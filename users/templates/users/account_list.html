@@ -4,37 +4,39 @@
 
 {% block body %}
 
-<article class="content-section border rounded p-3 shadow-sm">
-    <a href="{% url "account-create" %}" class="btn btn-outline-info">Create Account</a>
-    <div class="table-responsive table-nowrap mt-2">
-        <table id="accountsTable" class="table table-light table-striped text-center">
+<article class="content-section border rounded p-0 shadow-sm">
+    <a href="{% url "account-create" %}" class="btn btn-outline-info ms-2 mt-2 fw-bold">Create Account</a>
+    <div class="table-responsive w-100 mt-2">
+        <table id="accountsTable" class="table table-light table-striped text-center w-100 m-0">
             <thead class="table-secondary">
                 <tr>
                     <th>Username</th>
                     <th>Usertype</th>
                     <th>Status</th>
                     <th>Created By</th>
-                    <th>DateCreated</th>
+                    <th>Date Created</th>
                     <th>Options</th>
                 </tr>
             </thead>
-                <tbody>
-                    {% for account in accounts %}
-                        <tr>
-                            <td style="vertical-align: middle;">{{ account.user.username }}</td>
-                            <td style="vertical-align: middle;">{{ account.usertype }}</td>
-                            <td style="vertical-align: middle;">{{ account.status }}</td>
-                            <td style="vertical-align: middle;">{{ account.created_by }}</td>
-                            <td style="vertical-align: middle;">{{ account.user.date_joined|date:"M. d, Y" }}</td>
-                            <td style="vertical-align: middle;">
-                                <a href="{% url "account-update" account.pk %}" class="btn btn-sm btn-outline-success">Update</a>
-                                <a href="{% url "account-delete-confirm" account.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
+            <tbody>
+                {% for account in accounts %}
+                    <tr>
+                        <td style="vertical-align: middle;">{{ account.user.username }}</td>
+                        <td style="vertical-align: middle;">{{ account.usertype }}</td>
+                        <td style="vertical-align: middle;">{{ account.status }}</td>
+                        <td style="vertical-align: middle;">{{ account.created_by }}</td>
+                        <td style="vertical-align: middle;">{{ account.user.date_joined|date:"M. d, Y" }}</td>
+                        <td style="vertical-align: middle;">
+                            <a href="{% url "account-update" account.pk %}" class="btn btn-sm btn-outline-success fw-bold">Update</a>
+                            <a href="{% url "account-delete-confirm" account.pk %}" class="btn btn-sm btn-outline-danger fw-bold">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 </article>
+
+
 
 {% endblock %}

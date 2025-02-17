@@ -55,7 +55,7 @@
 
   <main id="main-content" role="main" class="container mt-5 pt-5">
     <div class="row">
-      <div class="col-lg-8">
+      <div class="col">
         {% if messages %}
           {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">
@@ -65,17 +65,8 @@
         {% endif %}
         {% block body %}{% endblock %}
       </div>
-
-      <div class="col-lg-4">
-        <div class="content-section border rounded shadow-sm">
-          <div class="row">
-            <div class="col btn btn-light border"><i class="ri-home-heart-fill me-1 menu-icons"></i>Residents</div>
-            <div class="col btn btn-light border"><i class="ri-user-heart-fill me-1 menu-icons"></i>Patients</div>
-          </div>
-          {% block sidebar_right %}
-          {% endblock %}
-        </div>
-      </div>
+      {% block summarybar %}
+      {% endblock %}
     </div>
   </main>
 
