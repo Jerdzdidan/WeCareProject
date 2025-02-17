@@ -1,33 +1,34 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile  
-# from .forms import AccountForm  
+from .models import UserProfile
+from .forms import AccountForm
 
 @login_required
 def accountlist(request):
-    if request.user.usertype != 'admin':
+    if request.user.userprofile.usertype != 'Admin':
         return HttpResponseForbidden()
     accounts = UserProfile.objects.all()
-    return render(request, 'accounts/list.html', {'accounts': accounts})
+    return render(request, 'users/account_list.html', {'accounts': accounts})
 
 @login_required
 def accountCreate(request):
-    if request.user.usertype != 'admin':
+    if not request.user.is_staff:
         return HttpResponseForbidden()
-    
+
     if request.method == 'POST':
         form = AccountForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(created_by=request.user)  
             return redirect('account-list')
     else:
         form = AccountForm()
-    return render(request, 'accounts/create.html', {'form': form})
+
+    return render(request, 'users/create.html', {'form': form})
 
 @login_required
 def accountUpdate(request):
-    if request.user.usertype != 'admin':
+    if request.user.userprofile.usertype != 'Admin':
         return HttpResponseForbidden()
     
     if request.method == 'POST':
@@ -39,11 +40,11 @@ def accountUpdate(request):
             return redirect('account-list')
     else:
         form = AccountForm()
-    return render(request, 'accounts/update.html', {'form': form})
+    return render(request, 'users/update.html', {'form': form})
 
 @login_required
 def accountDelete(request, pk):
-    if request.user.usertype != 'admin':
+    if request.user.userprofile.usertype != 'Admin':
         return HttpResponseForbidden()
     
     account = get_object_or_404(UserProfile, pk=pk)
@@ -54,8 +55,8 @@ def accountDelete(request, pk):
 
 @login_required
 def accountDeleteConfirm(request, pk):
-    if request.user.usertype != 'admin':
+    if request.user.userprofile.usertype != 'Admin':
         return HttpResponseForbidden()
     
     account = get_object_or_404(UserProfile, pk=pk)
-    return render(request, 'accounts/delete_confirm.html', {'account': account})
+    return render(request, 'users/delete_confirm.html', {'account': account})
