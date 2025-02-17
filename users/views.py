@@ -3,60 +3,75 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile
 from .forms import AccountForm
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 @login_required
 def accountlist(request):
-    if request.user.userprofile.usertype != 'Admin':
-        return HttpResponseForbidden()
+    if not request.user.is_staff:
+        return HttpResponseForbidden("You do not have perimission to see accounts list.")
     accounts = UserProfile.objects.all()
     return render(request, 'users/account_list.html', {'accounts': accounts})
 
 @login_required
 def accountCreate(request):
     if not request.user.is_staff:
-        return HttpResponseForbidden()
-
+        return HttpResponseForbidden("You do not have permissions to create accounts.")
+    
     if request.method == 'POST':
         form = AccountForm(request.POST)
         if form.is_valid():
-            form.save(created_by=request.user)  
+            username = form.cleaned_data['username']
+            if User.objects.filter(username=username).exists():
+                messages.danger(request, "Username already exists. Please choose a different one.")
+                return redirect('account-create')
+            
+            # Use the form's custom save method to create the User and UserProfile
+            profile = form.save(commit=False, created_by=request.user)
+            profile.save()
+            
+            messages.success(request, "Account created successfully!")
             return redirect('account-list')
     else:
         form = AccountForm()
 
     return render(request, 'users/create.html', {'form': form})
 
-@login_required
-def accountUpdate(request):
-    if request.user.userprofile.usertype != 'Admin':
-        return HttpResponseForbidden()
-    
-    if request.method == 'POST':
-        account_id = request.POST.get('account_id')
-        account = get_object_or_404(UserProfile, pk=account_id)
-        form = AccountForm(request.POST, instance=account)
-        if form.is_valid():
-            form.save()
-            return redirect('account-list')
-    else:
-        form = AccountForm()
-    return render(request, 'users/update.html', {'form': form})
 
 @login_required
-def accountDelete(request, pk):
+def accountUpdate(request, pk):
     if request.user.userprofile.usertype != 'Admin':
         return HttpResponseForbidden()
-    
+
     account = get_object_or_404(UserProfile, pk=pk)
+
     if request.method == 'POST':
-        account.delete()
-        return redirect('account-list')
-    return redirect('account-delete-confirm', pk=pk)
+        form = AccountForm(request.POST, instance=account)  
+        if form.is_valid():
+            form.save()
+            return redirect('account-list')  
+    else:
+        form = AccountForm(instance=account)  
+
+    return render(request, 'users/update.html', {'form': form})
+
 
 @login_required
 def accountDeleteConfirm(request, pk):
-    if request.user.userprofile.usertype != 'Admin':
-        return HttpResponseForbidden()
+    if not request.user.is_staff:
+        return HttpResponseForbidden("You do not have permission to delete accounts.")
     
     account = get_object_or_404(UserProfile, pk=pk)
+    
+    # Prevent Admins from deleting themselves
+    if request.user == account.user:
+        return HttpResponseForbidden("You cannot delete your own account.")
+    
+    if request.method == 'POST':
+        account.user.delete() 
+        account.delete()
+        
+        return redirect('account-list')
+
     return render(request, 'users/delete_confirm.html', {'account': account})
+

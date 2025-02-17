@@ -40,7 +40,7 @@
         </a>
       </ul>
       <ul class="list-group my-1">
-        <a href="#" class="nav-link rounded">
+        <a href="{% url "account-list" %}" class="nav-link {% if request.path == '/users/' %}active{% endif %} rounded">
           <li class="list-group-item d-flex align-items-center menu-item">
             <i class="ri-account-box-2-fill me-1 menu-icons"></i>Account Management
           </li>

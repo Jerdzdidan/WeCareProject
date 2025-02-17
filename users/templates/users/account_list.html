@@ -7,7 +7,7 @@
 <article class="content-section border rounded p-3 shadow-sm">
     <a href="{% url "account-create" %}" class="btn btn-outline-info">Create Account</a>
     <div class="table-responsive table-nowrap mt-2">
-        <table id="accountsTable" class="table table-success table-striped text-center">
+        <table id="accountsTable" class="table table-light table-striped text-center">
             <thead class="table-secondary">
                 <tr>
                     <th>Username</th>
@@ -27,8 +27,8 @@
                             <td style="vertical-align: middle;">{{ account.created_by }}</td>
                             <td style="vertical-align: middle;">{{ account.user.date_joined|date:"M. d, Y" }}</td>
                             <td style="vertical-align: middle;">
-                                <a href="#" class="btn btn-sm btn-outline-success">Update</a>
-                                <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                                <a href="{% url "account-update" account.pk %}" class="btn btn-sm btn-outline-success">Update</a>
+                                <a href="{% url "account-delete-confirm" account.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
                             </td>
                         </tr>
                     {% endfor %}

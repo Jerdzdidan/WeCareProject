@@ -1,0 +1,22 @@
+{% extends "dashboard/layout.html" %}
+{% load crispy_forms_tags %}
+
+{% comment %} Insert Custom Page Style Here
+{% block style %}
+
+{% endblock style %} {% endcomment %}
+
+{% comment %} Page Body {% endcomment %}
+{% block body %}
+
+    <article class="content-section border rounded p-3 shadow-sm">
+        <h2>Update Account</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-success">Update</button>
+            <a href="{% url 'account-list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </article>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "dashboard/layout.html" %}
+
+{% block style %}{% endblock style %}
+
+{% block body %}
+
+<article class="content-section border rounded p-3 shadow-sm">
+    <h3 class="text-danger">Confirm Account Deletion</h3>
+    <p>Are you sure you want to delete the account of <strong>{{ account.user.username }}</strong>?</p>
+    
+    <div class="table-responsive table-nowrap mt-2">
+        <table id="accountsTable" class="table table-danger table-striped text-center">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Username</th>
+                    <th>Usertype</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th>Date Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="vertical-align: middle;">{{ account.user.username }}</td>
+                    <td style="vertical-align: middle;">{{ account.usertype }}</td>
+                    <td style="vertical-align: middle;">{{ account.status }}</td>
+                    <td style="vertical-align: middle;">{{ account.created_by }}</td>
+                    <td style="vertical-align: middle;">{{ account.user.date_joined|date:"M. d, Y" }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'account-list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</article>
+
+{% endblock %}
