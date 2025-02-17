@@ -23,10 +23,9 @@ def accountCreate(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             if User.objects.filter(username=username).exists():
-                messages.danger(request, "Username already exists. Please choose a different one.")
+                messages.warning(request, "Username already exists. Please choose a different one.")
                 return redirect('account-create')
             
-            # Use the form's custom save method to create the User and UserProfile
             profile = form.save(commit=False, created_by=request.user)
             profile.save()
             
@@ -63,9 +62,9 @@ def accountDeleteConfirm(request, pk):
     
     account = get_object_or_404(UserProfile, pk=pk)
     
-    # Prevent Admins from deleting themselves
     if request.user == account.user:
-        return HttpResponseForbidden("You cannot delete your own account.")
+        messages.warning(request, "You cannot delete your own account.")
+        return redirect('account-list')
     
     if request.method == 'POST':
         account.user.delete() 
