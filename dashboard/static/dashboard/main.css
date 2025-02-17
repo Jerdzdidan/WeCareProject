@@ -68,6 +68,12 @@ a.article-title:hover {
 }
 
 
+/* Navbar Styles */
+.nav-font {
+  font-size: calc(0.6rem + .6vw)
+}
+
+
 /* Sidebar Styles */
 .sidebar {
   position: fixed;

@@ -1,0 +1,38 @@
+{% extends "dashboard/layout.html" %}
+
+{% block style %}{% endblock style %}
+
+{% block body %}
+
+<article class="content-section border rounded p-3 shadow-sm">
+    <div class="table-responsive table-nowrap">
+        <table id="accountsTable" class="table table-success table-striped text-center">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Username</th>
+                    <th>Usertype</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th>DateCreated</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for account in accounts %}
+                    <tr>
+                        <td>{{ account.user.username }}</td>
+                        <td>{{ account.usertype }}</td>
+                        <td>{{ account.status }}</td>
+                        <td>{{ account.created_by }}</td>
+                        <td>{{ account.user.date_joined|date:"M. d, Y" }}</td>
+                        <td>
+                            <a href="{% url "account-update" account.user.id %}">Update</a>
+                            <a href="{% url "account-delete-confirm" account.user.id %}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</article>
+
+{% endblock %}

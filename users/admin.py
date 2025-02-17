@@ -3,7 +3,7 @@ from .models import UserProfile
 
 # Register your models here.
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'usertype', 'status')
+    list_display = ('user', 'usertype', 'status', 'created_by')
     list_filter = ('usertype', 'status')
     search_fields = ('user__username', 'usertype', 'status')
 
