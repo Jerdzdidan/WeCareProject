@@ -1,0 +1,50 @@
+{% extends 'dashboard/layout.html' %}
+{% load static %}
+
+{% comment %} Insert Custom Page Style Here {% endcomment %}
+{% block style %}{% endblock style %}
+
+{% comment %} Page Body {% endcomment %}
+{% block body %}
+
+    {% if time %}
+        {{ time }}
+    {% endif %}
+
+    <article class="content-section border rounded p-3 shadow-sm">
+        <img src="{% static 'dashboard/images/WeCareHome.png' %}" alt="" style="min-height: 100%; width: 100%; object-fit: cover;">
+    </article>
+    
+<!--    {% if is_paginated %}-->
+<!--        <div class="d-flex justify-content-between mb-4">-->
+<!--            <div>-->
+<!--                {% if page_obj.has_previous %}-->
+<!--                    <a class="btn btn-outline-primary mb-4" href="?page=1">First</a>-->
+<!--                    <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>-->
+<!--                {% else %}-->
+<!--                    <a class="btn btn-outline-primary mb-4 disabled" href="#">First</a>-->
+<!--                    <a class="btn btn-outline-primary mb-4 disabled" href="#">Previous</a>-->
+<!--                {% endif %}-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                {% for page in page_obj.paginator.page_range %}-->
+<!--                    {% if page_obj.number == page %}-->
+<!--                        <a class="btn btn-primary mb-4" href="?page={{ page }}">{{ page }}</a>-->
+<!--                    {% elif page > page_obj.number|add:'-3' and page < page_obj.number|add:'3' %}-->
+<!--                        <a class="btn btn-outline-primary mb-4" href="?page={{ page }}">{{ page }}</a>-->
+<!--                    {% endif %}-->
+<!--                {% endfor %}-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                {% if page_obj.has_next %}-->
+<!--                    <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>-->
+<!--                    <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>-->
+<!--                {% else %}-->
+<!--                    <a class="btn btn-outline-primary mb-4 disabled" href="#">Next</a>-->
+<!--                    <a class="btn btn-outline-primary mb-4 disabled" href="#">Last</a>-->
+<!--                {% endif %}-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    {% endif %}-->
+
+{% endblock %}
