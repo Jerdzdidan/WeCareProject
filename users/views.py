@@ -5,7 +5,7 @@ from .models import UserProfile
 from .forms import AccountForm
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login, authenticate
 
 @login_required
 def accountlist(request):
@@ -79,3 +79,18 @@ def accountDeleteConfirm(request, pk):
 def custom_logout(request):
     logout(request)
     return render(request, 'users/logout.html')
+
+# Custom view for logging in
+def custom_login(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect("dashboard") 
+        else:
+            messages.error(request, "Invalid username or password.")
+
+    return render(request, "users/login.html")

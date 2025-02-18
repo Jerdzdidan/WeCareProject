@@ -23,7 +23,9 @@
 </head>
 <body>
   <!-- Sidebar -->
-  {% include "dashboard/sidebar.html" %}
+  {% if user.is_authenticated %}
+    {% include "dashboard/sidebar.html" %}
+  {% endif %}
 
   <header class="site-header">
     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
@@ -37,7 +39,7 @@
         <div class="ms-2 me-auto">
           <h5 class="d-flex align-items-end gap-1 mb-1">
               <span class="text-light nav-font">
-                  Welcome, <span class="text-info">{{ request.user }}</span> <br>
+                  {% if user.is_authenticated %}Welcome, <span class="text-info">{{ request.user }}</span> <br>{% endif %}
                   <small id="clock" class="my-auto text-muted text-light"></small>
               </span>
               <img src="/themes/dmz/assets/img/gif/hand.gif" alt="" style="width: 1.75rem; height: auto; pointer-events: none;">
@@ -47,7 +49,9 @@
         
         <!-- Right Side Navbar -->
           <div class="navbar-nav ms-auto nav-font">
-              <a class="nav-item nav-link" href="#">Logout</a>
+            {% if user.is_authenticated %}
+              <a class="nav-item nav-link" href="{% url "logout" %}">Logout</a>
+            {% endif %}
           </div>
       </div>
     </nav>
