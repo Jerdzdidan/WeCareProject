@@ -1,0 +1,19 @@
+{% extends "blog/layout.html" %}
+{% load crispy_forms_tags %}
+
+<!-- Insert Custom Page Style Here -->
+{% block style %}
+
+{% endblock style %}
+
+<!-- Page Body -->
+{% block body %}
+
+    <h2>You have been logged out</h2>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            <a href="{% url 'login' %}">Log In Again</a>
+        </small>
+    </div>
+
+{% endblock %}

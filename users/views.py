@@ -5,6 +5,7 @@ from .models import UserProfile
 from .forms import AccountForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import logout
 
 @login_required
 def accountlist(request):
@@ -74,3 +75,7 @@ def accountDeleteConfirm(request, pk):
 
     return render(request, 'users/delete_confirm.html', {'account': account})
 
+# Custom view for logging out.
+def custom_logout(request):
+    logout(request)
+    return render(request, 'users/logout.html')
