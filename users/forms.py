@@ -12,7 +12,16 @@ class AccountForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['username', 'password1', 'password2', 'email', 'first_name', 'last_name', 'usertype', 'status']
+        fields = [
+            'username',
+            'password1',
+            'password2',
+            'email',
+            'first_name',
+            'last_name',
+            'usertype',
+            'status',
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -28,14 +37,17 @@ class AccountForm(forms.ModelForm):
         cleaned_data = super().clean()
         password1 = cleaned_data.get("password1")
         password2 = cleaned_data.get("password2")
-        if password1 or password2:
-            if password1 != password2:
-                raise forms.ValidationError("Passwords do not match!")
+        if (password1 or password2) and password1 != password2:
+            raise forms.ValidationError("Passwords do not match!")
         return cleaned_data
 
     def save(self, commit=True, created_by=None):
         user_profile = super().save(commit=False)
-        user = user_profile.user  
+        if not hasattr(user_profile, 'user') or user_profile.user is None:
+            user = User()
+            user_profile.user = user
+        else:
+            user = user_profile.user
 
         user.username = self.cleaned_data.get('username')
         user.email = self.cleaned_data.get('email')
@@ -47,5 +59,6 @@ class AccountForm(forms.ModelForm):
 
         if commit:
             user.save()
+            user_profile.created_by = created_by
             user_profile.save()
         return user_profile

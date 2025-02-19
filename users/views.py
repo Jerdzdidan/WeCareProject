@@ -22,36 +22,31 @@ def accountCreate(request):
     if request.method == 'POST':
         form = AccountForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            if User.objects.filter(username=username).exists():
-                messages.warning(request, "Username already exists. Please choose a different one.")
-                return redirect('account-create')
-            
-            profile = form.save(commit=False, created_by=request.user)
-            profile.save()
-            
+            # Pass the current user as 'created_by' so it's stored on the profile.
+            profile = form.save(commit=True, created_by=request.user)
             messages.success(request, "Account created successfully!")
             return redirect('account-list')
     else:
         form = AccountForm()
-
+    
     return render(request, 'users/create.html', {'form': form})
 
 
 @login_required
 def accountUpdate(request, pk):
-    if request.user.userprofile.usertype != 'Admin':
-        return HttpResponseForbidden()
+    if not request.user.is_staff:
+        return HttpResponseForbidden("You do not have permission to update accounts.")
 
     account = get_object_or_404(UserProfile, pk=pk)
 
     if request.method == 'POST':
-        form = AccountForm(request.POST, instance=account)  
+        form = AccountForm(request.POST, instance=account)
         if form.is_valid():
             form.save()
-            return redirect('account-list')  
+            messages.success(request, "Account updated successfully!")
+            return redirect('account-list')
     else:
-        form = AccountForm(instance=account)  
+        form = AccountForm(instance=account)
 
     return render(request, 'users/update.html', {'form': form})
 

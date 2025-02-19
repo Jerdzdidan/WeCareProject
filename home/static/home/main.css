@@ -140,3 +140,10 @@ a.article-title:hover {
 .container{
   max-width: 1490px!important;
 }
+
+
+/* Table styles */
+
+td {
+  vertical-align: middle;
+}

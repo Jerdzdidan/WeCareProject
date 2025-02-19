@@ -1,125 +1,179 @@
 {% extends "home/layout.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 
-{% comment %} Insert Custom Page Style Here
-{% block style %}
+{% block style %}<link rel="stylesheet" href="{% static 'residentInfo/main.css' %}">{% endblock style %}
 
-{% endblock style %} {% endcomment %}
-
-{% comment %} Page Body {% endcomment %}
 {% block body %}
+<article class="content-section border rounded shadow-sm">
+  <h1>Register Your Family</h1>
+  <form method="POST" action="{% url 'resident-create' %}">
+    {% csrf_token %}
+    
+    <h2>Family Head Information</h2>
+    <div class="row">
+      <div class="col-md-6 form-group">
+        <label for="head_last_name">Last Name:</label>
+        <input type="text" id="head_last_name" name="head_last_name" class="form-control" required>
+      </div>
+      <div class="col-md-6 form-group">
+        <label for="head_first_name">First Name:</label>
+        <input type="text" id="head_first_name" name="head_first_name" class="form-control" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 form-group">
+        <label for="head_middle_name">Middle Name:</label>
+        <input type="text" id="head_middle_name" name="head_middle_name" class="form-control">
+      </div>
+      <div class="col-md-6 form-group">
+        <label for="head_birthdate">Birthdate:</label>
+        <div class="input-group">
+          <!-- Use type="text" and assign class "flatpickr" for Flatpickr -->
+          <input type="text" id="head_birthdate" name="head_birthdate" class="form-control flatpickr" required>
+          <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <label for="head_age">Age:</label>
+        <input type="number" id="head_age" name="head_age" class="form-control" required min="0" max="999">
+      </div>
+      <div class="col-md-4 form-group">
+        <label for="head_gender">Gender:</label>
+        <select id="head_gender" name="head_gender" class="form-control" required>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="col-md-4 form-group">
+        <label for="head_civil_status">Civil Status:</label>
+        <input type="text" id="head_civil_status" name="head_civil_status" class="form-control" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <label for="head_category">Category:</label>
+        <select id="head_category" name="head_category" class="form-control">
+          <option value="NA">N/A</option>
+          <option value="Senior">Senior</option>
+          <option value="Solo Parent">Solo Parent</option>
+          <option value="Pregnant">Pregnant</option>
+          <option value="Children">Children</option>
+        </select>
+      </div>
+      <div class="col-md-4 form-group">
+        <label for="head_present_address">Present Address:</label>
+        <input type="text" id="head_present_address" name="head_present_address" class="form-control" required>
+      </div>
+      <div class="col-md-4 form-group">
+        <label for="head_contact_number">Contact Number:</label>
+        <input type="text" id="head_contact_number" name="head_contact_number" class="form-control" required>
+      </div>
+    </div>
+    
+    <h2 class="mt-4">Family Members Information</h2>
+    <div class="table-responsive">
+      <table id="familyMembersTable" class="table table-light table-striped text-center">
+        <thead class="table-secondary">
+            <tr>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>Middle Name</th>
+              <th>Relationship to Head</th>
+              <th>Birthdate</th>
+              <th>Age</th>
+              <th>Civil Status</th>
+              <th>Gender</th>
+              <th>Category</th>
+              <th>Contact Number</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="text" name="members[0][last_name]" class="form-control" required></td>
+              <td><input type="text" name="members[0][first_name]" class="form-control" required></td>
+              <td><input type="text" name="members[0][middle_name]" class="form-control"></td>
+              <td><input type="text" name="members[0][relationship]" class="form-control" required></td>
+              <td>
+                <div class="input-group">
+                  <input type="text" name="members[0][birthdate]" class="form-control flatpickr" required>
+                  <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                </div>
+              </td>
+              <td><input type="number" name="members[0][age]" class="form-control" required min="0" max="999"></td>
+              <td><input type="text" name="members[0][civil_status]" class="form-control" required></td>
+              <td>
+                <select name="members[0][gender]" class="form-control">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </td>
+              <td>
+                <select name="members[0][category]" class="form-control">
+                  <option value="NA">N/A</option>
+                  <option value="Senior">Senior</option>
+                  <option value="Children">Children</option>
+                  <option value="Solo Parent">Solo Parent</option>
+                  <option value="Pregnant">Pregnant</option>
+                </select>
+              </td>
+              <td><input type="text" name="members[0][contact_number]" class="form-control" required></td>
+              <td><button type="button" class="btn btn-danger btn-sm delete-row my-auto">Delete</button></td>
+            </tr>
+          </tbody>          
+      </table>
+    </div>
+    <div class="text-end">
+      <button type="button" id="addMemberButton" class="btn btn-outline-primary">Add Family Member</button>
+    </div>
+    <div class="mt-3 text-end d-flex align-items-center justify-content-end mb-2">
+      <input type="submit" class="btn btn-success my-auto" value="Register">
+      <a href="{% url 'resident-list' %}" class="btn btn-secondary ms-2 my-auto">Cancel</a>
+    </div>
+  </form>
+</article>
+{% endblock body %}
 
-    <article class="content-section border rounded p-3 shadow-sm">
-        <h1>Register Your Family</h1>
-        <form method="POST" action="{% url 'register_family' %}">
-          {% csrf_token %}
-          <h2>Family Head Information</h2>
-          <label for="head_last_name">Last Name:</label>
-          <input type="text" id="head_last_name" name="head_last_name" required>
-          <br>
-      
-          <label for="head_first_name">First Name:</label>
-          <input type="text" id="head_first_name" name="head_first_name" required>
-          <br>
-      
-          <label for="head_middle_name">Middle Name:</label>
-          <input type="text" id="head_middle_name" name="head_middle_name">
-          <br>
-      
-          <label for="head_birthdate">Birthdate:</label>
-          <input type="date" id="head_birthdate" name="head_birthdate" required>
-          <br>
-      
-          <label for="head_age">Age:</label>
-          <input type="number" id="head_age" name="head_age" required>
-          <br>
-      
-          <label for="head_gender">Gender:</label>
-          <select id="head_gender" name="head_gender" required>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-          <br>
-      
-          <label for="head_civil_status">Civil Status:</label>
-          <input type="text" id="head_civil_status" name="head_civil_status" required>
-          <br>
-      
-          <label for="head_category">Category:</label>
-          <select id="head_category" name="head_category">
-            <option value="NA">N/A</option>
-            <option value="Senior">Senior</option>
-            <option value="Solo Parent">Solo Parent</option>
-            <option value="Pregnant">Pregnant</option>
-            <option value="Children">Children</option>
-          </select>
-          <br>
-      
-          <label for="head_present_address">Present Address:</label>
-          <input type="text" id="head_present_address" name="head_present_address" required>
-          <br>
-      
-          <label for="head_contact_number">Contact Number:</label>
-          <input type="text" id="head_contact_number" name="head_contact_number" required>
-          <br>
-      
-          <h2>Family Members Information</h2>
-          <table id="familyMembersTable" border="1">
-            <thead>
-              <tr>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Relationship to Head</th>
-                <th>Birthdate</th>
-                <th>Age</th>
-                <th>Civil Status</th>
-                <th>Gender</th>
-                <th>Category</th>
-                <th>Present Address</th>
-                <th>Contact Number</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- New rows will be added here -->
-            </tbody>
-          </table>
-          <button type="button" onclick="addFamilyMemberRow()">Add Family Member</button>
-          <br><br>
-          <input type="submit" value="Submit">
-        </form>
-    </article>
-
-{% endblock %}
-
-
-{% comment %} Insert Custom Page Script Here {% endcomment %}
 {% block script %}
 <script>
-    function addFamilyMemberRow() {
-      const tbody = document.getElementById('familyMembersTable').getElementsByTagName('tbody')[0];
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow(rowCount);
-      
-      row.innerHTML = `
-        <td><input type="text" name="members[${rowCount}][last_name]" required></td>
-        <td><input type="text" name="members[${rowCount}][first_name]" required></td>
-        <td><input type="text" name="members[${rowCount}][middle_name]"></td>
-        <td><input type="text" name="members[${rowCount}][relationship]" required></td>
-        <td><input type="date" name="members[${rowCount}][birthdate]" required></td>
-        <td><input type="number" name="members[${rowCount}][age]" required></td>
-        <td><input type="text" name="members[${rowCount}][civil_status]" required></td>
+document.addEventListener('DOMContentLoaded', function(){
+  // Initialize Flatpickr on all elements with class "flatpickr"
+  flatpickr(".flatpickr", {
+    dateFormat: "M j, Y",
+    allowInput: true,
+    autoClose: true
+  });
+  
+  function addFamilyMemberRow() {
+    var rowCount = $('#familyMembersTable tbody tr').length;
+    var newRow = `
+      <tr>
+        <td><input type="text" name="members[${rowCount}][last_name]" class="form-control" required></td>
+        <td><input type="text" name="members[${rowCount}][first_name]" class="form-control" required></td>
+        <td><input type="text" name="members[${rowCount}][middle_name]" class="form-control"></td>
+        <td><input type="text" name="members[${rowCount}][relationship]" class="form-control" required></td>
         <td>
-          <select name="members[${rowCount}][gender]">
+          <div class="input-group">
+            <input type="text" name="members[${rowCount}][birthdate]" class="form-control flatpickr" required>
+            <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+          </div>
+        </td>
+        <td><input type="number" name="members[${rowCount}][age]" class="form-control" required min="0" max="999"></td>
+        <td><input type="text" name="members[${rowCount}][civil_status]" class="form-control" required></td>
+        <td>
+          <select name="members[${rowCount}][gender]" class="form-control">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
         </td>
         <td>
-          <select name="members[${rowCount}][category]">
+          <select name="members[${rowCount}][category]" class="form-control">
             <option value="NA">N/A</option>
             <option value="Senior">Senior</option>
             <option value="Children">Children</option>
@@ -127,15 +181,25 @@
             <option value="Pregnant">Pregnant</option>
           </select>
         </td>
-        <td><input type="text" name="members[${rowCount}][present_address]" required></td>
-        <td><input type="text" name="members[${rowCount}][contact_number]" required></td>
-        <td><button type="button" onclick="deleteFamilyMemberRow(this)">Delete</button></td>
-      `;
-    }
-
-    function deleteFamilyMemberRow(btn) {
-      const row = btn.parentNode.parentNode;
-      row.parentNode.removeChild(row);
-    }
-  </script>
-{% endblock script %} 
+        <td><input type="text" name="members[${rowCount}][contact_number]" class="form-control" required></td>
+        <td><button type="button" class="btn btn-danger btn-sm delete-row">Delete</button></td>
+      </tr>
+    `;
+    $('#familyMembersTable tbody').append(newRow);
+    flatpickr($('#familyMembersTable tbody tr:last-child .flatpickr')[0], {
+      dateFormat: "M j, Y",
+      allowInput: true,
+      autoClose: true
+    });
+  }
+  
+  $('#addMemberButton').click(function(){
+    addFamilyMemberRow();
+  });
+  
+  $('#familyMembersTable tbody').on('click', '.delete-row', function(){
+    $(this).closest('tr').remove();
+  });
+});
+</script>
+{% endblock script %}

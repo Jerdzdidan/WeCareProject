@@ -1,64 +1,96 @@
 {% extends "home/layout.html" %}
 
-{% block style %}{% endblock style %}
+{% block style %}
+<style>
+  /* Responsive headings */
+  h1, h2 {
+    font-size: calc(1rem + 1vw);
+    margin-bottom: 1rem;
+  }
+
+  /* Table styling with responsive text */
+  #residentsTable {
+    width: 100%;
+    font-size: calc(0.55rem + 0.2vw);
+    margin-bottom: 10px;
+    border-collapse: collapse;
+  }
+  #residentsTable th,
+  #residentsTable td {
+    padding: calc(5px + 0.2vw) calc(8px + 0.2vw);
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid #dee2e6;
+  }
+  #residentsTable thead th {
+    background-color: #f8f9fa;
+  }
+
+  button,
+  input[type="submit"] {
+    margin-top: 10px;
+  }
+</style>
+{% endblock style %}
 
 {% block body %}
-
+<h3>Resident Info - <span class="text-primary">List</span></h3>
 <article class="content-section border rounded p-0 shadow-sm">
-    <a href="{% url "create-resident" %}" class="btn btn-outline-info ms-2 mt-2 fw-bold">Register Family/Resident</a>
+    <div class="container">
+        <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark mt-2 fw-bold d-inline-flex align-items-center" style="max-width: 300px;">
+            <i class="ri-add-fill" style="font-size: calc(6px + 0.8vw);"></i>
+            <span class="ms-2">Register Family/Resident</span>
+        </a>
+    </div>
     <div class="table-responsive w-100 mt-2">
-        <table id="residentsTable" border="1" cellpadding="5">
-            <thead>
-                <tr>
-                    <th>Family ID</th>
-                    <th>Head of Family</th>
-                    <th>Address</th>
-                    <th>Contact Number</th>
-                    <th>Last Updated</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for family in families %}
-                <tr>
-                    <td>{{ family.family_no }}</td>
-                    {% comment %}
-                    We assume the head of the family is the Resident record with relationship_to_head set as "Head".
-                    {% endcomment %}
-                    {% with head=family.residents.filter(relationship_to_head="Head").first %}
-                    <td>
-                        {% if head %}
-                          {{ head.last_name }}, {{ head.first_name }}{% if head.middle_name %} {{ head.middle_name }}{% endif %}
-                        {% else %}
-                          No head found
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if head %}
-                          {{ head.present_address }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if head %}
-                          {{ head.contact_number }}
-                        {% endif %}
-                    </td>
-                    {% endwith %}
-                    <td>{{ family.date_updated|date:"M d, Y H:i" }}</td>
-                    <td>
-                        <a href="{% url 'update_family' family.family_no %}">Edit Family</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6">No families found.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+        <table id="residentsTable" class="table table-light table-striped text-center w-100 m-0">
+        <thead class="table-secondary">
+            <tr>
+                <th>Family No.</th>
+                <th>Resident ID</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Relationship to Head</th>
+                <th>Birthdate</th>
+                <th>Age</th>
+                <th>Civil Status</th>
+                <th>Gender</th>
+                <th>Category</th>
+                <th>Address</th>
+                <th>Contact Number</th>
+                <th>Date Updated</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resident in residents %}
+            <tr>
+                <td>{{ resident.family.family_no }}</td>
+                <td>{{ resident.id }}</td>
+                <td>{{ resident.last_name }}</td>
+                <td>{{ resident.first_name }}</td>
+                <td>{{ resident.middle_name }}</td>
+                <td>{{ resident.relationship_to_head|capfirst }}</td>
+                <td>{{ resident.birthdate|date:"M d, Y" }}</td>
+                <td>{{ resident.age }}</td>
+                <td>{{ resident.civil_status }}</td>
+                <td>{{ resident.gender }}</td>
+                <td>{{ resident.category }}</td>
+                <td>{{ resident.present_address }}</td>
+                <td>{{ resident.contact_number }}</td>
+                <td>{{ resident.date_updated|date:"M d, Y" }}</td>
+                <td>
+                    <a href="{% url 'resident-update' resident.family.family_no %}">Edit</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="15">No residents found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
         </table>
     </div>
 </article>
-
-
-
-{% endblock %}
+{% endblock body %}

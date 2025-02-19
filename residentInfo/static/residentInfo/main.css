@@ -1,0 +1,49 @@
+h1, h2 {
+    margin-bottom: 1rem;
+  }
+  form label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  .form-control {
+    width: 100%;
+  }
+  /* Table styling */
+  .table-responsive {
+    overflow-x: auto;
+  }
+  #familyMembersTable {
+    width: 100%;
+    min-width: 900px; /* adjust as needed for horizontal scroll */
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    border-collapse: collapse;
+  }
+  #familyMembersTable th,
+  #familyMembersTable td {
+    padding: 5px 8px;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid #dee2e6;
+  }
+  #familyMembersTable thead th {
+    background-color: #f8f9fa;
+  }
+  /* Fixed width for the Age column */
+  #familyMembersTable th:nth-child(6),
+  #familyMembersTable td:nth-child(6) {
+    width: 70px;
+  }
+  button,
+  input[type="submit"] {
+    margin-top: 10px;
+  }
+  /* Make Family Members table inputs/selects smaller */
+  #familyMembersTable input.form-control,
+  #familyMembersTable select.form-control {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+  }

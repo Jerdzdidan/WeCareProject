@@ -21,10 +21,14 @@ class Family(models.Model):
 
     def __str__(self):
         return f"Family #{self.family_no}"
+    
+    @property
+    def head(self):
+        return self.residents.filter(relationship_to_head="Head of the family").first()
 
 
 class Resident(models.Model):
-    family = models.ForeignKey(Family, on_delete=models.CASCADE, related_name='residents')
+    family = models.ForeignKey(Family, on_delete=models.CASCADE, related_name='residents', null=True)
     
     last_name = models.CharField(max_length=100, default="--")
     first_name = models.CharField(max_length=100, default="--")
