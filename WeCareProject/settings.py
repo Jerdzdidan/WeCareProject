@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-    'dashboard',
+    'home',
     'residentInfo',
     'patientInfo',
     'crispy_forms',

@@ -1,0 +1,29 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+
+{% comment %} Insert Custom Page Style Here {% endcomment %}
+{% block style %}{% endblock style %}
+
+{% comment %} Page Body {% endcomment %}
+{% block body %}
+
+    {% if time %}
+        {{ time }}
+    {% endif %}
+
+    <article class="content-section border rounded p-3 shadow-sm">
+        <img src="{% static 'home/images/WeCareHome.png' %}" alt="" style="min-height: 100%; width: 100%; object-fit: cover;">
+    </article>
+   
+{% endblock %}
+
+{% comment %} {% block summarybar %}
+<div class="col-lg-4">
+    <div class="content-section border rounded shadow-sm">
+      <div class="row">
+        <div class="col btn btn-light border"><i class="ri-home-heart-fill me-1 menu-icons"></i>Residents</div>
+        <div class="col btn btn-light border"><i class="ri-user-heart-fill me-1 menu-icons"></i>Patients</div>
+      </div>
+    </div>
+  </div>
+{% endblock %} {% endcomment %}

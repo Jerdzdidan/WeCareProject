@@ -78,7 +78,8 @@ def accountDeleteConfirm(request, pk):
 # Custom view for logging out.
 def custom_logout(request):
     logout(request)
-    return render(request, 'users/logout.html')
+    messages.success(request, "You Have Been Logged Out!")
+    return redirect("login")
 
 # Custom view for logging in
 def custom_login(request):
@@ -89,7 +90,7 @@ def custom_login(request):
 
         if user is not None:
             login(request, user)
-            return redirect("dashboard") 
+            return redirect("home") 
         else:
             messages.error(request, "Invalid username or password.")
 

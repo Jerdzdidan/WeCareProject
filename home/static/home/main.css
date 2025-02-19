@@ -1,7 +1,7 @@
+/* Global Styles */
 body {
   background: #fafafa;
   color: #333333;
-  margin-top: 5rem;
 }
 h1, h2, h3, h4, h5, h6 {
   color: #444444;
@@ -12,6 +12,8 @@ ul {
 .bg-steel {
   background-color: #5f788a;
 }
+
+/* Navbar Styles */
 .site-header .navbar-nav .nav-link {
   color: #cbd5db;
 }
@@ -21,6 +23,11 @@ ul {
 .site-header .navbar-nav .nav-link.active {
   font-weight: 500;
 }
+.nav-font {
+  font-size: calc(0.6rem + 0.6vw);
+}
+
+/* Content Section Styles */
 .content-section {
   background: #ffffff;
   padding: 10px 20px;
@@ -46,7 +53,7 @@ a.article-title:hover {
 .article-metadata {
   padding-bottom: 1px;
   margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3
+  border-bottom: 1px solid #e3e3e3;
 }
 .article-metadata a:hover {
   color: #333;
@@ -67,64 +74,69 @@ a.article-title:hover {
   font-size: 2.5rem;
 }
 
-
-/* Navbar Styles */
-.nav-font {
-  font-size: calc(0.6rem + .6vw)
+/* Layout Wrappers */
+#page-wrapper {
+  display: flex;
+  min-height: 100vh;
 }
-
+#content-wrapper {
+  flex-grow: 1;
+  transition: margin-left 0.3s ease;
+}
 
 /* Sidebar Styles */
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 275px;
-  height: 100%;
+  min-width: 275px;
   background: #ffffff;
   border-right: 1px solid #ddd;
-  transform: translateX(-275px);
-  transition: transform 0.3s ease;
-  z-index: 1050;
+  transition: width 0.3s ease, min-width 0.3s ease; /* Transition both properties */
 }
-.sidebar.active {
-  transform: translateX(0);
+.sidebar.sidebar-hidden {
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
 }
-/* Responsive adjustments for mobile devices */
+
+/* Responsive Sidebar (mobile) */
 @media (max-width: 768px) {
   .sidebar {
-    width: 75%; /* adjust mobile width as needed */
-    transform: translateX(-100%);
+    width: 275px;
+    min-width: 275px; /* Ensure min-width is consistent */
   }
-  .sidebar.active {
-    transform: translateX(0);
+  .sidebar.sidebar-hidden {
+    width: 0;
+    min-width: 0; /* Maintain hidden state */
   }
 }
 
+/* Menu Icons and Items */
 .menu-icons {
   font-size: calc(0.1rem + 1vw) !important;
 }
-
 @media (max-width: 576px) {
   .menu-icons {
-    font-size: 1.5rem !important; 
+    font-size: 1.5rem !important;
   }
 }
 .menu-item {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
 .menu-item:hover {
-  background-color: #5F788A!important;
+  background-color: #5F788A !important;
   color: white;
 }
-
 .nav-link.active .menu-item {
-  background-color: #5F788A; 
+  background-color: #5F788A;
   color: white;
 }
 .logo-small {
-  width: 50px; 
-  height: auto; 
+  width: 50px;
+  height: auto;
   max-width: 100%;
+}
+
+
+.container{
+  max-width: 1490px!important;
 }
