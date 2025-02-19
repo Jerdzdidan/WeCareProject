@@ -8,7 +8,7 @@ GENDER_CHOICES = (
 )
 
 CATEGORY_CHOICES = (
-    ('NA', 'N/A'),
+    ('N/A', 'N/A'),
     ('Senior', 'Senior'),
     ('Children', 'Children'),
     ('Solo Parent', 'Solo Parent'),

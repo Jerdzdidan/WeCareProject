@@ -34,7 +34,7 @@
 {% endblock style %}
 
 {% block body %}
-<h3>Resident Info - <span class="text-primary">List</span></h3>
+<h3 class="mb-3">Residents Info - <span class="text-primary">List</span></h3>
 <article class="content-section border rounded p-0 shadow-sm">
     <div class="container">
         <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark mt-2 fw-bold d-inline-flex align-items-center" style="max-width: 300px;">
@@ -66,7 +66,7 @@
         <tbody>
             {% for resident in residents %}
             <tr>
-                <td>{{ resident.family.family_no }}</td>
+                <td><a href="{% url 'resident-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold px-4">{{ resident.family.family_no }}</a></td>
                 <td>{{ resident.id }}</td>
                 <td>{{ resident.last_name }}</td>
                 <td>{{ resident.first_name }}</td>
@@ -81,7 +81,7 @@
                 <td>{{ resident.contact_number }}</td>
                 <td>{{ resident.date_updated|date:"M d, Y" }}</td>
                 <td>
-                    <a href="{% url 'resident-update' resident.family.family_no %}">Edit</a>
+                    <a href="{% url 'resident-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold">Update</a>
                 </td>
             </tr>
             {% empty %}
