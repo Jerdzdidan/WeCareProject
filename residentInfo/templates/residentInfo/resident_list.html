@@ -1,0 +1,64 @@
+{% extends "home/layout.html" %}
+
+{% block style %}{% endblock style %}
+
+{% block body %}
+
+<article class="content-section border rounded p-0 shadow-sm">
+    <a href="{% url "create-resident" %}" class="btn btn-outline-info ms-2 mt-2 fw-bold">Register Family/Resident</a>
+    <div class="table-responsive w-100 mt-2">
+        <table id="residentsTable" border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Family ID</th>
+                    <th>Head of Family</th>
+                    <th>Address</th>
+                    <th>Contact Number</th>
+                    <th>Last Updated</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for family in families %}
+                <tr>
+                    <td>{{ family.family_no }}</td>
+                    {% comment %}
+                    We assume the head of the family is the Resident record with relationship_to_head set as "Head".
+                    {% endcomment %}
+                    {% with head=family.residents.filter(relationship_to_head="Head").first %}
+                    <td>
+                        {% if head %}
+                          {{ head.last_name }}, {{ head.first_name }}{% if head.middle_name %} {{ head.middle_name }}{% endif %}
+                        {% else %}
+                          No head found
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if head %}
+                          {{ head.present_address }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if head %}
+                          {{ head.contact_number }}
+                        {% endif %}
+                    </td>
+                    {% endwith %}
+                    <td>{{ family.date_updated|date:"M d, Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'update_family' family.family_no %}">Edit Family</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No families found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</article>
+
+
+
+{% endblock %}

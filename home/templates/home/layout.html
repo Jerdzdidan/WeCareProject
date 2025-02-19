@@ -19,57 +19,8 @@
   {% block style %}{% endblock %}
 </head>
 <body>
-  <!-- Flex Container -->
-  <div id="page-wrapper" class="d-flex" style="min-height: 100vh;">
-    <!-- Sidebar -->
-    <div id="sidebar" class="sidebar active">
-      <div class="p-3" style="position: relative;">
-        <button id="sidebarClose" class="btn btn-outline-secondary" style="position: absolute; top: 10px; right: 10px;">
-          <i class="ri-close-line"></i>
-        </button>
-        <div class="sidebar-logo p-3 text-center">
-          <a href="{% url "home" %}" class="nav-link">
-              <img src="{% static 'home/images/WeCareLogo.svg' %}" alt="Logo" class="img-fluid logo-small">
-              <h3 class="">WeCare</h3>
-          </a>
-        </div>
-        <ul class="list-group my-1">
-          <a href="{% url "home" %}" class="nav-link {% if request.path == '/' %}active{% endif %} rounded">
-            <li class="list-group-item d-flex align-items-center menu-item">
-              <i class="ri-home-9-fill me-1 menu-icons"></i>Home
-            </li>
-          </a>
-        </ul>
-        <ul class="list-group my-1">
-          <a href="#" class="nav-link rounded">
-            <li class="list-group-item d-flex align-items-center menu-item">
-              <i class="ri-home-heart-fill me-1 menu-icons"></i>Resident Info
-            </li>
-          </a>
-        </ul>
-        <ul class="list-group my-1">
-          <a href="#" class="nav-link rounded">
-            <li class="list-group-item d-flex align-items-center menu-item">
-              <i class="ri-user-heart-fill me-1 menu-icons"></i>Patient Info
-            </li>
-          </a>
-        </ul>
-        <ul class="list-group my-1">
-          <a href="#" class="nav-link rounded">
-            <li class="list-group-item d-flex align-items-center menu-item">
-              <i class="ri-file-chart-fill me-1 menu-icons"></i>Reports
-            </li>
-          </a>
-        </ul>
-        <ul class="list-group my-1">
-          <a href="{% url "account-list" %}" class="nav-link {% if '/users/' in request.path %}active{% endif %} rounded">
-            <li class="list-group-item d-flex align-items-center menu-item">
-              <i class="ri-account-box-2-fill me-1 menu-icons"></i>Account Management
-            </li>
-          </a>
-        </ul>
-      </div>
-    </div>
+  <!-- Sidebar -->
+  {% include "home/sidebar.html" %}
 
     <!-- Content Wrapper (Header + Main Content) -->
     <div id="content-wrapper" class="flex-grow-1">
@@ -113,12 +64,14 @@
               {% endif %}
               {% block body %}{% endblock %}
             </div>
-            {% block summarybar %}{% endblock %}
           </div>
       </main>
     </div>
   </div>
 
+
+  {% block script %}{% endblock %}
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>

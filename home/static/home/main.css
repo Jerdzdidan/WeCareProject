@@ -86,8 +86,8 @@ a.article-title:hover {
 
 /* Sidebar Styles */
 .sidebar {
-  width: 275px;
-  min-width: 275px;
+  width: clamp(200px, calc(150px + 10vw), 275px);
+  min-width: clamp(200px, calc(150px + 10vw), 275px);
   background: #ffffff;
   border-right: 1px solid #ddd;
   transition: width 0.3s ease, min-width 0.3s ease; /* Transition both properties */
