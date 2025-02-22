@@ -19,7 +19,7 @@ class AccountForm(forms.ModelForm):
             'email',
             'first_name',
             'last_name',
-            'usertype',
+            'userrole',
             'status',
         ]
 

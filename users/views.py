@@ -83,6 +83,11 @@ def custom_login(request):
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
 
+        user_profile = UserProfile.objects.filter(user=user).first()
+        if user_profile is not None and user_profile.status == 'INACTIVE':
+            messages.error(request, "Your account is INACTIVE. Please contact the administrator for the reactivation of your account.")
+            return render(request, "users/login.html")
+
         if user is not None:
             login(request, user)
             return redirect("home") 
