@@ -36,6 +36,9 @@ $(document).ready(function() {
             bottomEnd: null,
             bottom: 'paging',
 
+        },
+        language: {
+            emptyTable: "No data available in table"
         }
     //   "paging": true,
     //   "ordering": true,

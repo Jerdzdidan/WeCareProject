@@ -163,10 +163,47 @@ def family_resident_update(request, pk):
 
 def family_delete_confirm(request, pk):
     family = get_object_or_404(Family, pk=pk)
-    
+
     residents = family.residents.all()
     if request.method == 'POST':
         family.delete()
         messages.success(request, "Family record deleted successfully!")
         return redirect('resident-list')
     return render(request, 'residentInfo/family_delete.html', {'family': family, 'residents': residents})
+
+def resident_update(request, pk):
+    resident = get_object_or_404(Resident, pk=pk)
+    
+    if request.method == "POST":
+        resident.last_name = request.POST.get('last_name', '').strip()
+        resident.first_name = request.POST.get('first_name', '').strip()
+        resident.middle_name = request.POST.get('middle_name', '').strip()
+        
+        birthdate_str = request.POST.get('birthdate', '')
+        try:
+            resident.birthdate = datetime.strptime(birthdate_str, "%b %d, %Y").date()
+        except ValueError:
+            resident.birthdate = datetime(2000, 1, 1).date()
+        
+        resident.age = request.POST.get('age', '').strip()
+        resident.gender = request.POST.get('gender', '').strip()
+        resident.civil_status = request.POST.get('civil_status', '').strip()
+        resident.category = request.POST.get('category', '').strip()
+        resident.present_address = request.POST.get('present_address', '').strip()
+        resident.contact_number = request.POST.get('contact_number', '').strip()
+        resident.save()
+        
+        messages.success(request, "Resident updated successfully!")
+        return redirect('resident-list')
+    
+    return render(request, 'residentInfo/resident_update.html', {'resident': resident})
+
+def resident_delete_confirm(request, pk):
+    resident = get_object_or_404(Resident, pk=pk)
+    
+    if request.method == 'POST':
+        resident.delete()
+        messages.success(request, "Resident record deleted successfully!")
+        return redirect('resident-list')
+    
+    return render(request, 'residentInfo/resident_delete.html', {'resident': resident})

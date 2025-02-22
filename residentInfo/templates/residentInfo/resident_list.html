@@ -74,8 +74,8 @@
                 <td class="text-center">{{ resident.date_updated|date:"M d, Y" }}</td>
                 <td>
                     <div class="d-flex">
-                      <a href="{% url 'family-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1"><i class="ri-edit-2-fill"></i></a>
-                      <a href="{% url 'family-update' resident.family.family_no %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></a>
+                      <a href="{% url 'resident-update' resident.id %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1"><i class="ri-edit-2-fill"></i></a>
+                      <a href="{% url 'resident-delete-confirm' resident.id %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></a>
                     </div>
                 </td>
             </tr>

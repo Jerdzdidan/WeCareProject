@@ -7,20 +7,19 @@
 {% endblock style %}
 
 {% block body %}
-<h3 class="mb-3">Residents Info - <span class="text-danger">Delete Family Record</span></h3>
+<h3 class="mb-3">Residents Info - <span class="text-danger">Delete Resident Record</span></h3>
 <article class="content-section border rounded p-0 shadow-sm">
     <div class="container">
       <div class="row mt-2">
         <div class="col-auto">
-            <h4>Are you sure you want to delete <span class="text-danger">{{ family }}?</span></h4>
+            <h4>Are you sure you want to delete <span class="text-danger">{{ resident }}?</span></h4>
         </div>
       </div>
     </div>
     <div class="table-responsive mt-2">
-        <table class="table table-danger table-striped table-striped text-cente m-0 projectTables">
+        <table class="table table-danger table-striped text-center m-0 projectTables">
         <thead class="table-dark">
           <tr>
-            <th class="text-center">Family No.</th>
             <th class="text-center">Resident ID</th>
             <th class="text-center">Last Name</th>
             <th class="text-center">First Name</th>
@@ -37,9 +36,7 @@
           </tr>
         </thead>
         <tbody>
-            {% for resident in residents %}
             <tr>
-                <td class="text-center">{{ resident.family.family_no }}</td>
                 <td class="text-center">{{ resident.id }}</td>
                 <td class="text-center">{{ resident.last_name }}</td>
                 <td class="text-center">{{ resident.first_name }}</td>
@@ -54,11 +51,6 @@
                 <td class="text-center">{{ resident.contact_number }}</td>
                 <td class="text-center">{{ resident.date_updated|date:"M d, Y" }}</td>
             </tr>
-            {% empty %}
-            <tr>
-                <td colspan="14">No residents found.</td>
-            </tr>
-            {% endfor %}
         </tbody>
         </table>
     </div>
@@ -71,5 +63,6 @@
 {% endblock body %}
 
 {% block script %}
+
 
 {% endblock %}

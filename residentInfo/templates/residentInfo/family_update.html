@@ -60,7 +60,7 @@
       <div class="col-md-4 form-group">
         <label for="head_category">Category:</label>
         <select id="head_category" name="head_category" class="form-control">
-          <option value="NA" {% if head.category == "NA" %}selected{% endif %}>N/A</option>
+          <option value="N/A" {% if head.category == "N/A" %}selected{% endif %}>N/A</option>
           <option value="Senior" {% if head.category == "Senior" %}selected{% endif %}>Senior</option>
           <option value="Solo Parent" {% if head.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
           <option value="Pregnant" {% if head.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
@@ -132,7 +132,7 @@
             </td>
             <td>
               <select name="members[{{ forloop.counter0 }}][category]" class="form-control">
-                <option value="NA" {% if member.category == "NA" %}selected{% endif %}>N/A</option>
+                <option value="N/A" {% if member.category == "N/A" %}selected{% endif %}>N/A</option>
                 <option value="Senior" {% if member.category == "Senior" %}selected{% endif %}>Senior</option>
                 <option value="Children" {% if member.category == "Children" %}selected{% endif %}>Children</option>
                 <option value="Solo Parent" {% if member.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function(){
         </td>
         <td>
           <select name="members[${rowCount}][category]" class="form-control">
-            <option value="NA">N/A</option>
+            <option value="N/A">N/A</option>
             <option value="Senior">Senior</option>
             <option value="Children">Children</option>
             <option value="Solo Parent">Solo Parent</option>
