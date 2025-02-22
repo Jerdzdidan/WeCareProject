@@ -151,6 +151,15 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
 }
 
+#dataTables_wrapper {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+#dataTables_paginate {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
 .projectTables thead th {
   font-weight: 600;
 }

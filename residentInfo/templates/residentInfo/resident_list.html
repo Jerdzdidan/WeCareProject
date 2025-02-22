@@ -10,51 +10,73 @@
 <h3 class="mb-3">Residents Info - <span class="text-primary">List</span></h3>
 <article class="content-section border rounded p-0 shadow-sm">
     <div class="container">
-        <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark mt-2 fw-bold d-inline-flex align-items-center" style="max-width: 300px;">
+      <div class="row mt-2">
+        <div class="col-auto ms-auto">
+          <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark fw-bold d-flex align-items-center">
             <i class="ri-add-fill" style="font-size: calc(6px + 0.8vw);"></i>
             <span class="ms-2">Register Family/Resident</span>
-        </a>
+          </a>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-auto">
+          <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: 1rem; cursor: pointer; vertical-align: middle;">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span class="d-inline ms-2" style="font-size: 1rem; vertical-align: middle;">Entries per page</span>
+        </div>
+        <div class="col-auto ms-auto">
+          <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: 1rem; vertical-align: middle;">
+        </div>
+      </div>
+
     </div>
     <div class="table-responsive mt-2">
-        <table id="residentsTable" class="table table-light table-striped table-striped text-cente m-0 projectTables">
+        <table id="dataTable" class="table table-light table-striped table-striped text-cente m-0 projectTables">
         <thead class="table-dark">
           <tr>
-            <th>Family No.</th>
-            <th>Resident ID</th>
-            <th>Last Name</th>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Relationship to Head</th>
-            <th>Birthdate</th>
-            <th>Age</th>
-            <th>Civil Status</th>
-            <th>Gender</th>
-            <th>Category</th>
-            <th>Address</th>
-            <th>Contact Number</th>
-            <th>Date Updated</th>
-            <th>Action</th>
+            <th class="text-center">Family No.</th>
+            <th class="text-center">Resident ID</th>
+            <th class="text-center">Last Name</th>
+            <th class="text-center">First Name</th>
+            <th class="text-center">Middle Name</th>
+            <th class="text-center">Relationship to Head</th>
+            <th class="text-center">Birthdate</th>
+            <th class="text-center">Age</th>
+            <th class="text-center">Civil Status</th>
+            <th class="text-center">Gender</th>
+            <th class="text-center">Category</th>
+            <th class="text-center">Address</th>
+            <th class="text-center">Contact Number</th>
+            <th class="text-center">Date Updated</th>
+            <th class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
             {% for resident in residents %}
             <tr>
-                <td><a href="{% url 'resident-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold px-4">{{ resident.family.family_no }}</a></td>
-                <td>{{ resident.id }}</td>
-                <td>{{ resident.last_name }}</td>
-                <td>{{ resident.first_name }}</td>
-                <td>{{ resident.middle_name }}</td>
-                <td>{{ resident.relationship_to_head|capfirst }}</td>
-                <td>{{ resident.birthdate|date:"M d, Y" }}</td>
-                <td>{{ resident.age }}</td>
-                <td>{{ resident.civil_status }}</td>
-                <td>{{ resident.gender }}</td>
-                <td>{{ resident.category }}</td>
-                <td>{{ resident.present_address }}</td>
-                <td>{{ resident.contact_number }}</td>
-                <td>{{ resident.date_updated|date:"M d, Y" }}</td>
+                <td><a href="{% url 'family-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold px-4 text-center"><i class="ri-edit-2-line"></i>F{{ resident.family.family_no }}</a></td>
+                <td class="text-center">R{{ resident.id }}</td>
+                <td class="text-center">{{ resident.last_name }}</td>
+                <td class="text-center">{{ resident.first_name }}</td>
+                <td class="text-center">{{ resident.middle_name }}</td>
+                <td class="text-center">{{ resident.relationship_to_head|capfirst }}</td>
+                <td class="text-center">{{ resident.birthdate|date:"M d, Y" }}</td>
+                <td class="text-center">{{ resident.age }}</td>
+                <td class="text-center">{{ resident.civil_status }}</td>
+                <td class="text-center">{{ resident.gender }}</td>
+                <td class="text-center">{{ resident.category }}</td>
+                <td class="text-center">{{ resident.present_address }}</td>
+                <td class="text-center">{{ resident.contact_number }}</td>
+                <td class="text-center">{{ resident.date_updated|date:"M d, Y" }}</td>
                 <td>
-                    <a href="{% url 'resident-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold">Update</a>
+                    <div class="d-flex">
+                      <a href="{% url 'family-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1"><i class="ri-edit-2-fill"></i></a>
+                      <a href="{% url 'family-update' resident.family.family_no %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></a>
+                    </div>
                 </td>
             </tr>
             {% empty %}

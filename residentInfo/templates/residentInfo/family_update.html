@@ -7,7 +7,7 @@
 {% block body %}
 <h3 class="mb-3">Residents Info - <span class="text-primary">Family Update Form</span></h3>
 <article class="content-section border rounded shadow-sm">
-  <form method="POST" action="{% url 'resident-update' family.family_no %}">
+  <form method="POST" action="{% url 'family-update' family.family_no %}">
     {% csrf_token %}
     
     <h4>Family Head Information</h4>
@@ -76,7 +76,7 @@
     
     <h4 class="mt-4">Family Members Information</h4>
     <div class="table-responsive">
-      <table id="familyMembersTable" class="table table-light table-striped text-center">
+      <table id="familyMembersTable" class="table table-light table-striped text-center projectTables">
         <thead class="table-secondary">
           <tr>
             <th>Last Name</th>
