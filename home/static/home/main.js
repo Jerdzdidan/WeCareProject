@@ -34,7 +34,7 @@ $(document).ready(function() {
             topEnd: null,
             bottomStart: null,
             bottomEnd: null,
-            bottom: 'paging',
+            bottom: null,
 
         },
         language: {
@@ -72,6 +72,7 @@ $(document).ready(function() {
     // Custom DataTable Functions:
     const $dataTableEntries = $('#customEntries');
     const $dataTableSearch = $('#searchBar');
+    const $dataTablePagination = $('#customPagination');
 
     $dataTableEntries.on('change', function() {
         var newLength = parseInt($(this).val(), 10);
@@ -80,7 +81,45 @@ $(document).ready(function() {
 
     $dataTableSearch.on('keyup', function() {
         $dataTable.search(this.value).draw();
+    });
+
+    function updatePagination() {
+        var info = $dataTable.page.info();
+        var paginationHtml = '';
+    
+        // Previous button
+        paginationHtml += '<ul class="pagination justify-content-center">';
+        if (info.page > 0) {
+            paginationHtml += '<li class="page-item"><a href="#" class="page-link text-success" data-page="' + (info.page - 1) + '">Prev</a></li>';
+        }
+      
+        for (var i = 0; i < info.pages; i++) {
+            if (i === info.page) {
+            paginationHtml += '<li class="page-item active"><a href="#" class="page-link bg-success text-white" data-page="' + i + '">' + (i + 1) + '</a></li>';
+            } else {
+            paginationHtml += '<li class="page-item"><a href="#" class="page-link text-success" data-page="' + i + '">' + (i + 1) + '</a></li>';
+            }
+        }
+      
+        if (info.page < info.pages - 1) {
+            paginationHtml += '<li class="page-item"><a href="#" class="page-link text-success" data-page="' + (info.page + 1) + '">Next</a></li>';
+        }
+        paginationHtml += '</ul>';
+    
+        $dataTablePagination.html(paginationHtml);
+      }
+    
+      $dataTable.on('draw', function() {
+        updatePagination();
       });
+    
+      $dataTablePagination.on('click', 'a.page-link', function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        $dataTable.page(page).draw('page');
+      });
+    
+      updatePagination();
     
 
 });
