@@ -88,7 +88,7 @@ def custom_login(request):
             messages.error(request, "Your account is INACTIVE. Please contact the administrator for the reactivation of your account.")
             return render(request, "users/login.html")
 
-        if user is not None:
+        elif user is not None:
             login(request, user)
             return redirect("home") 
         else:

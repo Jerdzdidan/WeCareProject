@@ -3,23 +3,28 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Family, Resident
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def family_resident_list(request):
     category = request.GET.get('category', '')
     gender = request.GET.get('gender', '')
-    
+    street = request.GET.get('street', '') 
+
     residents = Resident.objects.select_related('family').all()
-    
+
     if category:
         residents = residents.filter(category=category)
     if gender:
         residents = residents.filter(gender=gender)
-    
+    if street:
+        residents = residents.filter(present_address__icontains=street)
+
     residents = residents.order_by('family__family_no', 'id')
-    
+
     return render(request, 'residentInfo/resident_list.html', {'residents': residents})
 
-
+@login_required
 def family_resident_create(request):
     if request.method == "POST":
         head_data = {
@@ -85,7 +90,7 @@ def family_resident_create(request):
     
     return render(request, 'residentInfo/resident_create.html')
 
-
+@login_required
 def family_resident_update(request, pk):
     family = get_object_or_404(Family, pk=pk)
     head = family.residents.filter(relationship_to_head__iexact='head of the family').first()
@@ -173,6 +178,7 @@ def family_resident_update(request, pk):
     }
     return render(request, 'residentInfo/family_update.html', context)
 
+@login_required
 def family_delete_confirm(request, pk):
     family = get_object_or_404(Family, pk=pk)
 
@@ -183,6 +189,7 @@ def family_delete_confirm(request, pk):
         return redirect('resident-list')
     return render(request, 'residentInfo/family_delete.html', {'family': family, 'residents': residents})
 
+@login_required
 def resident_update(request, pk):
     resident = get_object_or_404(Resident, pk=pk)
     
@@ -210,6 +217,7 @@ def resident_update(request, pk):
     
     return render(request, 'residentInfo/resident_update.html', {'resident': resident})
 
+@login_required
 def resident_delete_confirm(request, pk):
     resident = get_object_or_404(Resident, pk=pk)
     
