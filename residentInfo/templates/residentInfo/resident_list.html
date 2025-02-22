@@ -2,34 +2,7 @@
 
 {% block style %}
 <style>
-  /* Responsive headings */
-  h1, h2 {
-    font-size: calc(1rem + 1vw);
-    margin-bottom: 1rem;
-  }
 
-  /* Table styling with responsive text */
-  #residentsTable {
-    width: 100%;
-    font-size: calc(0.55rem + 0.2vw);
-    margin-bottom: 10px;
-    border-collapse: collapse;
-  }
-  #residentsTable th,
-  #residentsTable td {
-    padding: calc(5px + 0.2vw) calc(8px + 0.2vw);
-    vertical-align: middle;
-    text-align: center;
-    border: 1px solid #dee2e6;
-  }
-  #residentsTable thead th {
-    background-color: #f8f9fa;
-  }
-
-  button,
-  input[type="submit"] {
-    margin-top: 10px;
-  }
 </style>
 {% endblock style %}
 
@@ -42,26 +15,26 @@
             <span class="ms-2">Register Family/Resident</span>
         </a>
     </div>
-    <div class="table-responsive w-100 mt-2">
-        <table id="residentsTable" class="table table-light table-striped text-center w-100 m-0">
-        <thead class="table-secondary">
-            <tr>
-                <th>Family No.</th>
-                <th>Resident ID</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Relationship to Head</th>
-                <th>Birthdate</th>
-                <th>Age</th>
-                <th>Civil Status</th>
-                <th>Gender</th>
-                <th>Category</th>
-                <th>Address</th>
-                <th>Contact Number</th>
-                <th>Date Updated</th>
-                <th>Action</th>
-            </tr>
+    <div class="table-responsive mt-2">
+        <table id="residentsTable" class="table table-light table-striped table-striped text-cente m-0 projectTables">
+        <thead class="table-dark">
+          <tr>
+            <th>Family No.</th>
+            <th>Resident ID</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Relationship to Head</th>
+            <th>Birthdate</th>
+            <th>Age</th>
+            <th>Civil Status</th>
+            <th>Gender</th>
+            <th>Category</th>
+            <th>Address</th>
+            <th>Contact Number</th>
+            <th>Date Updated</th>
+            <th>Action</th>
+          </tr>
         </thead>
         <tbody>
             {% for resident in residents %}

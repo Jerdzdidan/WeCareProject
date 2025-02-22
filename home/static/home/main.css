@@ -1,123 +1,122 @@
-/* Global Styles */
+/* ===== Global Styles ===== */
 body {
   background: #fafafa;
   color: #333333;
 }
+
 h1, h2, h3, h4, h5, h6 {
   color: #444444;
+  font-size: calc(1rem + 0.8vw); 
+  margin-bottom: 1rem;
 }
-ul {
-  margin: 0;
-}
+
 .bg-steel {
   background-color: #5f788a;
 }
 
-/* Navbar Styles */
-.site-header .navbar-nav .nav-link {
-  color: #cbd5db;
+/* ===== Navbar Styles ===== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
-.site-header .navbar-nav .nav-link:hover {
+
+.navbar-nav {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.navbar-nav .nav-link {
+  color: #cbd5db;
+  transition: color 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
   color: #ffffff;
 }
-.site-header .navbar-nav .nav-link.active {
-  font-weight: 500;
-}
+
 .nav-font {
-  font-size: calc(0.6rem + 0.6vw);
+  font-size: clamp(0.7rem, 1.2vw, 1rem); /* Improved responsive sizing */
 }
 
-/* Content Section Styles */
+/* ===== Content Sections ===== */
 .content-section {
   background: #ffffff;
-  padding: 10px 20px;
+  padding: 1.25rem;
   border: 1px solid #dddddd;
-  border-radius: 3px;
-  margin-bottom: 20px;
-}
-.article-title {
-  color: #444444;
-}
-a.article-title:hover {
-  color: #428bca;
-  text-decoration: none;
-}
-.article-content {
-  white-space: pre-line;
-}
-.article-img {
-  height: 65px;
-  width: 65px;
-  margin-right: 16px;
-}
-.article-metadata {
-  padding-bottom: 1px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3;
-}
-.article-metadata a:hover {
-  color: #333;
-  text-decoration: none;
-}
-.article-svg {
-  width: 25px;
-  height: 25px;
-  vertical-align: middle;
-}
-.account-img {
-  height: 125px;
-  width: 125px;
-  margin-right: 20px;
-  margin-bottom: 16px;
-}
-.account-heading {
-  font-size: 2.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
-/* Layout Wrappers */
+.article-title {
+  color: #444444;
+  transition: color 0.2s ease;
+}
+
+.article-title:hover {
+  color: #428bca;
+}
+
+/* ===== Layout Structure ===== */
 #page-wrapper {
   display: flex;
   min-height: 100vh;
 }
+
 #content-wrapper {
-  flex-grow: 1;
+  flex: 1;
+  min-width: 0;
   transition: margin-left 0.3s ease;
 }
 
-/* Sidebar Styles */
+/* ===== Sidebar ===== */
 .sidebar {
-  width: clamp(200px, calc(150px + 10vw), 275px);
-  min-width: clamp(200px, calc(150px + 10vw), 275px);
+  width: clamp(250px, 20vw, 300px); 
+  min-width: 0; 
   background: #ffffff;
   border-right: 1px solid #ddd;
-  transition: width 0.3s ease, min-width 0.3s ease; /* Transition both properties */
+  transition: all 0.3s ease;
+  overflow-y: auto; 
 }
+
 .sidebar.sidebar-hidden {
+  transform: translateX(-100%);
   width: 0;
   min-width: 0;
-  overflow: hidden;
+  opacity: 0; 
 }
 
 /* Responsive Sidebar (mobile) */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .sidebar {
-    width: 275px;
-    min-width: 275px; /* Ensure min-width is consistent */
+    width: 280px;
+    position: fixed;
+    height: 100vh;
+    z-index: 1001;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1); 
   }
+  
   .sidebar.sidebar-hidden {
-    width: 0;
-    min-width: 0; /* Maintain hidden state */
+    transform: translateX(-100%);
+    width: 280px; 
+  }
+  
+  .sidebar-active::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 999;
   }
 }
 
-/* Menu Icons and Items */
+/* ===== SideBar Menu Styles ===== */
 .menu-icons {
   font-size: calc(0.1rem + 1vw) !important;
-}
-@media (max-width: 576px) {
-  .menu-icons {
-    font-size: 1.5rem !important;
-  }
 }
 .menu-item {
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -137,13 +136,52 @@ a.article-title:hover {
 }
 
 
-.container{
-  max-width: 1490px!important;
+/* ===== Table Styles ===== */
+.projectTables {
+  min-width: 992px; 
+  font-size: calc(0.55rem + 0.2vw);
+  margin-bottom: 0;
 }
 
-
-/* Table styles */
-
-td {
+.projectTables th,
+.projectTables td {
+  padding: calc(5px + 0.2vw) calc(8px + 0.2vw);
   vertical-align: middle;
+  border-color: #dee2e6;
+  text-align: center;
+}
+
+.projectTables thead th {
+  font-weight: 600;
+}
+
+button,
+input[type="submit"] {
+  margin-top: 10px;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 768px) {
+  .content-section {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .projectTables {
+    min-width: 768px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .nav-font {
+    font-size: 0.85rem;
+  }
+  
+  .menu-icons {
+    font-size: 1.25rem !important;
+  }
+}
+.container{
+  max-width: 1490px!important;
 }
