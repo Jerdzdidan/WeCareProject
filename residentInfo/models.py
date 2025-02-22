@@ -9,6 +9,7 @@ GENDER_CHOICES = (
 
 CATEGORY_CHOICES = (
     ('N/A', 'N/A'),
+    ('PWD', 'PWD'),
     ('Senior', 'Senior'),
     ('Children', 'Children'),
     ('Solo Parent', 'Solo Parent'),
