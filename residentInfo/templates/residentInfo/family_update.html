@@ -64,7 +64,7 @@
           <option value="Senior" {% if head.category == "Senior" %}selected{% endif %}>Senior</option>
           <option value="Solo Parent" {% if head.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
           <option value="Pregnant" {% if head.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
-          <option value="Children" {% if head.category == "Children" %}selected{% endif %}>Children</option>
+          <option value="Children" {% if head.category == "Children" %}selected{% endif %}>Children (17 and below)</option>
         </select>
       </div>
       <div class="col-md-4 form-group">
@@ -134,7 +134,7 @@
               <select name="members[{{ forloop.counter0 }}][category]" class="form-control">
                 <option value="N/A" {% if member.category == "N/A" %}selected{% endif %}>N/A</option>
                 <option value="Senior" {% if member.category == "Senior" %}selected{% endif %}>Senior</option>
-                <option value="Children" {% if member.category == "Children" %}selected{% endif %}>Children</option>
+                <option value="Children" {% if member.category == "Children" %}selected{% endif %}>Children (17 and below)</option>
                 <option value="Solo Parent" {% if member.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
                 <option value="Pregnant" {% if member.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
               </select>
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function(){
           <select name="members[${rowCount}][category]" class="form-control">
             <option value="N/A">N/A</option>
             <option value="Senior">Senior</option>
-            <option value="Children">Children</option>
+            <option value="Children">Children (17 and below)</option>
             <option value="Solo Parent">Solo Parent</option>
             <option value="Pregnant">Pregnant</option>
           </select>

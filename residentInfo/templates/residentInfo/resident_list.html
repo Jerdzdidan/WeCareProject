@@ -11,6 +11,27 @@
 <article class="content-section border rounded p-0 shadow-sm">
     <div class="container">
       <div class="row mt-2">
+        <div class="col-auto">
+          <form method="get" action="">
+            <div class="input-group">
+                <select name="category" class="form-select border-secondary">
+                  <option value="" {% if not request.GET.category %}selected{% endif %}>All Categories</option>
+                  <option value="N/A" {% if request.GET.category == "N/A" %}selected{% endif %}>N/A</option>
+                  <option value="Senior" {% if request.GET.category == "Senior" %}selected{% endif %}>Senior</option>
+                  <option value="Children" {% if request.GET.category == "Children" %}selected{% endif %}>Children (17 and below)</option>
+                  <option value="Solo Parent" {% if request.GET.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
+                  <option value="Pregnant" {% if request.GET.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
+                </select>
+                <select name="gender" class="form-select border-secondary">
+                    <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders</option>
+                    <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
+                    <option value="Other" {% if request.GET.gender == "Other" %}selected{% endif %}>Other</option>
+                </select>
+              <button type="submit" class="btn btn-outline-secondary fw-bold">Filter</button>
+            </div>
+          </form>
+        </div>
         <div class="col-auto ms-auto">
           <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark fw-bold d-flex align-items-center">
             <i class="ri-add-fill" style="font-size: calc(6px + 0.8vw);"></i>
@@ -78,10 +99,6 @@
                       <a href="{% url 'resident-delete-confirm' resident.id %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></a>
                     </div>
                 </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="15">No residents found.</td>
             </tr>
             {% endfor %}
         </tbody>

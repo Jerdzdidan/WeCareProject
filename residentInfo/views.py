@@ -5,8 +5,20 @@ from .models import Family, Resident
 from datetime import datetime
 
 def family_resident_list(request):
-    residents = Resident.objects.select_related('family').all().order_by('family__family_no', 'id')
+    category = request.GET.get('category', '')
+    gender = request.GET.get('gender', '')
+    
+    residents = Resident.objects.select_related('family').all()
+    
+    if category:
+        residents = residents.filter(category=category)
+    if gender:
+        residents = residents.filter(gender=gender)
+    
+    residents = residents.order_by('family__family_no', 'id')
+    
     return render(request, 'residentInfo/resident_list.html', {'residents': residents})
+
 
 def family_resident_create(request):
     if request.method == "POST":
