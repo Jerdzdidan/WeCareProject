@@ -14,7 +14,7 @@
         <div class="col-auto">
           <form method="get" action="">
             <div class="input-group">
-                <select name="category" class="form-select border-secondary">
+                <select name="category" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle;">
                   <option value="" {% if not request.GET.category %}selected{% endif %}>All Categories</option>
                   <option value="N/A" {% if request.GET.category == "N/A" %}selected{% endif %}>N/A</option>
                   <option value="Senior" {% if request.GET.category == "Senior" %}selected{% endif %}>Senior</option>
@@ -22,7 +22,7 @@
                   <option value="Solo Parent" {% if request.GET.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
                   <option value="Pregnant" {% if request.GET.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
                 </select>
-                <select name="gender" class="form-select border-secondary">
+                <select name="gender" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle;">
                     <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders</option>
                     <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
                     <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
