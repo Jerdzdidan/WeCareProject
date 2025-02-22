@@ -7,35 +7,17 @@
 {% endblock style %}
 
 {% block body %}
-<h3 class="mb-3">Residents Info - <span class="text-primary">List</span></h3>
+<h3 class="mb-3">Residents Info - <span class="text-danger">Delete Family Record</span></h3>
 <article class="content-section border rounded p-0 shadow-sm">
     <div class="container">
       <div class="row mt-2">
-        <div class="col-auto ms-auto">
-          <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark fw-bold d-flex align-items-center">
-            <i class="ri-add-fill" style="font-size: calc(6px + 0.8vw);"></i>
-            <span class="ms-2">Register Family/Resident</span>
-          </a>
-        </div>
-      </div>
-      <div class="row mt-2">
         <div class="col-auto">
-          <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: 1rem; cursor: pointer; vertical-align: middle;">
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-          <span class="d-inline ms-2" style="font-size: 1rem; vertical-align: middle;">Entries per page</span>
-        </div>
-        <div class="col-auto ms-auto">
-          <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: 1rem; vertical-align: middle;">
+            <h4>Are you sure you want to delete <span class="text-danger">{{ family }}?</span></h4>
         </div>
       </div>
-
     </div>
     <div class="table-responsive mt-2">
-        <table id="dataTable" class="table table-light table-striped table-striped text-cente m-0 projectTables">
+        <table class="table table-danger table-striped table-striped text-cente m-0 projectTables">
         <thead class="table-dark">
           <tr>
             <th class="text-center">Family No.</th>
@@ -87,5 +69,26 @@
         </tbody>
         </table>
     </div>
+    <form method="post" class="d-flex justify-content-center align-items-center my-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger me-2">Yes, Delete</button>
+        <a href="{% url 'resident-list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
 </article>
 {% endblock body %}
+
+{% block script %}
+
+<script>
+    $dataTable = $('#dataTable').DataTable({
+        layout: {
+            topStart: null,
+            topEnd: null,
+            bottomStart: null,
+            bottomEnd: null,
+            bottom: 'null',
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 import datetime
 
 GENDER_CHOICES = (
@@ -16,18 +16,36 @@ CATEGORY_CHOICES = (
 )
 
 class Family(models.Model):
-    family_no = models.AutoField(primary_key=True)
+    family_no = models.CharField(max_length=10, primary_key=True, editable=False)
     date_updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.family_no:
+            with transaction.atomic():
+                last_family = Family.objects.select_for_update().order_by('-family_no').first()
+                last_number = 0
+                if last_family:
+                    last_family_no = str(last_family.family_no)
+                    if last_family_no.startswith('F'):
+                        try:
+                            last_number = int(last_family_no[1:])
+                        except ValueError:
+                            last_number = 0
+                    else:
+                        try:
+                            last_number = int(last_family_no)
+                        except ValueError:
+                            last_number = 0
+                new_number = last_number + 1
+                self.family_no = f"F{new_number}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Family #{self.family_no}"
-    
-    @property
-    def head(self):
-        return self.residents.filter(relationship_to_head="Head of the family").first()
 
 
 class Resident(models.Model):
+    id = models.CharField(max_length=10, primary_key=True, editable=False)
     family = models.ForeignKey(Family, on_delete=models.CASCADE, related_name='residents', null=True)
     
     last_name = models.CharField(max_length=100, default="--")
@@ -44,12 +62,33 @@ class Resident(models.Model):
     
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES, default="Male")
     
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='NA')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='N/A')
     
     present_address = models.CharField(max_length=255, default="--")
     contact_number = models.CharField(max_length=20, default="--")
     
     date_updated = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            with transaction.atomic():
+                last_resident = Resident.objects.select_for_update().order_by('-id').first()
+                last_number = 0
+                if last_resident:
+                    last_id = str(last_resident.id)
+                    if last_id.startswith('R'):
+                        try:
+                            last_number = int(last_id[1:])
+                        except ValueError:
+                            last_number = 0
+                    else:
+                        try:
+                            last_number = int(last_id)
+                        except ValueError:
+                            last_number = 0
+                new_number = last_number + 1
+                self.id = f"R{new_number}"
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.last_name}, {self.first_name}"
+        return f"{self.id} - {self.last_name}, {self.first_name}"

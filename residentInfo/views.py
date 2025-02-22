@@ -4,15 +4,12 @@ from django.contrib import messages
 from .models import Family, Resident
 from datetime import datetime
 
-
 def family_resident_list(request):
     residents = Resident.objects.select_related('family').all().order_by('family__family_no', 'id')
     return render(request, 'residentInfo/resident_list.html', {'residents': residents})
 
-
 def family_resident_create(request):
     if request.method == "POST":
-        # Extract head of family data
         head_data = {
             'last_name': request.POST.get('head_last_name', '').strip(),
             'first_name': request.POST.get('head_first_name', '').strip(),
@@ -26,23 +23,19 @@ def family_resident_create(request):
             'contact_number': request.POST.get('head_contact_number', '').strip()
         }
         
-        # Convert birthdate string to date object
         try:
             head_data['birthdate'] = datetime.strptime(head_data['birthdate'], "%b %d, %Y").date()
         except ValueError:
             head_data['birthdate'] = datetime(2000, 1, 1).date()
         
-        # Create a Family instance
         family = Family.objects.create()
         
-        # Create Head of Family Resident
         Resident.objects.create(
             family=family,
             relationship_to_head='Head of the Family',
             **head_data
         )
         
-        # Extract and process family members' data
         members = {}
         for key, value in request.POST.items():
             match = re.match(r'members\[(\d+)\]\[(\w+)\]', key)
@@ -52,14 +45,12 @@ def family_resident_create(request):
                     members[idx] = {}
                 members[idx][field] = value.strip()
         
-        # Create Resident instances for each family member
         for member in members.values():
             try:
                 member['birthdate'] = datetime.strptime(member.get('birthdate', 'Jan 01, 2000'), "%b %d, %Y").date()
             except ValueError:
                 member['birthdate'] = datetime(2000, 1, 1).date()
             
-            # Assign the head's present address to all family members
             member['present_address'] = head_data['present_address']
             
             Resident.objects.create(
@@ -83,14 +74,12 @@ def family_resident_create(request):
     return render(request, 'residentInfo/resident_create.html')
 
 
-
 def family_resident_update(request, pk):
     family = get_object_or_404(Family, pk=pk)
-    head = family.residents.filter(relationship_to_head='head of the family').first()
-    members_qs = family.residents.exclude(relationship_to_head='head of the family')
+    head = family.residents.filter(relationship_to_head__iexact='head of the family').first()
+    members_qs = family.residents.exclude(relationship_to_head__iexact='head of the family')
 
     if request.method == "POST":
-        # Update Head of the Family
         head.last_name = request.POST.get('head_last_name', '').strip()
         head.first_name = request.POST.get('head_first_name', '').strip()
         head.middle_name = request.POST.get('head_middle_name', '').strip()
@@ -109,7 +98,6 @@ def family_resident_update(request, pk):
         head.contact_number = request.POST.get('head_contact_number', '').strip()
         head.save()
 
-        # Processing Family Members
         submitted_members = {}
         for key, value in request.POST.items():
             match = re.match(r'members\[(\d+)\]\[(\w+)\]', key)
@@ -169,6 +157,16 @@ def family_resident_update(request, pk):
     context = {
         'family': family,
         'head': head,
-        'members': list(members_qs.values()),  
+        'members': list(members_qs.values()),
     }
     return render(request, 'residentInfo/family_update.html', context)
+
+def family_delete_confirm(request, pk):
+    family = get_object_or_404(Family, pk=pk)
+    
+    residents = family.residents.all()
+    if request.method == 'POST':
+        family.delete()
+        messages.success(request, "Family record deleted successfully!")
+        return redirect('resident-list')
+    return render(request, 'residentInfo/family_delete.html', {'family': family, 'residents': residents})

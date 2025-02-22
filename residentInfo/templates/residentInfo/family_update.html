@@ -10,7 +10,10 @@
   <form method="POST" action="{% url 'family-update' family.family_no %}">
     {% csrf_token %}
     
-    <h4>Family Head Information</h4>
+    <div class="d-flex justify-content-between align-items-center">
+      <h4>Family Head Information</h4>
+      <a href="{% url "family-delete-confirm" family.family_no %}" class="btn btn-danger">Delete Record</a>
+    </div>
     <div class="row">
       <div class="col-md-6 form-group">
         <label for="head_last_name">Last Name:</label>

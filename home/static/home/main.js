@@ -26,7 +26,7 @@ $(document).ready(function() {
       updateClock();
       setInterval(updateClock, 1000);
     }
-
+    
     // DataTables
     const $dataTable = $('#dataTable').DataTable({
         layout: {
