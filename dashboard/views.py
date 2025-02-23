@@ -5,6 +5,7 @@ from residentInfo.models import Resident, Family
 def dashboard(request):
     residents = Resident.objects.all()
 
+    # Resident Count
     residentCount_total = residents.count()
     residentCount_na = residents.filter(category='N/A').count()
     residentCount_pwd = residents.filter(category='PWD').count()
@@ -17,6 +18,7 @@ def dashboard(request):
     residentCount_other = residents.filter(gender='Other').count()
 
     context = {
+        # Resident Count
         'residentCount_total': residentCount_total,
         'residentCount_na': residentCount_na,
         'residentCount_pwd': residentCount_pwd,

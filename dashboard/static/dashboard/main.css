@@ -1,20 +1,10 @@
 .dashboard-card {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 15px;
-    margin-bottom: 20px;
-    background-color: #f8f9fa;
+    width: calc(40% - 2rem); 
+    height: calc((40% - 2rem) * 2 / 3);
 }
 .card-title {
     font-size: 1.2em;
     margin-bottom: 10px;
     font-weight: bold;
 }
-.list-group-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.list-group-item i {
-    margin-right: 8px;
-}
+
