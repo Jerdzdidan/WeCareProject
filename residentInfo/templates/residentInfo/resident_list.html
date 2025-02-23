@@ -1,10 +1,6 @@
 {% extends "home/layout.html" %}
 
-{% block style %}
-<style>
-
-</style>
-{% endblock style %}
+{% block style %}{% endblock style %}
 
 {% block body %}
 <h3 class="mb-3">Residents Info - <span class="text-primary">List</span></h3>
@@ -14,22 +10,23 @@
         <div class="col-auto">
           <form method="get" action="">
             <div class="input-group">
-                <select name="category" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle;">
-                  <option value="" {% if not request.GET.category %}selected{% endif %}>All Categories</option>
+                <select name="category" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
+                  <option value="" {% if not request.GET.category %}selected{% endif %}>All Categories (Default)</option>
                   <option value="N/A" {% if request.GET.category == "N/A" %}selected{% endif %}>N/A</option>
                   <option value="Senior" {% if request.GET.category == "Senior" %}selected{% endif %}>Senior</option>
+                  <option value="PWD" {% if request.GET.category == "PWD" %}selected{% endif %}>PWD</option>
                   <option value="Children" {% if request.GET.category == "Children" %}selected{% endif %}>Children (17 and below)</option>
                   <option value="Solo Parent" {% if request.GET.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
                   <option value="Pregnant" {% if request.GET.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
                 </select>
-                <select name="gender" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle;">
-                    <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders</option>
-                    <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
-                    <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
-                    <option value="Other" {% if request.GET.gender == "Other" %}selected{% endif %}>Other</option>
+                  <select name="gender" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
+                  <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders (Default)</option>
+                  <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
+                  <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
+                  <option value="Other" {% if request.GET.gender == "Other" %}selected{% endif %}>Other</option>
                 </select>
-                <select name="street" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle;">
-                  <option value="" {% if not request.GET.street %}selected{% endif %}>All Streets</option>
+                <select name="street" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
+                  <option value="" {% if not request.GET.street %}selected{% endif %}>All Streets (Default)</option>
                   <option value="SITIO 2" {% if request.GET.street == "SITIO 2" %}selected{% endif %}>SITIO 2</option>
                   <option value="PRIMO CRUZ STREET" {% if request.GET.street == "PRIMO CRUZ STREET" %}selected{% endif %}>PRIMO CRUZ STREET</option>
                   <option value="P. CRUZ STREET" {% if request.GET.street == "P. CRUZ STREET" %}selected{% endif %}>P. CRUZ STREET</option>
@@ -48,29 +45,29 @@
                   <option value="MAYSILO CIRCLE" {% if request.GET.street == "MAYSILO CIRCLE" %}selected{% endif %}>MAYSILO CIRCLE</option>
                   <option value="PRINCETON STREET" {% if request.GET.street == "PRINCETON STREET" %}selected{% endif %}>PRINCETON STREET</option>
                 </select>
-              <button type="submit" class="btn btn-outline-secondary fw-bold">Filter</button>
+              <button type="submit" class="btn btn-outline-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw);">Filter</button>
             </div>
           </form>
         </div>
         <div class="col-auto ms-auto">
-          <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark fw-bold d-flex align-items-center">
-            <i class="ri-add-fill" style="font-size: calc(6px + 0.8vw);"></i>
+          <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark fw-bold d-flex align-items-center" style="font-size: calc(0.8rem + 0.2vw);">
+            <i class="ri-add-fill" style="font-size: calc(0.6rem + 0.4vw);"></i>
             <span class="ms-2">Register Family/Resident</span>
           </a>
         </div>
       </div>
       <div class="row mt-2">
         <div class="col-auto">
-          <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: 1rem; cursor: pointer; vertical-align: middle;">
+          <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
             <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
             <option value="100">100</option>
           </select>
-          <span class="d-inline ms-2" style="font-size: 1rem; vertical-align: middle;">Entries per page</span>
+          <span class="d-inline ms-2" style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">Entries per page</span>
         </div>
         <div class="col-auto ms-auto">
-          <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: 1rem; vertical-align: middle;">
+          <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
         </div>
       </div>
 

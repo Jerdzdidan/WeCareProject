@@ -1,0 +1,78 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+
+{% block style %}
+{% endblock style %}
+
+{% block body %}
+<h3 class="mb-4">Dashboard</h3>
+    
+<div class="row">
+    <div class="col-6">
+        <!-- Total Residents -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fa-solid fa-users"></i> Total Residents
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ residentCount_total }}</h5>
+            </div>
+        </div>
+        
+        <!-- Category of Residents -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fa-solid fa-list"></i> Category of Residents
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-question-circle"></i> N/A</span>
+                    <span class="badge bg-primary rounded-pill">{{ residentCount_na }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-wheelchair"></i> PWD</span>
+                    <span class="badge bg-primary rounded-pill">{{ residentCount_pwd }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-user-plus"></i> Solo Parent</span>
+                    <span class="badge bg-primary rounded-pill">{{ residentCount_solo_parent }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-child"></i> Children</span>
+                    <span class="badge bg-primary rounded-pill">{{ residentCount_children }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-person"></i> Senior</span>
+                    <span class="badge bg-primary rounded-pill">{{ residentCount_senior }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-heart"></i> Pregnant</span>
+                    <span class="badge bg-primary rounded-pill">{{ residentCount_pregnant }}</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Gender of Residents -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fa-solid fa-venus-mars"></i> Gender of Residents
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-mars"></i> Male</span>
+                    <span class="badge bg-success rounded-pill">{{ residentCount_male }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-venus"></i> Female</span>
+                    <span class="badge bg-success rounded-pill">{{ residentCount_female }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-genderless"></i> Other</span>
+                    <span class="badge bg-success rounded-pill">{{ residentCount_other }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

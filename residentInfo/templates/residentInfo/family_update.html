@@ -2,7 +2,9 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block style %}<link rel="stylesheet" href="{% static 'residentInfo/main.css' %}">{% endblock style %}
+{% block style %}
+  <link rel="stylesheet" href="{% static 'residentInfo/main.css' %}">
+{% endblock style %}
 
 {% block body %}
 <h3 class="mb-3">Residents Info - <span class="text-primary">Family Update Form</span></h3>
@@ -160,7 +162,7 @@
       <button type="button" id="addMemberButton" class="btn btn-outline-primary">Add Family Member</button>
     </div>
     <div class="mt-3 text-end d-flex align-items-center justify-content-end">
-      <input type="submit" class="btn btn-success my-auto" value="Submit">
+      <input type="submit" class="btn btn-success my-auto" value="Update Record">
       <a href="{% url 'resident-list' %}" class="btn btn-secondary ms-2 my-auto">Cancel</a>
     </div>
   </form>
