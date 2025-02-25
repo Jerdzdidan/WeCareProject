@@ -10,6 +10,29 @@ $(document).ready(function() {
         $('#sidebar').addClass('sidebar-hidden');
       });
     }
+
+    // Sidebar dropdown functionality
+    $(document).ready(function () {
+      $("#patientToggle").click(function (e) {
+        e.preventDefault();
+        $("#patientDropdown").slideToggle(300); 
+        $(this).toggleClass("active"); 
+      });
+    });
+    
+    $('a.nav-link.rounded[data-bs-toggle="collapse"]').on('click', function(e) {
+      e.preventDefault(); 
+      
+      var targetSelector = $(this).attr('href');
+      var $target = $(targetSelector);
+      
+      $target.slideToggle(300);
+      
+      var expanded = $(this).attr('aria-expanded') === 'true';
+      $(this).attr('aria-expanded', !expanded);
+    });
+
+    
   
     // Clock functionality: update clock every second if the clock element exists
     if ($('#clock').length) {

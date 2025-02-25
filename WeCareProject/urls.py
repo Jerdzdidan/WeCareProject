@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('home.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('residents/', include('residentInfo.urls')),
+    path('patients/', include('patientInfo.urls')),
     path('users/', include('users.urls')),
     path('login/', user_views.custom_login, name='login'),
     path('logout/', user_views.custom_logout, name='logout'),

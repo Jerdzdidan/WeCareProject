@@ -1,0 +1,355 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'residentInfo/main.css' %}">
+  <style>
+    .nav-tabs {
+      border-bottom: 2px solid #dee2e6;
+      margin-bottom: 0;
+    }
+    .nav-tabs .nav-link {
+      border: none;
+      background-color: #f8f9fa;
+      color: #495057;
+      padding: 0.75rem 1.25rem;
+      margin-right: 0.25rem;
+    }
+    .nav-tabs .nav-link.active {
+      background-color: #ffffff;
+      border: 1px solid #dee2e6;
+      border-bottom-color: transparent;
+      color: #212529;
+    }
+    .tab-content {
+      background-color: #ffffff;
+      border: 1px solid #dee2e6;
+      border-top: none;
+      padding: 1rem;
+      margin-top: -1px;
+    }
+    .content-section {
+      border-radius: 0.25rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .info-section h4 {
+      border-bottom: 1px solid rgb(95, 95, 95);
+      padding-bottom: 0.5rem;
+    }
+    .info-section p, .info-section li {
+      margin-bottom: 0.5rem;
+    }   
+    .info-label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .info-value {
+      padding: 0.375rem 0.75rem;
+      background-color: #e9ecef;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .section-header {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgb(0, 0, 0);
+      padding-bottom: 0.5rem;
+      font-size: 1.25rem;
+    }
+    /* For table styling (present illness) */
+    .table-readonly th, .table-readonly td {
+      vertical-align: middle;
+      padding: 0.75rem;
+    }
+  </style>
+{% endblock style %}
+
+{% block body %}
+<div class="container my-4">
+  <h3>Patient Details - {{ patient.patientID }}</h3>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" id="patientTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active fw-bold" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true">Patient Info</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link fw-bold" id="medical-tab" data-bs-toggle="tab" data-bs-target="#medical" type="button" role="tab" aria-controls="medical" aria-selected="false">Medical Record</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link fw-bold" id="medicine-tab" data-bs-toggle="tab" data-bs-target="#medicine" type="button" role="tab" aria-controls="medicine" aria-selected="false">Medicine Tracking</button>
+    </li>
+  </ul>
+
+  <!-- Tab content -->
+  <article class="tab-content content-section" id="patientTabsContent">
+    <!-- Patient Info Tab -->
+    <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+      <div class="info-section">
+        <!-- Resident Information -->
+        <div class="section-header fw-bold">Resident Information</div>
+        <div class="row">
+            <div class="col-md-6">
+            <p class="info-label">ID:</p>
+            <p class="info-value">{{ patient.resident.id }}</p>
+            </div>
+            <div class="col-md-6">
+            <p class="info-label">Name:</p>
+            <p class="info-value">{{ patient.resident.last_name }}, {{ patient.resident.first_name }}</p>
+            </div>
+            <div class="col-md-6">
+            <p class="info-label">Age:</p>
+            <p class="info-value">{{ patient.resident.age }}</p>
+            </div>
+            <div class="col-md-6">
+            <p class="info-label">Address:</p>
+            <p class="info-value">{{ patient.resident.present_address }}</p>
+            </div>
+        </div>
+        
+        <!-- Vital Signs -->
+        <div class="section-header fw-bold mt-5">Vital Signs</div>
+        {% if patient.vital_signs %}
+        <div class="row">
+            <div class="col-md-4">
+            <p class="info-label">Blood Pressure (BP):</p>
+            <p class="info-value">{{ patient.vital_signs.blood_pressure|default:"N/A" }}</p>
+            </div>
+            <div class="col-md-4">
+            <p class="info-label">Pulse Rate (PR):</p>
+            <p class="info-value">{{ patient.vital_signs.pulse_rate|default:"N/A" }}</p>
+            </div>
+            <div class="col-md-4">
+            <p class="info-label">Temperature (TEMP):</p>
+            <p class="info-value">{{ patient.vital_signs.temperature|default:"N/A" }}</p>
+            </div>
+            <div class="col-md-4">
+            <p class="info-label">Height (cm):</p>
+            <p class="info-value">{{ patient.vital_signs.height|default:"N/A" }}</p>
+            </div>
+            <div class="col-md-4">
+            <p class="info-label">Weight (kg):</p>
+            <p class="info-value">{{ patient.vital_signs.weight|default:"N/A" }}</p>
+            </div>
+        </div>
+        {% else %}
+            <p>No vital signs recorded.</p>
+        {% endif %}
+        
+        <!-- Present Illness -->
+        <div class="section-header fw-bold mt-5">Present Illness</div>
+        <div class="table-responsive">
+            <table class="table table-light table-striped table-readonly text-center">
+            <thead class="table-secondary">
+                <tr>
+                <th>Illness Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Treatment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for illness in patient.present_illnesses.all %}
+                <tr>
+                <td>{{ illness.illness_name }}</td>
+                <td>{{ illness.start_date|date:"M d, Y" }}</td>
+                <td>
+                    {% if illness.end_date %}
+                    {{ illness.end_date|date:"M d, Y" }}
+                    {% else %}
+                    Ongoing
+                    {% endif %}
+                </td>
+                <td>{{ illness.treatment|default:"N/A" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                <td colspan="4">No present illness records available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+        
+        <!-- Vaccinations -->
+        <div class="section-header fw-bold mt-5">Vaccinations</div>
+        {% if patient.vaccinations %}
+            <div class="row">
+            <div class="col-md-4">
+                <p class="info-label">Hepatitis A:</p>
+                <p class="info-value">{% if patient.vaccinations.hepatitis_a %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Hepatitis B:</p>
+                <p class="info-value">{% if patient.vaccinations.hepatitis_b %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">HPV Vaccine:</p>
+                <p class="info-value">{% if patient.vaccinations.hpv_vaccine %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Pre-announced Vaccine:</p>
+                <p class="info-value">{% if patient.vaccinations.pre_announced_vaccine %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Typhoid:</p>
+                <p class="info-value">{% if patient.vaccinations.typhoid %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">MMR:</p>
+                <p class="info-value">{% if patient.vaccinations.mmr %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">DPT:</p>
+                <p class="info-value">{% if patient.vaccinations.dpt %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Chicken Pox:</p>
+                <p class="info-value">{% if patient.vaccinations.chicken_pox %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Tetanus Toxoid:</p>
+                <p class="info-value">{% if patient.vaccinations.tetanus_toxoid %}Yes{% else %}No{% endif %}</p>
+            </div>
+            {% if patient.vaccinations.others %}
+            <div class="col-md-12">
+                <p class="info-label">Others:</p>
+                <p class="info-value">{{ patient.vaccinations.others|default:"None" }}</p>
+            </div>
+            {% endif %}
+            </div>
+        {% else %}
+            <p>No vaccination records available.</p>
+        {% endif %}
+        
+        <!-- Past Medical History -->
+        <div class="section-header fw-bold mt-5">Past Medical History</div>
+        {% if patient.past_medical_history %}
+            <div class="row">
+            <div class="col-md-4">
+                <p class="info-label">Asthma:</p>
+                <p class="info-value">{% if patient.past_medical_history.asthma %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Anemia:</p>
+                <p class="info-value">{% if patient.past_medical_history.anemia %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Bad Teeth:</p>
+                <p class="info-value">{% if patient.past_medical_history.bad_teeth %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Diabetes:</p>
+                <p class="info-value">{% if patient.past_medical_history.diabetes %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Depression:</p>
+                <p class="info-value">{% if patient.past_medical_history.depression %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Heart Disease:</p>
+                <p class="info-value">{% if patient.past_medical_history.heart_disease %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Hearing Problem:</p>
+                <p class="info-value">{% if patient.past_medical_history.hearing_problem %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">High Blood Pressure:</p>
+                <p class="info-value">{% if patient.past_medical_history.high_blood_pressure %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Heart Attack:</p>
+                <p class="info-value">{% if patient.past_medical_history.heart_attack %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Drug Allergy:</p>
+                <p class="info-value">{% if patient.past_medical_history.drug_allergy %}Yes{% else %}No{% endif %}</p>
+            </div>
+            {% if patient.past_medical_history.allergy_details %}
+            <div class="col-md-12">
+                <p class="info-label">Allergy Details:</p>
+                <p class="info-value">{{ patient.past_medical_history.allergy_details|default:"None" }}</p>
+            </div>
+            {% endif %}
+            </div>
+        {% else %}
+            <p>No past medical history available.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Medical Record Tab -->
+    <div class="tab-pane fade" id="medical" role="tabpanel" aria-labelledby="medical-tab">
+      <div class="mt-3">
+        <h4>Medical Records</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Concern</th>
+              <th>Description</th>
+              <th>Last Visited</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in medical_records %}
+            <tr>
+              <td>{{ record.concern }}</td>
+              <td>{{ record.description }}</td>
+              <td>{{ record.last_visited|date:"M d, Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3">No medical records available.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Medicine Tracking Tab -->
+    <div class="tab-pane fade" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">
+      <div class="mt-3">
+        <h4>Medicine Tracking</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Medicine Name</th>
+              <th>Dosage</th>
+              <th>Frequency</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tracking in medicine_trackings %}
+            <tr>
+              <td>{{ tracking.medicine_name }}</td>
+              <td>{{ tracking.dosage }}</td>
+              <td>{{ tracking.frequency }}</td>
+              <td>{{ tracking.start_date|date:"M d, Y" }}</td>
+              <td>
+                {% if tracking.end_date %}
+                  {{ tracking.end_date|date:"M d, Y" }}
+                {% else %}
+                  Ongoing
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5">No medicine tracking records available.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </article>
+</div>
+{% endblock body %}
+
+{% block script %}
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+{% endblock script %}

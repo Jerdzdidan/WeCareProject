@@ -4,7 +4,7 @@
 {% block style %}{% endblock style %}
 
 {% block body %}
-<h3 class="mb-3">Residents Info - <span class="text-primary">List</span></h3>
+<h3 class="mb-3">Patient Info - <span class="text-primary">List</span></h3>
 <article class="content-section border rounded p-0 shadow-sm">
     <div class="container">
       <div class="row mt-2">
@@ -20,7 +20,7 @@
                   <option value="Solo Parent" {% if request.GET.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
                   <option value="Pregnant" {% if request.GET.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
                 </select>
-                  <select name="gender" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
+                <select name="gender" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
                   <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders (Default)</option>
                   <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
                   <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
@@ -46,14 +46,14 @@
                   <option value="MAYSILO CIRCLE" {% if request.GET.street == "MAYSILO CIRCLE" %}selected{% endif %}>MAYSILO CIRCLE</option>
                   <option value="PRINCETON STREET" {% if request.GET.street == "PRINCETON STREET" %}selected{% endif %}>PRINCETON STREET</option>
                 </select>
-              <button type="submit" class="btn btn-outline-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw);">Filter</button>
+                <button type="submit" class="btn btn-outline-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw);">Filter</button>
             </div>
           </form>
         </div>
         <div class="col-auto ms-auto">
-          <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark fw-bold d-flex align-items-center" style="font-size: calc(0.8rem + 0.2vw);">
+          <a href="{% url 'patient-select' %}" class="btn btn-success info border-dark fw-bold d-flex align-items-center" style="font-size: calc(0.8rem + 0.2vw);">
             <i class="ri-add-fill" style="font-size: calc(0.6rem + 0.4vw);"></i>
-            <span class="ms-2">Register Family/Resident</span>
+            <span class="ms-2">Register Patient</span>
           </a>
         </div>
       </div>
@@ -71,50 +71,64 @@
           <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
         </div>
       </div>
-
     </div>
     <div class="table-responsive mt-2">
-        <table id="dataTable" class="table table-light table-striped table-striped text-cente m-0 projectTables">
+        <table id="dataTable" class="table table-light table-striped text-center m-0 projectTables">
         <thead class="table-dark">
           <tr>
-            <th class="text-center">Family No.</th>
-            <th class="text-center">Resident ID</th>
-            <th class="text-center">Last Name</th>
-            <th class="text-center">First Name</th>
-            <th class="text-center">Middle Name</th>
-            <th class="text-center">Relationship to Head</th>
-            <th class="text-center">Birthdate</th>
-            <th class="text-center">Age</th>
-            <th class="text-center">Civil Status</th>
-            <th class="text-center">Gender</th>
-            <th class="text-center">Category</th>
-            <th class="text-center">Address</th>
-            <th class="text-center">Contact Number</th>
-            <th class="text-center">Date Updated</th>
-            <th class="text-center">Action</th>
+            <th class="text-start">Family No.</th>
+            <th class="text-start">Patient ID</th>
+            <th class="text-start">Last Name</th>
+            <th class="text-start">First Name</th>
+            <th class="text-start">Middle Name</th>
+            <th class="text-start">Birthdate</th>
+            <th class="text-start">Age</th>
+            <th class="text-start">Civil Status</th>
+            <th class="text-start">Gender</th>
+            <th class="text-start">Category</th>
+            <th class="text-start">Contact Number</th>
+            <th class="text-start">Last Visit</th>
+            <th class="text-start">Action</th>
           </tr>
         </thead>
         <tbody>
-            {% for resident in residents %}
+            {% for patient in patients %}
             <tr>
-                <td><a href="{% url 'family-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold px-4 text-center"><i class="ri-edit-2-line"></i>{{ resident.family.family_no }}</a></td>
-                <td class="text-center">{{ resident.id }}</td>
-                <td class="text-center">{{ resident.last_name }}</td>
-                <td class="text-center">{{ resident.first_name }}</td>
-                <td class="text-center">{{ resident.middle_name }}</td>
-                <td class="text-center">{{ resident.relationship_to_head|capfirst }}</td>
-                <td class="text-center">{{ resident.birthdate|date:"M d, Y" }}</td>
-                <td class="text-center">{{ resident.age }}</td>
-                <td class="text-center">{{ resident.civil_status }}</td>
-                <td class="text-center">{{ resident.gender }}</td>
-                <td class="text-center">{{ resident.category }}</td>
-                <td class="text-center">{{ resident.present_address }}</td>
-                <td class="text-center">{{ resident.contact_number }}</td>
-                <td class="text-center">{{ resident.date_updated|date:"M d, Y" }}</td>
+                <td class="text-start"> 
+                  <a href="{% url 'family-update' patient.resident.family.family_no %}" 
+                     class="btn btn-sm btn-outline-success fw-bold px-4">
+                    <i class="ri-edit-2-line"></i>{{ patient.resident.family.family_no }}
+                  </a>
+                </td>
+                <td class="text-start">
+                  <a href="{% url 'patient-detail' patient.patientID %}" class="btn btn-sm btn-outline-primary fw-bold px-4">
+                    <i class="ri-user-search-line"></i>{{ patient.patientID }}
+                  </a>
+                </td>
+                <td class="text-start">{{ patient.resident.last_name }}</td>
+                <td class="text-start">{{ patient.resident.first_name }}</td>
+                <td class="text-start">{{ patient.resident.middle_name }}</td>
+                <td class="text-start">{{ patient.resident.birthdate|date:"M d, Y" }}</td>
+                <td class="text-start">{{ patient.resident.age }}</td>
+                <td class="text-start">{{ patient.resident.civil_status }}</td>
+                <td class="text-start">{{ patient.resident.gender }}</td>
+                <td class="text-start">{{ patient.resident.category }}</td>
+                <td class="text-start">{{ patient.resident.contact_number }}</td>
+                <td class="text-start">
+                  {% if patient.last_visit_date %}
+                    {{ patient.last_visit_date|date:"M d, Y" }}
+                  {% else %}
+                    --
+                  {% endif %}
+                </td>
                 <td>
                     <div class="d-flex">
-                      <a href="{% url 'resident-update' resident.id %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1"><i class="ri-edit-2-fill"></i></a>
-                      <a href="{% url 'resident-delete-confirm' resident.id %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></a>
+                      <a href="{% url "patient-update" patient.patientID %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1">
+                        <i class="ri-edit-2-fill"></i>
+                      </a>
+                      <a href="{% url "patient-delete-confirm" patient.patientID %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill">
+                        <i class="ri-delete-bin-5-fill"></i>
+                      </a>
                     </div>
                 </td>
             </tr>
@@ -125,9 +139,3 @@
     </div>
 </article>
 {% endblock body %}
-
-{% block script %}
-
-<script src="{% static "residentInfo/main.js" %}"></script>
-
-{% endblock %}

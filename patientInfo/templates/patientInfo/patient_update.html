@@ -1,0 +1,331 @@
+{% extends "home/layout.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'residentInfo/main.css' %}">
+  <style>
+    thead {
+      background-color: #212529;
+      color: white;
+    }
+    .cursor {
+      cursor: pointer;
+    }
+    .form-check-label {
+      font-size: 1rem;
+      margin-left: 0.3rem;
+    }
+    .checkbox-group .form-check {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+{% endblock style %}
+
+{% block body %}
+<h3 class="mb-3">Patient Info - <span class="text-primary">Update Form</span></h3>
+<article class="content-section border rounded shadow-sm p-4">
+  <div class="resident-info">
+    <h5>Patient ID: {{ patient.patientID }}</h5>
+    <p>
+      <strong>Patient:</strong> {{ patient.resident.last_name }}, {{ patient.resident.first_name }}<br>
+      <strong>Age:</strong> {{ patient.resident.age }}<br>
+      <strong>Address:</strong> {{ patient.resident.present_address }}
+    </p>
+  </div>
+  <form method="POST" action="{% url 'patient-update' patient.patientID %}">
+    {% csrf_token %}
+    
+    <!-- Vital Signs Section -->
+    <h4 class="mt-4">Vital Signs</h4>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="bp" class="form-label">Blood Pressure (BP):</label>
+        <input type="text" id="bp" name="bp" class="form-control" placeholder="e.g., 120/80" value="{{ vital_signs.blood_pressure|default_if_none:'' }}">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="pr" class="form-label">Pulse Rate (PR):</label>
+        <input type="number" id="pr" name="pr" class="form-control" placeholder="e.g., 72" value="{{ vital_signs.pulse_rate|default_if_none:'' }}">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="temp" class="form-label">Temperature (TEMP):</label>
+        <input type="number" step="0.1" id="temp" name="temp" class="form-control" placeholder="e.g., 98.6" value="{{ vital_signs.temperature|default_if_none:'' }}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="height" class="form-label">Height (cm):</label>
+        <input type="number" step="0.1" id="height" name="height" class="form-control" placeholder="e.g., 170" value="{{ vital_signs.height|default_if_none:'' }}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="weight" class="form-label">Weight (kg):</label>
+        <input type="number" step="0.1" id="weight" name="weight" class="form-control" placeholder="e.g., 65" value="{{ vital_signs.weight|default_if_none:'' }}">
+      </div>
+    </div>
+    
+    <!-- Present Illness Section -->
+    <h4 class="mt-4">Present Illness</h4>
+    <div class="table-responsive">
+      <table id="illnessTable" class="table table-light table-striped text-center">
+        <thead class="table-secondary">
+          <tr>
+            <th>Illness Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Treatment</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if present_illnesses %}
+            {% for illness in present_illnesses %}
+              <tr>
+                <td>
+                  <input type="text" name="present_illness[{{ forloop.counter0 }}][illness_name]" class="form-control" value="{{ illness.illness_name }}" required>
+                </td>
+                <td>
+                  <div class="input-group">
+                    <input type="text" name="present_illness[{{ forloop.counter0 }}][start_date]" class="form-control flatpickr" value="{{ illness.start_date|date:'M j, Y' }}" required>
+                    <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                  </div>
+                </td>
+                <td>
+                  <div class="input-group">
+                    <input type="text" name="present_illness[{{ forloop.counter0 }}][end_date]" class="form-control flatpickr" value="{{ illness.end_date|date:'M j, Y' }}">
+                    <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                  </div>
+                </td>
+                <td>
+                  <textarea name="present_illness[{{ forloop.counter0 }}][treatment]" class="form-control" rows="1" placeholder="Treatment details">{{ illness.treatment }}</textarea>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-danger btn-sm delete-illness-row">Delete</button>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td>
+                <input type="text" name="present_illness[0][illness_name]" class="form-control" required>
+              </td>
+              <td>
+                <div class="input-group">
+                  <input type="text" name="present_illness[0][start_date]" class="form-control flatpickr" required>
+                  <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                </div>
+              </td>
+              <td>
+                <div class="input-group">
+                  <input type="text" name="present_illness[0][end_date]" class="form-control flatpickr">
+                  <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                </div>
+              </td>
+              <td>
+                <textarea name="present_illness[0][treatment]" class="form-control" placeholder="Treatment details" rows="1"></textarea>
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger btn-sm delete-illness-row">Delete</button>
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+    <div class="text-end mb-4">
+      <button type="button" id="addIllnessButton" class="btn btn-outline-primary">Add Illness</button>
+    </div>
+    
+    <!-- Vaccinations Section -->
+    <h4 class="mt-4">Vaccinations</h4>
+    <div class="checkbox-group row">
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[hepatitis_a]" id="hepatitis_a" {% if vaccination and vaccination.hepatitis_a %}checked{% endif %}>
+          <label class="form-check-label cursor" for="hepatitis_a">Hepatitis A</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[hepatitis_b]" id="hepatitis_b" {% if vaccination and vaccination.hepatitis_b %}checked{% endif %}>
+          <label class="form-check-label cursor" for="hepatitis_b">Hepatitis B</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[hpv_vaccine]" id="hpv_vaccine" {% if vaccination and vaccination.hpv_vaccine %}checked{% endif %}>
+          <label class="form-check-label cursor" for="hpv_vaccine">HPV Vaccine</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[pre_announced_vaccine]" id="pre_announced_vaccine" {% if vaccination and vaccination.pre_announced_vaccine %}checked{% endif %}>
+          <label class="form-check-label cursor" for="pre_announced_vaccine">Pre-announced Vaccine</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[typhoid]" id="typhoid" {% if vaccination and vaccination.typhoid %}checked{% endif %}>
+          <label class="form-check-label cursor" for="typhoid">Typhoid</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[mmr]" id="mmr" {% if vaccination and vaccination.mmr %}checked{% endif %}>
+          <label class="form-check-label cursor" for="mmr">MMR</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[dpt]" id="dpt" {% if vaccination and vaccination.dpt %}checked{% endif %}>
+          <label class="form-check-label cursor" for="dpt">DPT</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[chicken_pox]" id="chicken_pox" {% if vaccination and vaccination.chicken_pox %}checked{% endif %}>
+          <label class="form-check-label cursor" for="chicken_pox">Chicken Pox</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[tetanus_toxoid]" id="tetanus_toxoid" {% if vaccination and vaccination.tetanus_toxoid %}checked{% endif %}>
+          <label class="form-check-label cursor" for="tetanus_toxoid">Tetanus Toxoid</label>
+        </div>
+      </div>
+      <div class="col-md-12 mt-2">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="vaccinations[others]" id="vaccination_others" onchange="document.getElementById('vaccination_others_text').disabled = !this.checked;" {% if vaccination and vaccination.others %}checked{% endif %}>
+          <label class="form-check-label cursor" for="vaccination_others">Others <small class="text-muted">(click to activate textarea)</small></label>
+        </div>
+        <textarea name="vaccinations[others_text]" id="vaccination_others_text" class="form-control mt-1" placeholder="Specify other vaccinations..." {% if not vaccination or not vaccination.others %}disabled{% endif %}>{{ vaccination.others|default_if_none:'' }}</textarea>
+      </div>
+    </div>
+    
+    <!-- Past Medical History Section -->
+    <h4 class="mt-4">Past Medical History</h4>
+    <div class="checkbox-group row">
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[asthma]" id="asthma" {% if past_medical_history and past_medical_history.asthma %}checked{% endif %}>
+          <label class="form-check-label cursor" for="asthma">Asthma</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[anemia]" id="anemia" {% if past_medical_history and past_medical_history.anemia %}checked{% endif %}>
+          <label class="form-check-label cursor" for="anemia">Anemia</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[bad_teeth]" id="bad_teeth" {% if past_medical_history and past_medical_history.bad_teeth %}checked{% endif %}>
+          <label class="form-check-label cursor" for="bad_teeth">Bad Teeth</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[diabetes]" id="diabetes" {% if past_medical_history and past_medical_history.diabetes %}checked{% endif %}>
+          <label class="form-check-label cursor" for="diabetes">Diabetes</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[depression]" id="depression" {% if past_medical_history and past_medical_history.depression %}checked{% endif %}>
+          <label class="form-check-label cursor" for="depression">Depression</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[heart_disease]" id="heart_disease" {% if past_medical_history and past_medical_history.heart_disease %}checked{% endif %}>
+          <label class="form-check-label cursor" for="heart_disease">Heart Disease</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[hearing_problem]" id="hearing_problem" {% if past_medical_history and past_medical_history.hearing_problem %}checked{% endif %}>
+          <label class="form-check-label cursor" for="hearing_problem">Hearing Problem</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[high_blood_pressure]" id="high_blood_pressure" {% if past_medical_history and past_medical_history.high_blood_pressure %}checked{% endif %}>
+          <label class="form-check-label cursor" for="high_blood_pressure">High Blood Pressure</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[heart_attack]" id="heart_attack" {% if past_medical_history and past_medical_history.heart_attack %}checked{% endif %}>
+          <label class="form-check-label cursor" for="heart_attack">Heart Attack</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input cursor" type="checkbox" name="past_history[drug_allergy]" id="drug_allergy" {% if past_medical_history and past_medical_history.drug_allergy %}checked{% endif %} onchange="document.getElementById('allergy_details').disabled = !this.checked;">
+          <label class="form-check-label cursor" for="drug_allergy">Drug Allergy/Reaction</label>
+        </div>
+        <textarea name="past_history[allergy_details]" id="allergy_details" class="form-control mt-1" placeholder="List any allergies or reactions..." {% if not past_medical_history or not past_medical_history.drug_allergy %}disabled{% endif %}>{{ past_medical_history.allergy_details|default_if_none:'' }}</textarea>
+      </div>
+    </div>
+    
+    <div class="mt-3 text-end d-flex align-items-center justify-content-end mb-2">
+      <button type="submit" class="btn btn-success my-auto">Update Patient</button>
+      <a href="{% url 'patient-list' %}" class="btn btn-secondary ms-2 my-auto">Cancel</a>
+    </div>
+  
+  </form>
+</article>
+{% endblock body %}
+
+{% block script %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  flatpickr(".flatpickr", {
+    dateFormat: "M j, Y",
+    allowInput: true,
+    autoClose: true
+  });
+  
+  function addIllnessRow() {
+    var rowCount = document.querySelectorAll('#illnessTable tbody tr').length;
+    var newRow = document.createElement('tr');
+    newRow.innerHTML = `
+      <td>
+        <input type="text" name="present_illness[${rowCount}][illness_name]" class="form-control" required>
+      </td>
+      <td>
+        <div class="input-group">
+          <input type="text" name="present_illness[${rowCount}][start_date]" class="form-control flatpickr" required>
+          <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+        </div>
+      </td>
+      <td>
+        <div class="input-group">
+          <input type="text" name="present_illness[${rowCount}][end_date]" class="form-control flatpickr">
+          <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+        </div>
+      </td>
+      <td>
+        <textarea name="present_illness[${rowCount}][treatment]" class="form-control" placeholder="Treatment details" rows="1"></textarea>
+      </td>
+      <td>
+        <button type="button" class="btn btn-danger btn-sm delete-illness-row">Delete</button>
+      </td>
+    `;
+    document.querySelector('#illnessTable tbody').appendChild(newRow);
+    flatpickr(newRow.querySelector('.flatpickr'), {
+      dateFormat: "M j, Y",
+      allowInput: true,
+      autoClose: true
+    });
+  }
+  
+  document.getElementById('addIllnessButton').addEventListener('click', addIllnessRow);
+  
+  document.querySelector('#illnessTable tbody').addEventListener('click', function(e) {
+    if(e.target && e.target.matches('button.delete-illness-row')) {
+      e.target.closest('tr').remove();
+    }
+  });
+});
+</script>
+{% endblock script %}

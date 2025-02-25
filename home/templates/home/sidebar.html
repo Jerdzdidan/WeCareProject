@@ -29,17 +29,40 @@
         <ul class="list-group my-1">
           <a href="{% url "resident-list" %}" class="nav-link {% if '/residents/' in request.path %}active{% endif %} rounded">
             <li class="list-group-item d-flex align-items-center menu-item">
-              <i class="ri-home-heart-fill me-1 menu-icons"></i>Resident Information                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+              <i class="ri-home-heart-fill me-1 menu-icons"></i>Resident Information
             </li>
           </a>
         </ul>
         <ul class="list-group my-1">
-          <a href="#" class="nav-link rounded">
+          <a class="nav-link rounded patient-nav-toggle" href="#" id="patientToggle">
             <li class="list-group-item d-flex align-items-center menu-item">
-              <i class="ri-user-heart-fill me-1 menu-icons"></i>Patient Information
+              <i class="ri-user-heart-fill me-1 menu-icons"></i>
+              <span>Patient Information</span>
+              <i class="ri-arrow-down-s-line ms-auto"></i>
             </li>
           </a>
+          <div class="collapse" id="patientDropdown">
+            <a href="{% url "patient-list" %}" class="nav-link rounded patient-nav-item">
+              <li class="list-group-item d-flex align-items-center menu-item">
+                <i class="ri-file-list-2-fill me-1 menu-icons"></i>
+                Patient List
+              </li>
+            </a>
+            <a href="#" class="nav-link rounded patient-nav-item">
+              <li class="list-group-item d-flex align-items-center menu-item">
+                <i class="ri-calendar-todo-fill me-1 menu-icons"></i>
+                Scheduled Checkup
+              </li>
+            </a>
+            <a href="#" class="nav-link rounded patient-nav-item">
+              <li class="list-group-item d-flex align-items-center menu-item">
+                <i class="ri-medicine-bottle-fill me-1 menu-icons"></i>
+                Medicine Monitoring
+              </li>
+            </a>
+          </div>
         </ul>
+        
         <ul class="list-group my-1">
           <a href="#" class="nav-link rounded">
             <li class="list-group-item d-flex align-items-center menu-item">

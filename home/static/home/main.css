@@ -87,6 +87,26 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0; 
 }
 
+/* Custom style for the Patient Information toggle */
+.patient-nav-toggle li {
+  transition: background-color 0.3s ease;
+}
+
+.patient-nav-toggle li:hover {
+  background-color: #cfe2ff; 
+}
+
+.patient-nav-item li {
+  background-color: #f8f9fa;  
+  border-left: 4px solid #adb5bd;  
+  color: #212529;
+  transition: background-color 0.3s ease;
+}
+
+.patient-nav-item li:hover {
+  background-color: #e9ecef; 
+}
+
 /* Responsive Sidebar (mobile) */
 @media (max-width: 992px) {
   .sidebar {
