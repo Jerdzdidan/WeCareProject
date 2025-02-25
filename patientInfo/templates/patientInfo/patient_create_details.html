@@ -33,7 +33,6 @@
   <form method="POST" action="{% url 'patient-create-details' resident.id %}">
     {% csrf_token %}
     
-    <!-- Hidden input to store selected resident's ID -->
     <input type="hidden" name="resident" id="resident" required>
     
     <h4 class="mt-4">Vital Signs</h4>
