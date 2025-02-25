@@ -261,7 +261,7 @@
       <div class="col-md-4">
         <div class="form-check">
           <input class="form-check-input cursor" type="checkbox" name="past_history[drug_allergy]" id="drug_allergy" {% if past_medical_history and past_medical_history.drug_allergy %}checked{% endif %} onchange="document.getElementById('allergy_details').disabled = !this.checked;">
-          <label class="form-check-label cursor" for="drug_allergy">Drug Allergy/Reaction</label>
+          <label class="form-check-label cursor" for="drug_allergy">Drug Allergy/Reaction <small class="text-muted">(click to activate textarea)</small></label>
         </div>
         <textarea name="past_history[allergy_details]" id="allergy_details" class="form-control mt-1" placeholder="List any allergies or reactions..." {% if not past_medical_history or not past_medical_history.drug_allergy %}disabled{% endif %}>{{ past_medical_history.allergy_details|default_if_none:'' }}</textarea>
       </div>

@@ -34,33 +34,33 @@
           </a>
         </ul>
         <ul class="list-group my-1">
-          <a class="nav-link rounded patient-nav-toggle" href="#" id="patientToggle">
+            <a class="nav-link rounded patient-nav-toggle {% if '/patients/' in request.path %}active{% endif %}" href="#" id="patientToggle">
             <li class="list-group-item d-flex align-items-center menu-item">
               <i class="ri-user-heart-fill me-1 menu-icons"></i>
               <span>Patient Information</span>
               <i class="ri-arrow-down-s-line ms-auto"></i>
             </li>
-          </a>
-          <div class="collapse" id="patientDropdown">
-            <a href="{% url "patient-list" %}" class="nav-link rounded patient-nav-item">
+            </a>
+            <div class="collapse {% if '/patients/' in request.path %}show{% endif %}" id="patientDropdown">
+            <a href="{% url "patient-list" %}" class="nav-link rounded patient-nav-item {% if '/patients/' in request.path %}active{% endif %}">
               <li class="list-group-item d-flex align-items-center menu-item">
-                <i class="ri-file-list-2-fill me-1 menu-icons"></i>
+              <i class="ri-file-list-2-fill me-1 menu-icons"></i>
                 Patient List
               </li>
             </a>
             <a href="#" class="nav-link rounded patient-nav-item">
               <li class="list-group-item d-flex align-items-center menu-item">
-                <i class="ri-calendar-todo-fill me-1 menu-icons"></i>
-                Scheduled Checkup
+              <i class="ri-calendar-todo-fill me-1 menu-icons"></i>
+              Scheduled Checkup
               </li>
             </a>
             <a href="#" class="nav-link rounded patient-nav-item">
               <li class="list-group-item d-flex align-items-center menu-item">
-                <i class="ri-medicine-bottle-fill me-1 menu-icons"></i>
-                Medicine Monitoring
+              <i class="ri-medicine-bottle-fill me-1 menu-icons"></i>
+              Medicine Monitoring
               </li>
             </a>
-          </div>
+            </div>
         </ul>
         
         <ul class="list-group my-1">

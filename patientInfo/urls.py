@@ -10,4 +10,7 @@ urlpatterns = [
     path('detail/<str:pk>/', views.patient_detail, name='patient-detail'),
     path('detail/<str:pk>/record/create/', views.medical_record_create, name='medical-record-create'),
     path('detail/<str:pk>/medicine/create/', views.medicine_tracking_create, name='medicine-tracking-create'),
+    path('medical-record/create/<str:pk>/', views.medical_record_create, name='medical-record-create'),
+    path('medical-record/update/<int:record_id>/', views.medical_record_update, name='medical-record-update'),
+    path('medical-record/delete/<int:record_id>/', views.medical_record_delete, name='medical-record-delete'),
 ]

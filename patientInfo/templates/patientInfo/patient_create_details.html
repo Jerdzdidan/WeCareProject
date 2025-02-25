@@ -228,8 +228,8 @@
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[drug_allergy]" id="drug_allergy">
-          <label class="form-check-label cursor" for="drug_allergy"  onchange="document.getElementById('allergy_details').disabled = !this.checked;">Drug Allergy/Reaction</label>
+          <input class="form-check-input cursor" type="checkbox" name="past_history[drug_allergy]" id="drug_allergy" onchange="document.getElementById('allergy_details').disabled = !this.checked;">
+          <label class="form-check-label cursor" for="drug_allergy">Drug Allergy/Reaction <small class="text-muted">(click to activate textarea)</small></label>
         </div>
         <textarea name="past_history[allergy_details]" id="allergy_details" class="form-control mt-1" placeholder="List any allergies or reactions..." disabled></textarea>
       </div>
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function(){
           </div>
         </td>
         <td>
-          <textarea name="present_illness[${rowCount}][treatment]" class="form-control" placeholder="Treatment details"></textarea>
+          <textarea name="present_illness[${rowCount}][treatment]" class="form-control" placeholder="Treatment details" rows="1"></textarea>
         </td>
         <td>
           <button type="button" class="btn btn-danger btn-sm delete-illness-row">Delete</button>

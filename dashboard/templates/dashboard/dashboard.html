@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header card-title">
+                        <div class="card-header card-title bg-secondary-subtle">
                             <i class="fa-solid fa-users me-2"></i>Total Residents
                         </div>
                         <div class="card-body text-center">
@@ -28,7 +28,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary-subtle">
                             <span class="fw-medium"><i class="fa-solid fa-question-circle"></i> N/A</span>
                         </div>
                         <div class="card-body text-center">
@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary-subtle">
                             <span class="fw-medium"><i class="fa-solid fa-wheelchair"></i> PWD</span>
                         </div>
                         <div class="card-body text-center">
@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary-subtle">
                             <span class="fw-medium"><i class="fa-solid fa-user-plus"></i> Solo Parent</span>
                         </div>
                         <div class="card-body text-center">
@@ -58,7 +58,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary-subtle">
                             <span class="fw-medium"><i class="fa-solid fa-child"></i> Children</span>
                         </div>
                         <div class="card-body text-center">
@@ -68,7 +68,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary-subtle">
                             <span class="fw-medium"><i class="fa-solid fa-person"></i> Senior</span>
                         </div>
                         <div class="card-body text-center">
@@ -78,7 +78,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary-subtle">
                             <span class="fw-medium"><i class="fa-solid fa-heart"></i> Pregnant</span>
                         </div>
                         <div class="card-body text-center">
@@ -90,7 +90,7 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary-subtle">
                             <span class="fw-medium"><i class="fa-solid fa-mars"></i> Male</span>
                         </div>
                         <div class="card-body text-center">
@@ -100,7 +100,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary-subtle">
                             <span class="fw-medium"><i class="fa-solid fa-venus"></i> Female</span>
                         </div>
                         <div class="card-body text-center">
@@ -110,7 +110,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow" style="">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary-subtle">
                             <span class="fw-medium"><i class="fa-solid fa-genderless"></i> Other</span>
                         </div>
                         <div class="card-body text-center">
@@ -121,6 +121,156 @@
             </div>
 
         </article>
+
+    </div>
+
+    <div class="col-6">
+
+        <article class="content-section border-secondary-subtle rounded p-3 shadow-lg">
+            <h4 class="text-center mb-3 fw-bold">PATIENT SUMMARY</h4>
+            <!-- Total Patients -->
+            <div class="row">
+                <div class="col">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header card-title bg-secondary-subtle">
+                            <i class="fa-solid fa-users me-2"></i>Total Patients
+                            <span><small class="text-muted fs-6">registered</small></span>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ patientCount_total }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Age Groups -->
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-child"></i> Ages 0-6</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_0_6 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-child"></i> Ages 6-18</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_6_18 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-user"></i> Ages 19-59</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_19_59 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-user"></i> Ages 59 &amp; Above</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_59_above }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-person"></i> Senior</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_senior }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-wheelchair"></i> N/A</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_na }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-wheelchair"></i> PWD</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_pwd }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-user-plus"></i> Solo Parent</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_solo_parent }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-heart"></i> Pregnant</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_pregnant }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow" style="">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-mars"></i> Male</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-success rounded-pill fs-6">{{ patientCount_male }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow" style="">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-venus"></i> Female</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-success rounded-pill fs-6">{{ patientCount_female }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card mb-4 shadow" style="">
+                        <div class="card-header bg-secondary-subtle">
+                            <span class="fw-medium"><i class="fa-solid fa-genderless"></i> Other</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <span class="badge bg-success rounded-pill fs-6">{{ patientCount_other }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </article>
+        
 
     </div>
 </div>

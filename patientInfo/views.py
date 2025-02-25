@@ -13,6 +13,7 @@ from patientInfo.models import (
 )
 from residentInfo.models import Resident
 
+# === PATIENT RECORD FUNCTIONALITY ===
 @login_required
 def patient_list(request):
     patients = Patient.objects.select_related('resident').all().order_by('patientID')
@@ -330,26 +331,48 @@ def patient_delete_confirm(request, pk):
 @login_required
 def patient_detail(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
-    medical_records = patient.medical_records.all().order_by('-last_visited')
+    records = patient.medical_records.all().order_by('-last_visited')
+    
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    
+    if start_date and end_date:
+        try:
+            start_date_obj = datetime.strptime(start_date, "%b %d, %Y").date()
+            end_date_obj = datetime.strptime(end_date, "%b %d, %Y").date()
+            records = records.filter(last_visited__range=[start_date_obj, end_date_obj])
+        except ValueError:
+            pass
+    elif start_date:
+        try:
+            start_date_obj = datetime.strptime(start_date, "%b %d, %Y").date()
+            records = records.filter(last_visited__gte=start_date_obj)
+        except ValueError:
+            pass
+    elif end_date:
+        try:
+            end_date_obj = datetime.strptime(end_date, "%b %d, %Y").date()
+            records = records.filter(last_visited__lte=end_date_obj)
+        except ValueError:
+            pass
+
     medicine_trackings = patient.medicine_trackings.all().order_by('start_date')
     return render(request, 'patientInfo/patient_detail.html', {
         'patient': patient,
-        'medical_records': medical_records,
+        'medical_records': records,
         'medicine_trackings': medicine_trackings,
     })
 
 
+# === MEDICAL RECORD FUNCTIONALITY ===
 @login_required
 def medical_record_create(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
     if request.method == "POST":
         concern = request.POST.get('concern', '').strip()
         description = request.POST.get('description', '').strip()
-        last_visited_str = request.POST.get('last_visited', '').strip()
-        try:
-            last_visited = datetime.strptime(last_visited_str, "%Y-%m-%d").date()
-        except ValueError:
-            last_visited = datetime.today().date()
+        
+        last_visited = datetime.today().date()
         MedicalRecord.objects.create(
             patient=patient,
             concern=concern,
@@ -359,6 +382,53 @@ def medical_record_create(request, pk):
         messages.success(request, "Medical record created successfully!")
         return redirect('patient-detail', pk=patient.patientID)
     return render(request, 'patientInfo/medical_record_create.html', {'patient': patient})
+
+
+@login_required
+def medical_record_list(request, pk):
+    patient = get_object_or_404(Patient, patientID=pk)
+    records = patient.medical_records.all().order_by('-last_visited')
+    filter_date = request.GET.get('filter_date', '')
+    if filter_date:
+        try:
+            filter_date_obj = datetime.strptime(filter_date, "%Y-%m-%d").date()
+            records = records.filter(last_visited=filter_date_obj)
+        except ValueError:
+            pass
+    return render(request, 'patientInfo/medical_record_list.html', {
+        'patient': patient,
+        'medical_records': records,
+        'filter_date': filter_date,
+    })
+
+@login_required
+def medical_record_update(request, record_id):
+    record = get_object_or_404(MedicalRecord, id=record_id)
+    if request.method == "POST":
+        concern = request.POST.get('concern', '').strip()
+        description = request.POST.get('description', '').strip()
+        last_visited_str = request.POST.get('last_visited', '').strip()
+        try:
+            last_visited = datetime.strptime(last_visited_str, "%Y-%m-%d").date()
+        except ValueError:
+            last_visited = record.last_visited
+        record.concern = concern
+        record.description = description
+        record.last_visited = last_visited
+        record.save()
+        messages.success(request, "Medical record updated successfully!")
+        return redirect('patient-detail', pk=record.patient.patientID)
+    return render(request, 'patientInfo/medical_record_update.html', {'record': record})
+
+@login_required
+def medical_record_delete(request, record_id):
+    record = get_object_or_404(MedicalRecord, id=record_id)
+    if request.method == 'POST':
+        patientID = record.patient.patientID
+        record.delete()
+        messages.success(request, "Medical record deleted successfully!")
+        return redirect('patient-detail', pk=patientID)
+    return render(request, 'patientInfo/medical_record_delete.html', {'record': record})
 
 @login_required
 def medicine_tracking_create(request, pk):
