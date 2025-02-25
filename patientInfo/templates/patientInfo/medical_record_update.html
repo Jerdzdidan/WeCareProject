@@ -12,22 +12,22 @@
 {% endblock style %}
 
 {% block body %}
-<div class="container my-4">
-  <h3>Edit Medical Record for Patient {{ record.patient.patientID }}</h3>
+<h3>Edit Medical Record for Patient <span class="text-primary">{{ record.patient.patientID }}</span></h3>
+<article class="content-section border-secondary-subtle rounded p-3 shadow-lg">
   <form method="post">
     {% csrf_token %}
     <div class="form-section mb-3">
       <label for="concern" class="form-label">Concern:</label>
-      <input type="text" id="concern" name="concern" class="form-control" value="{{ record.concern }}" required>
+      <input type="text" id="concern" name="concern" class="form-control shadow" value="{{ record.concern }}" required>
     </div>
     <div class="form-section mb-3">
       <label for="description" class="form-label">Description:</label>
-      <textarea id="description" name="description" class="form-control">{{ record.description }}</textarea>
+      <textarea id="description" name="description" class="form-control shadow" rows="9">{{ record.description }}</textarea>
     </div>
     <!-- Last Visited: Displayed as disabled and submitted via hidden field -->
     <div class="form-section mb-3">
       <label for="last_visited_display" class="form-label">Last Visited:</label>
-      <input type="date" id="last_visited_display" class="form-control" value="{{ record.last_visited|date:'Y-m-d' }}" disabled>
+      <input type="date" id="last_visited_display" class="form-control shadow" value="{{ record.last_visited|date:'Y-m-d' }}" disabled>
       <input type="hidden" name="last_visited" value="{{ record.last_visited|date:'Y-m-d' }}">
     </div>
     <div class="d-flex justify-content-end">
@@ -35,5 +35,5 @@
       <a href="{% url 'patient-detail' record.patient.patientID %}" class="btn btn-secondary ms-2 my-auto">Cancel</a>
     </div>
   </form>
-</div>
+</article>
 {% endblock body %}
