@@ -436,14 +436,12 @@
     });
 
 
-    // Corrected selector to target buttons
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
       localStorage.setItem('activeTab', $(e.target).attr('data-bs-target'));
     });
 
     var activeTab = localStorage.getItem('activeTab');
     if(activeTab) {
-      // Corrected selector to target buttons
       var someTabTriggerEl = document.querySelector('button[data-bs-target="' + activeTab + '"]');
       if(someTabTriggerEl) {
         var tab = new bootstrap.Tab(someTabTriggerEl);
