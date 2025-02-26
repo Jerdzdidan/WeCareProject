@@ -1,0 +1,95 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'medicine/main.css' %}">
+<style>
+  .info-card {
+    margin-bottom: 1.5rem;
+  }
+  table td, table th {
+    text-align: center !important;
+    vertical-align: middle;
+  }
+</style>
+{% endblock style %}
+
+{% block body %}
+  <h3 class="mb-3">Medicine Monitoring - <span class="text-primary">Inventory</span></h3>
+  <article class="content-section border rounded p-0 shadow">
+    <div class="mb-3 text-end">
+      <!-- Add any additional buttons or filters here -->
+    </div>
+    <div class="container">
+      <div class="row mt-2">
+        <div class="col-auto ms-auto">
+          <a href="{% url 'medicine-add' %}" class="btn btn-success info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
+            <i class="fa-solid fa-plus my-auto" style="font-size: calc(0.6rem + 0.4vw);"></i> 
+            <span class="ms-1">Add Medicine</span>
+          </a>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-auto">
+          <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span class="d-inline ms-2" style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">Entries per page</span>
+        </div>
+        <div class="col-auto ms-auto">
+          <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table id="dataTable" class="table table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Medicine Name</th>
+            <th>Generic Name</th>
+            <th>Brand Name</th>
+            <th>Unit Price</th>
+            <th>Total Value</th>
+            <th>Total Quantity</th>
+            <th>Supplier</th>
+            <th>Date Last Stocked</th>
+            <th>Notes</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for med in medicines %}
+          <tr>
+            <td class="align-middle">{{ med.medicine_name }}</td>
+            <td class="align-middle">{{ med.generic_name }}</td>
+            <td class="align-middle">{{ med.brand_name }}</td>
+            <td class="align-middle">{{ med.unit_price|floatformat:2 }}</td>
+            <td class="align-middle">{{ med.total_value|floatformat:2 }}</td>
+            <td class="align-middle">{{ med.total_quantity }}</td>
+            <td class="align-middle">{{ med.supplier_name }}</td>
+            <td class="align-middle">{{ med.date_last_stock|date:"M d, Y" }}</td>
+            <td class="align-middle">{{ med.notes }}</td>
+            <td class="align-middle">
+              <div class="d-flex">
+                <a href="{% url 'medicine-detail' med.pk %}" class="btn btn-sm btn-outline-primary fw-bold flex-fill me-1">
+                  <i class="fa-solid fa-boxes-stacked"></i>
+                </a>
+                <a href="{% url 'medicine-update' med.pk %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1">
+                  <i class="ri-edit-2-fill"></i>
+                </a>
+                <a href="{% url 'medicine-delete' med.pk %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill">
+                  <i class="ri-delete-bin-5-fill"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div id="customPagination"></div>
+    </div>
+  </article>
+{% endblock body %}

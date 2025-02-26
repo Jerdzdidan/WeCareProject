@@ -1,5 +1,6 @@
 from django.db import models, transaction
 import datetime
+from django.utils import timezone
 
 GENDER_CHOICES = (
     ('Male', 'Male'),

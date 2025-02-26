@@ -1,0 +1,40 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'medicine/main.css' %}">
+<style>
+  .record-table th, .record-table td {
+    vertical-align: middle;
+    padding: 0.75rem;
+  }
+</style>
+{% endblock style %}
+
+{% block body %}
+<div class="container my-4">
+  <h3>Delete Stock</h3>
+  <p>Are you sure you want to delete the following stock entry for {{ stock.medicine.medicine_name }}?</p>
+  <table class="table table-bordered record-table">
+    <tr>
+      <th>Dosage</th>
+      <td>{{ stock.dosage }}</td>
+    </tr>
+    <tr>
+      <th>Quantity</th>
+      <td>{{ stock.quantity }}</td>
+    </tr>
+    <tr>
+      <th>Expiration Date</th>
+      <td>{{ stock.expiration_date|date:"M d, Y" }}</td>
+    </tr>
+  </table>
+  <form method="post">
+    {% csrf_token %}
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      <a href="{% url 'medicine-detail' stock.medicine.pk %}" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock body %}

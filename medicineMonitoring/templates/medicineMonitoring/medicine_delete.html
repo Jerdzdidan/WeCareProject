@@ -1,0 +1,61 @@
+{% extends "home/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'medicine/main.css' %}">
+<style>
+  .record-table th, .record-table td {
+    vertical-align: middle;
+    padding: 0.75rem;
+  }
+</style>
+{% endblock style %}
+
+{% block body %}
+<div class="container my-4">
+  <h3>Delete Medicine</h3>
+  <p>Are you sure you want to delete the following medicine?</p>
+  <table class="table table-bordered record-table">
+    <tr>
+      <th>Medicine Name</th>
+      <td>{{ medicine.medicine_name }}</td>
+    </tr>
+    <tr>
+      <th>Generic Name</th>
+      <td>{{ medicine.generic_name }}</td>
+    </tr>
+    <tr>
+      <th>Brand Name</th>
+      <td>{{ medicine.brand_name }}</td>
+    </tr>
+    <tr>
+      <th>Unit Price</th>
+      <td>{{ medicine.unit_price }}</td>
+    </tr>
+    <tr>
+      <th>Total Price</th>
+      <td>{{ medicine.total_price }}</td>
+    </tr>
+    <tr>
+      <th>Supplier</th>
+      <td>{{ medicine.supplier_name }}</td>
+    </tr>
+    <tr>
+      <th>Date Last Stocked</th>
+      <td>{{ medicine.date_last_stock|date:"M d, Y" }}</td>
+    </tr>
+    <tr>
+      <th>Notes</th>
+      <td>{{ medicine.notes }}</td>
+    </tr>
+  </table>
+  <form method="post">
+    {% csrf_token %}
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      <a href="{% url 'medicine-list' %}" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock body %}

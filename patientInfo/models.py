@@ -80,8 +80,6 @@ class PastMedicalHistory(models.Model):
         return f"Medical History for {self.patient.resident.first_name}"
 
 
-
-
 class MedicalRecord(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="medical_records")
     concern = models.CharField(max_length=255)

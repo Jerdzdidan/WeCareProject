@@ -1,0 +1,214 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block style %}
+<style>
+  .info-card {
+    margin-bottom: 1.5rem;
+  }
+  /* Main Tabs Styling */
+  .nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 0;
+  }
+  .nav-tabs .nav-link {
+    border: none;
+    background-color: #f8f9fa;
+    color: #495057;
+    padding: 0.75rem 1.25rem;
+    margin-right: 0.25rem;
+  }
+  .nav-tabs .nav-link.active {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-bottom-color: transparent;
+    color: #212529;
+  }
+  .tab-content {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    padding: 1rem;
+    margin-top: -1px;
+    border-radius: 0 0 0.25rem 0.25rem;
+  }
+  /* Nested Tabs Styling (for individual stocks) */
+  .nested-nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 0;
+  }
+  .nested-nav-tabs .nav-link {
+    border: none;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 0.5rem 1rem;
+    margin-right: 0.25rem;
+    font-size: 0.9rem;
+    border-radius: 0.25rem 0.25rem 0 0;
+  }
+  #stockTabsContent {
+    border-radius: 0 0 0.25rem 0.25rem;
+  }
+  table td, table th {
+    text-align: center !important;
+  }
+</style>
+{% endblock style %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Medicine Monitoring - <span class="text-primary">Stocks</span></h3>
+  <a href="{% url 'medicine-list' %}" class="btn btn-outline-secondary">
+    <i class="fa-solid fa-xmark fw-bold"></i>
+  </a>
+</div>
+
+  <!-- General Medicine Info Card -->
+  <div class="card info-card shadow-sm ">
+    <div class="card-header bg-secondary-subtle">
+      <h3 class="my-auto">
+        <i class="fa-solid fa-prescription-bottle-medical me-2"></i>
+        Medicine: <span class="text-primary">{{ medicine.medicine_name }}</span>
+      </h3>
+    </div>
+    <div class="card-body">
+      <p class="mb-1"><strong>Generic Name:</strong> {{ medicine.generic_name }}</p>
+      <p class="mb-1"><strong>Brand Name:</strong> {{ medicine.brand_name }}</p>
+      <p class="mb-1"><strong>Supplier:</strong> {{ medicine.supplier_name }}</p>
+      <p class="mb-1"><strong>Unit Price:</strong> {{ medicine.unit_price|floatformat:2 }}</p>
+      <p class="mb-1"><strong>Total Quantity:</strong> {% if medicine.total_quantity %}{{ medicine.total_quantity}}{% else %}--{% endif %}</p>
+      <p class="mb-1"><strong>Total Value:</strong> {% if medicine.total_value %}{{ medicine.total_value }}{% else %}--{% endif %}</p>
+      <p class="mb-1"><strong>Date Last Stocked:</strong> {{ medicine.date_last_stock|date:"M d, Y" }}</p>
+      <p class="mb-1"><strong>Notes:</strong> {{ medicine.notes }}</p>
+    </div>
+  </div>
+
+  <!-- Nested Tabs for Individual Stocks -->
+  <h4 class="mb-3 fw-bold">Individual Stocks</h4>
+  <ul class="nav nav-tabs nested-nav-tabs" id="stockTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="stocks-tab" data-bs-toggle="tab" data-bs-target="#stocks" type="button" role="tab" aria-controls="stocks" aria-selected="true">Stocks</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="expired-tab" data-bs-toggle="tab" data-bs-target="#expired" type="button" role="tab" aria-controls="expired" aria-selected="false">Expired</button>
+    </li>
+  </ul>
+
+  <article class="tab-content content-section shadow-lg mt-0" id="stockTabsContent">
+    <!-- Stocks Tab Content -->
+    <div class="tab-pane fade show active" id="stocks" role="tabpanel" aria-labelledby="stocks-tab">
+      <div class="container">
+        <div class="row mt-2">
+          <div class="col-auto ms-auto">
+            <a href="{% url 'stock-add' medicine.pk %}" class="btn btn-success info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
+              <i class="fa-solid fa-plus"></i> Add Stock
+            </a>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-auto">
+            <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <span class="d-inline ms-2" style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">Entries per page</span>
+          </div>
+          <div class="col-auto ms-auto">
+            <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive mt-2">
+        <table id="dataTable" class="table table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>Dosage</th>
+              <th>Quantity</th>
+              <th>Expiration Date</th>
+              <th>Total Price</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for stock in valid_stocks %}
+            <tr>
+              <td class="align-middle">{{ stock.dosage }}</td>
+              <td class="align-middle">{{ stock.quantity }}</td>
+              <td class="align-middle">{{ stock.expiration_date|date:"M d, Y" }}</td>
+              <td class="align-middle">{{ stock.total_price|floatformat:2 }}</td>
+              <td class="align-middle text-center">
+                <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1 px-3"><i class="ri-edit-2-fill"></i></a>
+                <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div id="customPagination"></div>
+      </div>
+    </div>
+
+    <!-- Expired Tab Content -->
+    <div class="tab-pane fade" id="expired" role="tabpanel" aria-labelledby="expired-tab">
+      <div class="table-responsive mt-2">
+        <table class="table table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th class="text-center">Dosage</th>
+              <th class="text-center">Quantity</th>
+              <th class="text-center">Expiration Date</th>
+              <th class="text-center">Total Price</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for stock in expired_stocks %}
+            <tr>
+              <td class="align-middle text-center">{{ stock.dosage }}</td>
+              <td class="align-middle text-center">{{ stock.quantity }}</td>
+              <td class="align-middle text-center">{{ stock.expiration_date|date:"M d, Y" }}</td>
+              <td class="align-middle text-center">{{ stock.total_price|floatformat:2 }}</td>
+              <td class="align-middle text-center">
+                <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1">Edit</a>
+                <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </article>
+{% endblock body %}
+
+{% block script %}
+<script>
+  $(document).ready(function(){
+    flatpickr(".flatpickr-range", {
+      dateFormat: "M j, Y",
+      allowInput: true,
+      autoClose: true,
+      onChange: function(selectedDates, dateStr, instance) {
+        if($('#filter_start_date').val() && $('#filter_end_date').val()){
+          $("#dateFilterForm").submit();
+        }
+      }
+    });
+
+    $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+      localStorage.setItem('activeTab', $(e.target).attr('data-bs-target'));
+    });
+
+    var activeTab = localStorage.getItem('activeTab');
+    if(activeTab) {
+      var someTabTriggerEl = document.querySelector('button[data-bs-target="' + activeTab + '"]');
+      if(someTabTriggerEl) {
+        var tab = new bootstrap.Tab(someTabTriggerEl);
+        tab.show();
+      }
+    }
+  });
+</script>
+{% endblock script %}

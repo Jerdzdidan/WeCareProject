@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'dashboard',
     'residentInfo',
     'patientInfo',
+    'medicineMonitoring',
     'crispy_forms',
     'crispy_bootstrap5',
 ]

@@ -1,0 +1,44 @@
+{% extends "home/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'medicine/main.css' %}">
+{% endblock style %}
+
+{% block body %}
+<div class="container my-4">
+  <h3>Edit Medicine - {{ medicine.medicine_name }}</h3>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="medicine_name" class="form-label">Medicine Name</label>
+      <input type="text" class="form-control" id="medicine_name" name="medicine_name" value="{{ medicine.medicine_name }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="generic_name" class="form-label">Generic Name</label>
+      <input type="text" class="form-control" id="generic_name" name="generic_name" value="{{ medicine.generic_name }}">
+    </div>
+    <div class="mb-3">
+      <label for="brand_name" class="form-label">Brand Name</label>
+      <input type="text" class="form-control" id="brand_name" name="brand_name" value="{{ medicine.brand_name }}">
+    </div>
+    <div class="mb-3">
+      <label for="unit_price" class="form-label">Unit Price</label>
+      <input type="number" step="0.01" class="form-control" id="unit_price" name="unit_price" value="{{ medicine.unit_price }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="supplier_name" class="form-label">Supplier Name</label>
+      <input type="text" class="form-control" id="supplier_name" name="supplier_name" value="{{ medicine.supplier_name }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="notes" class="form-label">Notes</label>
+      <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Enter any notes...">{{ medicine.notes }}</textarea>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-success">Update Medicine</button>
+      <a href="{% url 'medicine-list' %}" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock body %}
