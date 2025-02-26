@@ -45,10 +45,11 @@
       </div>
     </div>
     <div class="table-responsive">
-      <table id="dataTable" class="table table-striped">
+      <table id="dataTable" class="table table-striped projectTables">
         <thead class="table-dark">
           <tr>
             <th>Medicine Name</th>
+            <th>Dosage</th>
             <th>Generic Name</th>
             <th>Brand Name</th>
             <th>Unit Price</th>
@@ -64,10 +65,11 @@
           {% for med in medicines %}
           <tr>
             <td class="align-middle">{{ med.medicine_name }}</td>
+            <td class="align-middle">{{ med.dosage }}</td>
             <td class="align-middle">{{ med.generic_name }}</td>
             <td class="align-middle">{{ med.brand_name }}</td>
-            <td class="align-middle">{{ med.unit_price|floatformat:2 }}</td>
-            <td class="align-middle">{{ med.total_value|floatformat:2 }}</td>
+            <td class="align-middle">₱{{ med.unit_price|floatformat:2 }}</td>
+            <td class="align-middle">₱{{ med.total_value|floatformat:2 }}</td>
             <td class="align-middle">{{ med.total_quantity }}</td>
             <td class="align-middle">{{ med.supplier_name }}</td>
             <td class="align-middle">{{ med.date_last_stock|date:"M d, Y" }}</td>

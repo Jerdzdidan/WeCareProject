@@ -48,7 +48,8 @@ def medicine_add(request):
         medicine_name = request.POST.get("medicine_name", "").strip()
         generic_name = request.POST.get("generic_name", "").strip()
         brand_name = request.POST.get("brand_name", "").strip()
-        unit_price = request.POST.get("unit_price", "").strip()  # NEW
+        dosage = request.POST.get("dosage", "").strip()  # Retrieve dosage
+        unit_price = request.POST.get("unit_price", "").strip()
         supplier_name = request.POST.get("supplier_name", "").strip()
         notes = request.POST.get("notes", "").strip()
 
@@ -61,7 +62,8 @@ def medicine_add(request):
             medicine_name=medicine_name,
             generic_name=generic_name,
             brand_name=brand_name,
-            unit_price=unit_price,  
+            dosage=dosage,  # Pass dosage to the model
+            unit_price=unit_price,
             supplier_name=supplier_name,
             notes=notes,
         )
@@ -76,7 +78,7 @@ def medicine_update(request, pk):
         medicine.medicine_name = request.POST.get("medicine_name", "").strip()
         medicine.generic_name = request.POST.get("generic_name", "").strip()
         medicine.brand_name = request.POST.get("brand_name", "").strip()
-        unit_price = request.POST.get("unit_price", "").strip()  # NEW
+        unit_price = request.POST.get("unit_price", "").strip()
         try:
             medicine.unit_price = Decimal(unit_price)
         except (InvalidOperation, ValueError):
@@ -102,8 +104,8 @@ def medicine_delete(request, pk):
 def medicine_stock_add(request, medicine_pk):
     medicine = get_object_or_404(Medicine, pk=medicine_pk)
     if request.method == "POST":
-        dosage = request.POST.get("dosage", "").strip()
         quantity = request.POST.get("quantity", "").strip()
+        notes = request.POST.get("notes", "").strip() 
         expiration_date_str = request.POST.get("expiration_date", "").strip()
         try:
             quantity = int(quantity)
@@ -118,24 +120,25 @@ def medicine_stock_add(request, medicine_pk):
             except ValueError:
                 continue
         
-        if dosage and expiration_date:
+        if expiration_date:
             medicine.stocks.create(
-                dosage=dosage,
                 quantity=quantity,
-                expiration_date=expiration_date
+                expiration_date=expiration_date,
+                notes=notes  
             )
-            update_medicine_totals(medicine)  # Update total value and quantity
+            update_medicine_totals(medicine) 
             messages.success(request, "Stock added successfully!")
             return redirect("medicine-detail", pk=medicine.pk)
         else:
-            messages.error(request, "Please provide valid dosage and expiration date.")
+            messages.error(request, "Please provide a valid expiration date.")
     return render(request, "medicineMonitoring/medicine_stock_add.html", {"medicine": medicine})
+
 
 @login_required
 def medicine_stock_update(request, stock_pk):
     stock = get_object_or_404(MedicineStock, pk=stock_pk)
     if request.method == "POST":
-        stock.dosage = request.POST.get("dosage", "").strip()
+        notes = request.POST.get("notes", "").strip() 
         quantity = request.POST.get("quantity", "").strip()
         expiration_date_str = request.POST.get("expiration_date", "").strip()
         try:
@@ -148,11 +151,13 @@ def medicine_stock_update(request, stock_pk):
                 break
             except ValueError:
                 continue
+        stock.notes = notes  
         stock.save()
         update_medicine_totals(stock.medicine)
         messages.success(request, "Stock updated successfully!")
         return redirect("medicine-detail", pk=stock.medicine.pk)
     return render(request, "medicineMonitoring/medicine_stock_update.html", {"stock": stock})
+
 
 @login_required
 def medicine_stock_delete(request, stock_pk):

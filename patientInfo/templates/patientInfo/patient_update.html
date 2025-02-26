@@ -1,5 +1,4 @@
 {% extends "home/layout.html" %}
-{% load crispy_forms_tags %}
 {% load static %}
 
 {% block style %}
@@ -23,10 +22,16 @@
 {% endblock style %}
 
 {% block body %}
-<h3 class="mb-3">Patient Info - <span class="text-primary">Update Form</span></h3>
-<article class="content-section border rounded shadow-sm p-4">
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <h3 class="mb-3 my-auto">Patient Info - <span class="text-primary">Update Form</span></h3>
+  <a href="{% url 'patient-list' %}" class="btn btn-outline-secondary my-auto">
+    <i class="fa-solid fa-xmark fw-bold"></i>
+  </a>
+</div>
+
+<article class="content-section border rounded shadow-sm">
   <div class="resident-info">
-    <h5>Patient ID: {{ patient.patientID }}</h5>
+    <h5>Patient ID: <span class="text-primary">{{ patient.patientID }}</span></h5>
     <p>
       <strong>Patient:</strong> {{ patient.resident.last_name }}, {{ patient.resident.first_name }}<br>
       <strong>Age:</strong> {{ patient.resident.age }}<br>

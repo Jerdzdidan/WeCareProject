@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="table-responsive mt-2">
-    <table class="table table-danger table-striped text-center m-0 projectTables">
+    <table id="dataTable" class="table table-danger table-striped text-center m-0 projectTables">
       <thead class="table-dark">
         <tr>
           <th class="text-center">Patient ID</th>
@@ -32,10 +32,12 @@
       </tbody>
     </table>
   </div>
-  <form method="post" class="d-flex justify-content-center align-items-center my-3">
+  <form method="post" class="p-2">
     {% csrf_token %}
-    <button type="submit" class="btn btn-danger me-2">Yes, Delete</button>
-    <a href="{% url 'patient-list' %}" class="btn btn-secondary">Cancel</a>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      <a href="{% url 'medicine-list' %}" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
   </form>
 </article>
 {% endblock body %}

@@ -75,9 +75,9 @@
       <p class="mb-1"><strong>Generic Name:</strong> {{ medicine.generic_name }}</p>
       <p class="mb-1"><strong>Brand Name:</strong> {{ medicine.brand_name }}</p>
       <p class="mb-1"><strong>Supplier:</strong> {{ medicine.supplier_name }}</p>
-      <p class="mb-1"><strong>Unit Price:</strong> {{ medicine.unit_price|floatformat:2 }}</p>
+      <p class="mb-1"><strong>Unit Price:</strong> ₱{{ medicine.unit_price|floatformat:2 }}</p>
       <p class="mb-1"><strong>Total Quantity:</strong> {% if medicine.total_quantity %}{{ medicine.total_quantity}}{% else %}--{% endif %}</p>
-      <p class="mb-1"><strong>Total Value:</strong> {% if medicine.total_value %}{{ medicine.total_value }}{% else %}--{% endif %}</p>
+      <p class="mb-1"><strong>Total Value:</strong> ₱{% if medicine.total_value %}{{ medicine.total_value }}{% else %}--{% endif %}</p>
       <p class="mb-1"><strong>Date Last Stocked:</strong> {{ medicine.date_last_stock|date:"M d, Y" }}</p>
       <p class="mb-1"><strong>Notes:</strong> {{ medicine.notes }}</p>
     </div>
@@ -87,17 +87,17 @@
   <h4 class="mb-3 fw-bold">Individual Stocks</h4>
   <ul class="nav nav-tabs nested-nav-tabs" id="stockTabs" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="stocks-tab" data-bs-toggle="tab" data-bs-target="#stocks" type="button" role="tab" aria-controls="stocks" aria-selected="true">Stocks</button>
+      <button class="nav-link active fs-6 fw-bold" id="stocks-tab" data-bs-toggle="tab" data-bs-target="#stocks" type="button" role="tab" aria-controls="stocks" aria-selected="true">Stocks</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="expired-tab" data-bs-toggle="tab" data-bs-target="#expired" type="button" role="tab" aria-controls="expired" aria-selected="false">Expired</button>
+      <button class="nav-link fs-6 fw-bold" id="expired-tab" data-bs-toggle="tab" data-bs-target="#expired" type="button" role="tab" aria-controls="expired" aria-selected="false">Expired</button>
     </li>
   </ul>
 
-  <article class="tab-content content-section shadow-lg mt-0" id="stockTabsContent">
+  <article class="tab-content content-section shadow-lg p-0" id="stockTabsContent">
     <!-- Stocks Tab Content -->
     <div class="tab-pane fade show active" id="stocks" role="tabpanel" aria-labelledby="stocks-tab">
-      <div class="container">
+      <div class="container px-3 pt-3">
         <div class="row mt-2">
           <div class="col-auto ms-auto">
             <a href="{% url 'stock-add' medicine.pk %}" class="btn btn-success info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
@@ -121,23 +121,23 @@
         </div>
       </div>
       <div class="table-responsive mt-2">
-        <table id="dataTable" class="table table-striped">
+        <table id="dataTable" class="table table-striped projectTables">
           <thead class="table-dark">
             <tr>
-              <th>Dosage</th>
               <th>Quantity</th>
               <th>Expiration Date</th>
               <th>Total Price</th>
+              <th>Notes</th>
               <th class="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
             {% for stock in valid_stocks %}
             <tr>
-              <td class="align-middle">{{ stock.dosage }}</td>
               <td class="align-middle">{{ stock.quantity }}</td>
               <td class="align-middle">{{ stock.expiration_date|date:"M d, Y" }}</td>
-              <td class="align-middle">{{ stock.total_price|floatformat:2 }}</td>
+              <td class="align-middle">₱{{ stock.total_price|floatformat:2 }}</td>
+              <td class="align-middle">{{ stock.notes }}</td>
               <td class="align-middle text-center">
                 <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1 px-3"><i class="ri-edit-2-fill"></i></a>
                 <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></a>
@@ -153,7 +153,7 @@
     <!-- Expired Tab Content -->
     <div class="tab-pane fade" id="expired" role="tabpanel" aria-labelledby="expired-tab">
       <div class="table-responsive mt-2">
-        <table class="table table-striped">
+        <table class="table table-striped projectTables">
           <thead class="table-dark">
             <tr>
               <th class="text-center">Dosage</th>

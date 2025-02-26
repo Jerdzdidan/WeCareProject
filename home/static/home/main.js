@@ -52,17 +52,17 @@ $(document).ready(function() {
     
     // DataTables
     const $dataTable = $('#dataTable').DataTable({
-        layout: {
-            topStart: null,
-            topEnd: null,
-            bottomStart: null,
-            bottomEnd: null,
-            bottom: null,
-
-        },
-        language: {
-            emptyTable: "No data available in table"
-        }
+      order: [], // disables initial ordering
+      layout: {
+          topStart: null,
+          topEnd: null,
+          bottomStart: null,
+          bottomEnd: null,
+          bottom: null,
+      },
+      language: {
+          emptyTable: "No data available in table"
+      }
     //   "paging": true,
     //   "ordering": true,
     //   "info": true,

@@ -17,16 +17,16 @@
   <p>Are you sure you want to delete the following stock entry for {{ stock.medicine.medicine_name }}?</p>
   <table class="table table-bordered record-table">
     <tr>
-      <th>Dosage</th>
-      <td>{{ stock.dosage }}</td>
-    </tr>
-    <tr>
       <th>Quantity</th>
       <td>{{ stock.quantity }}</td>
     </tr>
     <tr>
       <th>Expiration Date</th>
       <td>{{ stock.expiration_date|date:"M d, Y" }}</td>
+    </tr>
+    <tr>
+      <th>Notes</th>
+      <td>{{ stock.notes }}</td>
     </tr>
   </table>
   <form method="post">
