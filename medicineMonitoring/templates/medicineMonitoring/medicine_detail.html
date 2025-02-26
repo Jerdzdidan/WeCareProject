@@ -107,7 +107,7 @@
         </div>
         <div class="row mt-2">
           <div class="col-auto">
-            <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
+            <select id="stocksCustomEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
@@ -116,12 +116,12 @@
             <span class="d-inline ms-2" style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">Entries per page</span>
           </div>
           <div class="col-auto ms-auto">
-            <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
+            <input type="text" id="stocksSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
           </div>
         </div>
       </div>
       <div class="table-responsive mt-2">
-        <table id="dataTable" class="table table-striped projectTables">
+        <table id="stocksDataTable" class="table table-striped projectTables">
           <thead class="table-dark">
             <tr>
               <th>Quantity</th>
@@ -146,14 +146,14 @@
             {% endfor %}
           </tbody>
         </table>
-        <div id="customPagination"></div>
+        <div id="stocksCustomPagination"></div>
       </div>
     </div>
 
     <!-- Expired Tab Content -->
     <div class="tab-pane fade" id="expired" role="tabpanel" aria-labelledby="expired-tab">
       <div class="table-responsive mt-2">
-        <table class="table table-striped projectTables">
+        <table id="expiredDataTable" class="table table-striped projectTables">
           <thead class="table-dark">
             <tr>
               <th class="text-center">Dosage</th>
@@ -184,6 +184,7 @@
 {% endblock body %}
 
 {% block script %}
+<script src="{% static "medicineMonitoring/medicine_stock.js" %}"></script>
 <script>
   $(document).ready(function(){
     flatpickr(".flatpickr-range", {

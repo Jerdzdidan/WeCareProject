@@ -8,41 +8,41 @@
 
 {% block body %}
 <h3 class="mb-3">Medicine Monitoring - <span class="text-primary">Add Medicine</span></h3>
-<article class="content-section border rounded shadow-sm">
+<article class="content-section border rounded shadow">
   <form method="post">
     {% csrf_token %}
     <div class="row">
       <div class="col-4 mb-3">
         <label for="medicine_name" class="form-label fw-semibold">Medicine Name:</label>
-        <input type="text" class="form-control" id="medicine_name" name="medicine_name" placeholder="e.g., Paracetamol 500mg" required>
+        <input type="text" class="form-control border-secondary-subtle shadow" id="medicine_name" name="medicine_name" placeholder="e.g., Paracetamol 500mg" required>
       </div>
       <div class="col-4 mb-3">
         <label for="generic_name" class="form-label fw-semibold">Generic Name:</label>
-        <input type="text" class="form-control" id="generic_name" name="generic_name" placeholder="e.g., Acetaminophen">
+        <input type="text" class="form-control border-secondary-subtle shadow" id="generic_name" name="generic_name" placeholder="e.g., Acetaminophen">
       </div>
       <div class="col-4 mb-3">
         <label for="dosage" class="form-label fw-semibold">Dosage:</label>
-        <input type="text" class="form-control" id="dosage" name="dosage" placeholder="e.g., 500 mg">
+        <input type="text" class="form-control border-secondary-subtle shadow" id="dosage" name="dosage" placeholder="e.g., 500 mg">
       </div>
     </div>
     <div class="row">
       <div class="col-4 mb-3">
         <label for="brand_name" class="form-label fw-semibold">Brand Name:</label>
-        <input type="text" class="form-control" id="brand_name" name="brand_name" placeholder="e.g., Tylenol">
+        <input type="text" class="form-control border-secondary-subtle shadow" id="brand_name" name="brand_name" placeholder="e.g., Tylenol">
       </div>
       <div class="col-4 mb-3">
         <label for="supplier_name" class="form-label fw-semibold">Supplier Name:</label>
-        <input type="text" class="form-control" id="supplier_name" name="supplier_name" placeholder="e.g., ABC Pharmaceuticals" required>
+        <input type="text" class="form-control border-secondary-subtle shadow" id="supplier_name" name="supplier_name" placeholder="e.g., ABC Pharmaceuticals" required>
       </div>
       <div class="col-4 mb-3">
         <label for="unit_price" class="form-label fw-semibold">Unit Price:</label>
-        <input type="number" step="0.01" class="form-control" id="unit_price" name="unit_price" placeholder="e.g., 0.50" required>
+        <input type="number" step="0.01" class="form-control border-secondary-subtle shadow" id="unit_price" name="unit_price" placeholder="e.g., 0.50" required>
       </div>
     </div>
 
     <div class="mb-3">
       <label for="notes" class="form-label fw-semibold">Notes:</label>
-      <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Enter any additional details or remarks here..."></textarea>
+      <textarea class="form-control border-secondary-subtle shadow" id="notes" name="notes" rows="3" placeholder="Enter any additional details or remarks here..."></textarea>
     </div>
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn btn-success">Add Medicine</button>

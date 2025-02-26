@@ -26,7 +26,7 @@
     </div>
     <!-- Last Visited: Displayed as disabled and submitted via hidden field -->
     <div class="form-section mb-3">
-      <label for="last_visited_display" class="form-label">Last Visited:</label>
+      <label for="last_visited_display" class="form-label">Date Visited:</label>
       <input type="date" id="last_visited_display" class="form-control shadow" value="{{ record.last_visited|date:'Y-m-d' }}" disabled>
       <input type="hidden" name="last_visited" value="{{ record.last_visited|date:'Y-m-d' }}">
     </div>
