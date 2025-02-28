@@ -260,10 +260,8 @@ document.addEventListener('DOMContentLoaded', function(){
       const residentAge = this.getAttribute('data-resident-age');
       const residentAddress = this.getAttribute('data-resident-address');
       
-      // Use hidden input with id "resident"
       document.getElementById('resident').value = residentId;
       
-      // Update the display area with selected resident details
       document.getElementById('selectedResident').innerHTML = `
         <strong>ID:</strong> ${residentId}<br>
         <strong>Name:</strong> ${residentName}<br>
