@@ -328,7 +328,7 @@
             </form>
           </div>
           <div class="col-auto ms-auto my-auto">
-            <a href="{% url 'medical-record-create' patient.patientID %}" class="btn btn-success" style="font-size: calc(0.8rem + 0.2vw);">
+            <a href="{% url 'medical-record-create' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
               <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Medical Record
             </a>
           </div>
@@ -336,7 +336,7 @@
         <!-- Entries and Search Bar -->
         <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
           <div>
-            <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
+            <select id="patientMedicalRecordEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
@@ -345,13 +345,13 @@
             <span class="ms-2">Entries per page</span>
           </div>
           <div>
-            <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
+            <input type="text" id="patientMedicalRecordSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
           </div>
         </div>
       </div>
       <!-- Medical Records Table -->
       <div class="table-responsive">
-        <table class="table table-striped" id="dataTable">
+        <table class="table table-striped" id="patientMedicalRecordDataTable">
           <thead class="table-dark">
             <tr>
               <th>Concern</th>
@@ -376,43 +376,71 @@
         </table>
       </div>
       <!-- Custom Pagination Container -->
-      <div id="customPagination"></div>
+      <div id="patientMedicalRecordCustomPagination"></div>
     </div>
 
 
 
     <!-- Medicine Tracking Tab -->
     <div class="tab-pane fade" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">
-      <div class="mt-3">
-        <h4>Medicine Tracking</h4>
-        <table class="table table-striped">
-          <thead>
+      <div class="container px-3 pt-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4>Medicine Tracking</h4>
+        </div>
+        <div class="row">
+          <div class="col-auto ms-auto my-auto">
+            <a href="{% url 'medical-record-create' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
+              <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Medicine Record
+            </a>
+          </div>
+        </div>
+        <!-- Entries and Search Bar -->
+        <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+          <div>
+            <select id="patientMedicalRecordEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <span class="ms-2">Entries per page</span>
+          </div>
+          <div>
+            <input type="text" id="patientMedicalRecordSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
+          </div>
+        </div>
+      </div>
+      <!-- Medicine Tracking Table -->
+      <div class="table-responsive">
+        <table class="table table-striped" id="patientMedicineTrackingDataTable">
+          <thead class="table-dark">
             <tr>
               <th>Medicine Name</th>
               <th>Dosage</th>
               <th>Frequency</th>
               <th>Start Date</th>
               <th>End Date</th>
+              <th class="text-center ms-auto me-auto">Action</th>
             </tr>
           </thead>
           <tbody>
             {% for tracking in medicine_trackings %}
             <tr>
-              <td>{{ tracking.medicine_name }}</td>
-              <td>{{ tracking.dosage }}</td>
-              <td>{{ tracking.frequency }}</td>
-              <td>{{ tracking.start_date|date:"M d, Y" }}</td>
-              <td>
+              <td class="my-auto">{{ tracking.medicine_name }}</td>
+              <td class="my-auto">{{ tracking.dosage }}</td>
+              <td class="my-auto">{{ tracking.frequency }}</td>
+              <td class="my-auto">{{ tracking.start_date|date:"M d, Y" }}</td>
+              <td class="my-auto">
                 {% if tracking.end_date %}
                   {{ tracking.end_date|date:"M d, Y" }}
                 {% else %}
                   Ongoing
                 {% endif %}
               </td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="5">No medicine tracking records available.</td>
+              <td class="text-center my-auto">
+                <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success mx-0 px-4 ms-auto me-auto"><i class="ri-edit-2-fill"></i></a>
+                <a href="{% url 'medical-record-delete' record.id %}" class="btn btn-sm btn-outline-danger mx-0 px-4 ms-auto me-auto"><i class="ri-delete-bin-5-fill"></i></a>
+              </td>
             </tr>
             {% endfor %}
           </tbody>
@@ -424,6 +452,8 @@
 {% endblock body %}
 
 {% block script %}
+<script src="{% static "patientInfo/patientMedicalRecordDataTable.js" %}"></script>
+<script src="{% static "patientInfo/patientMedicineTrackingDataTable.js" %}"></script>
 <script>
   $(document).ready(function(){
     flatpickr(".flatpickr-range", {

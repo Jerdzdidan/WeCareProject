@@ -7,14 +7,21 @@ from datetime import datetime, date
 
 # Helper function to update total value and total quantity
 def update_medicine_totals(medicine):
-    total_value = Decimal("0.00")
-    total_qty = 0
-    for stock in medicine.stocks.all():
-        total_value += stock.quantity * medicine.unit_price
-        total_qty += stock.quantity
+    today = date.today()
+    valid_stocks = medicine.stocks.filter(expiration_date__gt=today)
+    
+    total_value = sum(stock.quantity * medicine.unit_price for stock in valid_stocks)
+    total_qty = sum(stock.quantity for stock in valid_stocks)
+    
     medicine.total_value = total_value
     medicine.total_quantity = total_qty
     medicine.save(update_fields=["total_value", "total_quantity"])
+
+# Helper function to update the Date of Last Stocked
+def update_medicine_date_last_stocked(medicine):
+    # Simply set the last stocked date to today's date
+    medicine.date_last_stock = date.today()
+    medicine.save(update_fields=["date_last_stock"])
 
 # === Medicine List ===
 @login_required
@@ -26,20 +33,18 @@ def medicine_list(request):
 @login_required
 def medicine_detail(request, pk):
     medicine = get_object_or_404(Medicine, pk=pk)
-    stocks = medicine.stocks.all().order_by("expiration_date")
-    valid_stocks = stocks.filter(expiration_date__gte=date.today())
-    expired_stocks = stocks.filter(expiration_date__lt=date.today())
+    today = date.today()
     
-    valid_total_qty = sum(stock.quantity for stock in valid_stocks)
-    expired_total_qty = sum(stock.quantity for stock in expired_stocks)
+    valid_stocks = medicine.stocks.filter(expiration_date__gt=today)
+    expired_stocks = medicine.stocks.filter(expiration_date__lte=today)
     
-    return render(request, 'medicineMonitoring/medicine_detail.html', {
+    context = {
         'medicine': medicine,
         'valid_stocks': valid_stocks,
         'expired_stocks': expired_stocks,
-        'valid_total_qty': valid_total_qty,
-        'expired_total_qty': expired_total_qty,
-    })
+        'expired_count': expired_stocks.count(),  
+    }
+    return render(request, 'medicineMonitoring/medicine_detail.html', context)
 
 # === Medicine Inventory CRUD Operations ===
 @login_required
@@ -62,7 +67,7 @@ def medicine_add(request):
             medicine_name=medicine_name,
             generic_name=generic_name,
             brand_name=brand_name,
-            dosage=dosage,  # Pass dosage to the model
+            dosage=dosage,  
             unit_price=unit_price,
             supplier_name=supplier_name,
             notes=notes,
@@ -127,6 +132,7 @@ def medicine_stock_add(request, medicine_pk):
                 notes=notes  
             )
             update_medicine_totals(medicine) 
+            update_medicine_date_last_stocked(medicine)
             messages.success(request, "Stock added successfully!")
             return redirect("medicine-detail", pk=medicine.pk)
         else:
@@ -154,6 +160,7 @@ def medicine_stock_update(request, stock_pk):
         stock.notes = notes  
         stock.save()
         update_medicine_totals(stock.medicine)
+        update_medicine_date_last_stocked(stock.medicine)
         messages.success(request, "Stock updated successfully!")
         return redirect("medicine-detail", pk=stock.medicine.pk)
     return render(request, "medicineMonitoring/medicine_stock_update.html", {"stock": stock})
@@ -166,6 +173,7 @@ def medicine_stock_delete(request, stock_pk):
         medicine_pk = stock.medicine.pk
         stock.delete()
         update_medicine_totals(stock.medicine)
+        update_medicine_date_last_stocked(stock.medicine)
         messages.success(request, "Stock deleted successfully!")
         return redirect("medicine-detail", pk=medicine_pk)
     return render(request, "medicineMonitoring/medicine_stock_delete.html", {"stock": stock})

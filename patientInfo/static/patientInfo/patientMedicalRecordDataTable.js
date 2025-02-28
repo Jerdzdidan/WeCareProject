@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    // ==================== Stocks DataTable ====================
-    const $stocksDataTable = $('#stocksDataTable').DataTable({
-        order: [],
+    // ==================== patientMedicalRecord DataTable ====================
+    const $patientMedicalRecordDataTable = $('#patientMedicalRecordDataTable').DataTable({
+        order: [2, 'desc'],
         layout: {
             topStart: null,
             topEnd: null,
@@ -15,22 +15,22 @@ $(document).ready(function() {
     });
 
     // Stock Table Elements (correct IDs)
-    const $stocksEntries = $('#stocksCustomEntries');
-    const $stocksSearch = $('#stocksSearchBar');
-    const $stocksPagination = $('#stocksCustomPagination');
+    const $patientMedicalRecordEntries = $('#patientMedicalRecordCustomEntries');
+    const $patientMedicalRecordSearch = $('#patientMedicalRecordSearchBar');
+    const $patientMedicalRecordPagination = $('#patientMedicalRecordCustomPagination');
 
     // Stock Controls Event Handlers
-    $stocksEntries.on('change', function() {
-        $stocksDataTable.page.len(parseInt(this.value, 10)).draw();
+    $patientMedicalRecordEntries.on('change', function() {
+        $patientMedicalRecordDataTable.page.len(parseInt(this.value, 10)).draw();
     });
 
-    $stocksSearch.on('keyup', function() {
-        $stocksDataTable.search(this.value).draw();
+    $patientMedicalRecordSearch.on('keyup', function() {
+        $patientMedicalRecordDataTable.search(this.value).draw();
     });
 
     // Stock Pagination Function
-    function updateStocksPagination() {
-        const info = $stocksDataTable.page.info();
+    function updatepatientMedicalRecordPagination() {
+        const info = $patientMedicalRecordDataTable.page.info();
         let paginationHtml = '<ul class="pagination justify-content-center">';
         
         // Previous Button
@@ -55,29 +55,16 @@ $(document).ready(function() {
             </li>`;
         }
         
-        $stocksPagination.html(paginationHtml + '</ul>');
+        $patientMedicalRecordPagination.html(paginationHtml + '</ul>');
     }
 
     // Stock Pagination Events
-    $stocksDataTable.on('draw', updateStocksPagination);
-    $stocksPagination.on('click', 'a.page-link', function(e) {
+    $patientMedicalRecordDataTable.on('draw', updatepatientMedicalRecordPagination);
+    $patientMedicalRecordPagination.on('click', 'a.page-link', function(e) {
         e.preventDefault();
-        $stocksDataTable.page(parseInt($(this).data('page'), 10).draw('page'));
+        $patientMedicalRecordDataTable.page(parseInt($(this).data('page'), 10).draw('page'));
     });
-    updateStocksPagination();
+    updatepatientMedicalRecordPagination();
 
-    // ==================== Expired DataTable ====================
-    const $expiredDataTable = $('#expiredDataTable').DataTable({
-        order: [],
-        layout: {
-            topStart: null,
-            topEnd: null,
-            bottomStart: null,
-            bottomEnd: null,
-            bottom: null,
-        },
-        language: {
-            emptyTable: "No data available in table"
-        }
-    });
+
 });

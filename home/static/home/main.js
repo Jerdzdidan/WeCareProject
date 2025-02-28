@@ -52,7 +52,7 @@ $(document).ready(function() {
     
     // DataTables
     const $dataTable = $('#dataTable').DataTable({
-      order: [], // disables initial ordering
+      order: [0, 'asc'], // disables initial ordering
       layout: {
           topStart: null,
           topEnd: null,

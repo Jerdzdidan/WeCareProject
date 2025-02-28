@@ -17,7 +17,21 @@ from residentInfo.models import Resident
 # === PATIENT RECORD FUNCTIONALITY ===
 @login_required
 def patient_list(request):
-    patients = Patient.objects.select_related('resident').all().order_by('patientID')
+    category = request.GET.get('category', '')
+    gender = request.GET.get('gender', '')
+    street = request.GET.get('street', '') 
+
+    patients = Patient.objects.select_related('resident').all()
+
+    if category:
+        patients = patients.filter(resident__category=category)
+    if gender:
+        patients = patients.filter(resident__gender=gender)
+    if street:
+        patients = patients.filter(resident__present_address__icontains=street)
+
+    patients = patients.order_by('patientID')
+
     return render(request, 'patientInfo/patient_list.html', {'patients': patients})
 
 @login_required
