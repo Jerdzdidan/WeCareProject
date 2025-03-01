@@ -15,9 +15,9 @@ $(document).ready(function() {
     });
 
     // Stock Table Elements (correct IDs)
-    const $expiredStocksEntries = $('#stocksCustomEntries');
-    const $expiredStocksSearch = $('#stocksSearchBar');
-    const $expiredStocksPagination = $('#stocksCustomPagination');
+    const $expiredStocksEntries = $('#expiredStocksCustomEntries');
+    const $expiredStocksSearch = $('#expiredStocksSearchBar');
+    const $expiredStocksPagination = $('#expiredStocksCustomPagination');
 
     // Stock Controls Event Handlers
     $expiredStocksEntries.on('change', function() {

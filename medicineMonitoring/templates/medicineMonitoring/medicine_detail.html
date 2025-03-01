@@ -90,7 +90,7 @@
 
 {% block body %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h3>Medicine Monitoring - <span class="text-primary">Stocks</span></h3>
+  <h3>Medicine Record - <span class="text-primary">Stocks</span></h3>
   <a href="{% url 'medicine-list' %}" class="btn btn-outline-secondary">
     <i class="fa-solid fa-xmark fw-bold"></i>
   </a>
@@ -193,7 +193,6 @@
   </div>
   
   <!-- Nested Tabs for Individual Stocks -->
-  <h4 class="mb-3 fw-bold">Individual Stocks</h4>
   <ul class="nav nav-tabs nested-nav-tabs" id="stockTabs" role="tablist">
     <li class="nav-item" role="presentation">
       <button class="nav-link active fs-6 fw-bold" id="stocks-tab" data-bs-toggle="tab" data-bs-target="#stocks" type="button" role="tab" aria-controls="stocks" aria-selected="true">Stocks</button>
@@ -263,6 +262,13 @@
     <div class="tab-pane fade" id="expired" role="tabpanel" aria-labelledby="expired-tab">
       <div class="container px-3 pt-3">
         <div class="row mt-2">
+          <div class="col-auto ms-auto">
+            <a href="{% url 'stock-delete-all-expired' medicine.pk %}" class="btn btn-danger info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
+              <i class="fa-solid fa-minus"></i> Delete ALL
+            </a>
+          </div>
+        </div>
+        <div class="row mt-2">
           <div class="col-auto">
             <select id="expiredStocksCustomEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
               <option value="10">10</option>
@@ -303,6 +309,7 @@
             {% endfor %}
           </tbody>
         </table>
+        <div id="expiredStocksCustomPagination"></div>
       </div>
     </div>
   </article>
