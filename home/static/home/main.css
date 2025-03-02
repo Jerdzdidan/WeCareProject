@@ -60,23 +60,31 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===== Layout Structure ===== */
 #page-wrapper {
-  display: flex;
   min-height: 100vh;
+  overflow: hidden; 
 }
 
 #content-wrapper {
   flex: 1;
-  min-width: 0;
-  transition: margin-left 0.3s ease;
+  overflow-y: auto; 
+  height: 100vh;
 }
 
 /* ===== Sidebar ===== */
 .sidebar {
-  width: clamp(250px, 20vw, 300px); 
-  min-width: 0; 
+  width: clamp(250px, 20vw, 300px);
+  position: relative; 
   background: #ffffff;
   border-right: 1px solid #ddd;
+  height: 100vh;
   transition: all 0.3s ease;
+  overflow-y: auto; 
+}
+
+.sidebar > .p-3 {
+  position: sticky;
+  top: 0;
+  height: 100vh;
   overflow-y: auto; 
 }
 

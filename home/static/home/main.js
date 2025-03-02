@@ -32,27 +32,24 @@ $(document).ready(function() {
       $(this).attr('aria-expanded', !expanded);
     });
 
-    
-  
     // Clock functionality: update clock every second if the clock element exists
     if ($('#clock').length) {
       function updateClock() {
         const now = new Date();
-        const formattedDate = now.toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-        });
+        const month = now.toLocaleString('en-US', { month: 'short' });
+        const day = now.getDate();
+        const year = now.getFullYear();
+        const formattedDate = `${month}. ${day}, ${year}`;
         const formattedTime = now.toLocaleTimeString();
         $('#clock').html(`${formattedDate}, ${formattedTime}`);
       }
       updateClock();
       setInterval(updateClock, 1000);
     }
-    
+
     // DataTables
     const $dataTable = $('#dataTable').DataTable({
-      order: [0, 'asc'], // disables initial ordering
+      order: [0, 'asc'], 
       layout: {
           topStart: null,
           topEnd: null,

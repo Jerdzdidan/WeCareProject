@@ -1,5 +1,7 @@
 from django.db import models, transaction
 from residentInfo.models import Resident  
+from medicineMonitoring.models import Medicine, MedicineStock
+from datetime import datetime, date
 
 
 class Patient(models.Model):
@@ -92,11 +94,14 @@ class MedicalRecord(models.Model):
 
 class MedicineTracking(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="medicine_trackings")
-    medicine_name = models.CharField(max_length=255)
+    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE, related_name="medicine_trackings")
+    medicine_stock = models.ForeignKey(MedicineStock, on_delete=models.SET_NULL, null=True, blank=True)
+    quantity_used = models.PositiveIntegerField()
     dosage = models.CharField(max_length=100)
     frequency = models.CharField(max_length=100)
-    start_date = models.DateField()
+    start_date = models.DateField(default=date.today)
     end_date = models.DateField(null=True, blank=True)
+    notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.medicine_name} for {self.patient.patientID}"
+        return f"{self.medicine.medicine_name} for {self.patient.patientID} ({self.quantity_used} units)"

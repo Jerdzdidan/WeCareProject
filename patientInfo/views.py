@@ -343,6 +343,9 @@ def patient_delete_confirm(request, pk):
     
     return render(request, 'patientInfo/patient_delete.html', {'patient': patient})
 
+
+
+
 @login_required
 def patient_detail(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)

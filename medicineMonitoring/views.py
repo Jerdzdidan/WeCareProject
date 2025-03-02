@@ -19,7 +19,6 @@ def update_medicine_totals(medicine):
 
 # Helper function to update the Date of Last Stocked
 def update_medicine_date_last_stocked(medicine):
-    # Simply set the last stocked date to today's date
     medicine.date_last_stock = date.today()
     medicine.save(update_fields=["date_last_stock"])
 
@@ -103,6 +102,8 @@ def medicine_delete(request, pk):
         messages.success(request, "Medicine deleted successfully!")
         return redirect("medicine-list")
     return render(request, "medicineMonitoring/medicine_delete.html", {"medicine": medicine})
+
+
 
 # === MEDICINE STOCK CRUD OPERATIONS ===
 @login_required
