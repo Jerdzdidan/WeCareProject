@@ -66,7 +66,12 @@
 
 {% block body %}
 <div class="container">
-  <h3>Patient Details - Patient <span class="text-primary">#{{ patient.patientID }}</span></h3>
+  <div class="d-flex justify-content-between align-items-center">
+    <h3>Patient Details - Patient <span class="text-primary">#{{ patient.patientID }}</span></h3>
+    <a href="{% url 'patient-list' %}" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-xmark fw-bold"></i>
+    </a>
+  </div>
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" id="patientTabs" role="tablist">
@@ -354,19 +359,19 @@
         <table class="table table-striped" id="patientMedicalRecordDataTable">
           <thead class="table-dark">
             <tr>
-              <th>Concern</th>
-              <th>Description</th>
-              <th>Date Visited</th>
+              <th class="text-start">Concern</th>
+              <th class="text-start">Description</th>
+              <th class="text-start">Date Visited</th>
               <th class="text-center ms-auto me-auto">Action</th>
             </tr>
           </thead>
           <tbody>
             {% for record in medical_records %}
             <tr>
-              <td class="my-auto">{{ record.concern }}</td>
-              <td class="my-auto">{{ record.description }}</td>
-              <td class="my-auto">{{ record.last_visited|date:"M d, Y" }}</td>
-              <td class="text-center my-auto">
+              <td class="text-start align-middle">{{ record.concern }}</td>
+              <td class="text-start align-middle">{{ record.description }}</td>
+              <td class="text-start align-middle">{{ record.last_visited|date:"M d, Y" }}</td>
+              <td class="text-center align-middle">
                 <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success mx-0 px-4 ms-auto me-auto"><i class="ri-edit-2-fill"></i></a>
                 <a href="{% url 'medical-record-delete' record.id %}" class="btn btn-sm btn-outline-danger mx-0 px-4 ms-auto me-auto"><i class="ri-delete-bin-5-fill"></i></a>
               </td>
@@ -389,7 +394,7 @@
         </div>
         <div class="row">
           <div class="col-auto ms-auto my-auto">
-            <a href="{% url 'medical-record-create' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
+            <a href="{% url 'medicine-tracking-select' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
               <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Medicine Record
             </a>
           </div>
@@ -415,22 +420,36 @@
         <table class="table table-striped" id="patientMedicineTrackingDataTable">
           <thead class="table-dark">
             <tr>
-              <th>Medicine Name</th>
-              <th>Dosage</th>
-              <th>Frequency</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th class="text-center ms-auto me-auto">Action</th>
+              <th class="text-start">Chief Complain</th>
+              <th class="text-start">Medicine Name</th>
+              <th class="text-start">Quantity Used</th>
+              <th class="text-start">Dosage</th>
+              <th class="text-start">Frequency</th>
+              <th class="text-start">Date Given</th>
+              <th class="text-start">Follow Up Date</th>
+              <th class="text-start">Start Date</th>
+              <th class="text-start">End Date</th>
+              <th class="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
             {% for tracking in medicine_trackings %}
             <tr>
-              <td class="my-auto">{{ tracking.medicine_name }}</td>
-              <td class="my-auto">{{ tracking.dosage }}</td>
-              <td class="my-auto">{{ tracking.frequency }}</td>
-              <td class="my-auto">{{ tracking.start_date|date:"M d, Y" }}</td>
-              <td class="my-auto">
+              <td class=" text-start">{{ tracking.chief_complain|default:"-" }}</td>
+              <td class="align-middle text-start">{{ tracking.medicine.medicine_name }}</td>
+              <td class="align-middle text-center">{{ tracking.quantity_used }}</td>
+              <td class="align-middle text-start">{{ tracking.total_dosage }}</td>
+              <td class="align-middle text-start">{{ tracking.frequency }}</td>
+              <td class="align-middle text-start">{{ tracking.date_given|date:"M d, Y" }}</td>
+              <td class="align-middle text-start">
+                {% if tracking.follow_up_date %}
+                  {{ tracking.follow_up_date|date:"M d, Y" }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+              <td class="align-middle text-start">{{ tracking.start_date|date:"M d, Y" }}</td>
+              <td class="align-middle text-start">
                 {% if tracking.end_date %}
                   {{ tracking.end_date|date:"M d, Y" }}
                 {% else %}
@@ -438,13 +457,18 @@
                 {% endif %}
               </td>
               <td class="text-center my-auto">
-                <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success mx-0 px-4 ms-auto me-auto"><i class="ri-edit-2-fill"></i></a>
-                <a href="{% url 'medical-record-delete' record.id %}" class="btn btn-sm btn-outline-danger mx-0 px-4 ms-auto me-auto"><i class="ri-delete-bin-5-fill"></i></a>
+                <a href="#" class="btn btn-sm btn-outline-success mx-0 px-4">
+                  <i class="ri-edit-2-fill"></i>
+                </a>
+                <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger mx-0 px-4">
+                  <i class="ri-delete-bin-5-fill"></i>
+                </a>
               </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
+        <div id="patientMedicineTrackingCustomPagination"></div>
       </div>
     </div>
   </article>

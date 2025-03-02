@@ -52,10 +52,11 @@ def medicine_add(request):
         medicine_name = request.POST.get("medicine_name", "").strip()
         generic_name = request.POST.get("generic_name", "").strip()
         brand_name = request.POST.get("brand_name", "").strip()
-        dosage = request.POST.get("dosage", "").strip()  # Retrieve dosage
+        dosage = request.POST.get("dosage", "").strip()  
         unit_price = request.POST.get("unit_price", "").strip()
         supplier_name = request.POST.get("supplier_name", "").strip()
         notes = request.POST.get("notes", "").strip()
+        date_last_stock = date.today()
 
         try:
             unit_price = Decimal(unit_price)
@@ -69,6 +70,7 @@ def medicine_add(request):
             dosage=dosage,  
             unit_price=unit_price,
             supplier_name=supplier_name,
+            date_last_stock = date_last_stock,
             notes=notes,
         )
         messages.success(request, "Medicine added successfully!")

@@ -1,0 +1,230 @@
+{% extends "home/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'residentInfo/main.css' %}">
+  <style>
+    .input-group-text {
+      background-color: #e9ecef;
+    }
+    .flatpickr-input {
+      background-color: #fff;
+    }
+    hr.divider {
+      border: 0;
+      border-top: 2px solid #dee2e6;
+      margin: 2rem 0;
+    }
+    .unselectable {
+        pointer-events: none;
+        user-select: none;
+        background-color: #e9ecef; /* grey color */
+    }      
+  </style>
+{% endblock style %}
+
+{% block body %}
+<h3 class="mb-3">Medicine Tracking - <span class="text-primary">Enter Details</span></h3>
+
+<!-- General Medicine Info Card -->
+<div class="card info-card border-secondary shadow-sm mb-4">
+  <div class="card-header bg-light border-secondary border-bottom py-3">
+    <div class="d-flex align-items-center gap-2">
+      <i class="ri-capsule-line ri-lg text-secondary"></i>
+      <div>
+        <h3 class="h5 mb-0 text-dark">{{ medicine.medicine_name }}</h3>
+        <p class="text-secondary mb-0 small">Pharmaceutical Details</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body p-3">
+    <div class="row g-3">
+      <!-- Basic Info Section -->
+      <div class="col-md-6">
+        <div class="info-box border border-secondary rounded p-3 mb-1">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <i class="ri-file-text-line text-secondary"></i>
+            <h4 class="text-uppercase small text-secondary mb-0">Basic Information</h4>
+          </div>
+          <dl class="row g-2">
+            <div class="col-4">
+              <dt class="text-secondary small">Generic Name</dt>
+              <dd class="mb-0">{{ medicine.generic_name|default:"-" }}</dd>
+            </div>
+            <div class="col-4">
+              <dt class="text-secondary small">Brand Name</dt>
+              <dd class="mb-0">{{ medicine.brand_name|default:"-" }}</dd>
+            </div>
+            <div class="col-4">
+              <dt class="text-secondary small">Unit Price</dt>
+              <dd class="mb-0">₱{{ medicine.unit_price|floatformat:2 }}</dd>
+            </div>
+            <div class="col-4">
+              <dt class="text-secondary small">Last Stocked</dt>
+              <dd class="mb-0">{{ medicine.date_last_stock|date:"M. d, Y"|default:"-" }}</dd>
+            </div>
+            <div class="col-4">
+              <dt class="text-secondary small">Dosage</dt>
+              <dd class="mb-0">{{ medicine.dosage|default:"-" }}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Inventory Section -->
+      <div class="col-md-6">
+        <div class="info-box border border-secondary rounded p-3 mb-1">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <i class="ri-archive-line text-secondary"></i>
+            <h4 class="text-uppercase small text-secondary mb-0">Inventory</h4>
+          </div>
+          <dl class="row g-2">
+            <div class="col-6">
+              <dt class="text-secondary small">Total Quantity (not expired)</dt>
+              <dd class="mb-0">{{ medicine.total_quantity|default:"-" }}</dd>
+            </div>
+            <div class="col-6">
+              <dt class="text-secondary small">Total Value (not expired)</dt>
+              <dd class="mb-0">₱{{ medicine.total_value|default:"-" }}</dd>
+            </div>
+            <div class="col-6 mt-2">
+              <dt class="text-secondary small">Expired Quantity</dt>
+              <dd class="mb-0">{{ medicine.expired_quantity }}</dd>
+            </div>
+            <div class="col-6 mt-2">
+              <dt class="text-secondary small">Expired Value</dt>
+              <dd class="mb-0">₱{{ medicine.expired_value|floatformat:2 }}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Supplier & Notes Section -->
+      <div class="col-12">
+        <div class="info-box border border-secondary rounded p-3">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <i class="ri-truck-line text-secondary"></i>
+                <h4 class="text-uppercase small text-secondary mb-0">Supplier</h4>
+              </div>
+              <p class="mb-0">{{ medicine.supplier_name }}</p>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <i class="ri-sticky-note-line text-secondary"></i>
+                <h4 class="text-uppercase small text-secondary mb-0">Notes</h4>
+              </div>
+              <p class="mb-0 text-muted small">{{ medicine.notes|default:"No special notes" }}</p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="col-12 mt-3">
+            <form method="POST" action="{% url 'medicine-tracking-create-details' patient.patientID medicine.id %}">
+                {% csrf_token %}
+                <!-- Hidden field to send the selected medicine ID -->
+                <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
+                
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label for="quantity" class="form-label">Quantity: <span><small class="text-muted">(max: {{ medicine.total_quantity }})</small></span></label>
+                    <input type="number" name="quantity" id="quantity" class="form-control" min="1" max="{{ medicine.total_quantity }}" data-base-dosage="{{ medicine.dosage }}" required>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="frequency" class="form-label">Frequency:</label>
+                    <input type="text" name="frequency" id="frequency" class="form-control" placeholder="e.g., Twice a day" required>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="total_dosage" class="form-label">Total Dosage: <span><small class="text-muted">(Automatically calculated)</small></span></label>
+                    <input type="text" id="total_dosage" name="total_dosage" class="form-control unselectable" readonly>
+                  </div>                
+                </div>
+                
+                <div class="mb-3">
+                  <label for="chief_complain" class="form-label">Chief Complain:</label>
+                  <textarea name="chief_complain" id="chief_complain" class="form-control" rows="2" placeholder="Enter chief complain..."></textarea>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="date_given" class="form-label">Date Given:</label>
+                    <div class="input-group">
+                      <input type="text" name="date_given" id="date_given" class="form-control flatpickr" value="{% now 'Y-m-d' %}" required>
+                      <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="follow_up_date" class="form-label">Follow Up Date:</label>
+                    <div class="input-group">
+                      <input type="text" name="follow_up_date" id="follow_up_date" class="form-control flatpickr" placeholder="Optional">
+                      <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="start_date" class="form-label">Start Date:</label>
+                        <div class="input-group">
+                          <input type="text" name="start_date" id="start_date" class="form-control flatpickr" value="{% now 'Y-m-d' %}" required>
+                          <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="end_date" class="form-label">End Date:</label>
+                        <div class="input-group">
+                          <input type="text" name="end_date" id="end_date" class="form-control flatpickr" placeholder="Optional">
+                          <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                        </div>
+                      </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="notes" class="form-label">Additional Notes:</label>
+                  <textarea name="notes" id="notes" class="form-control" rows="2" placeholder="Enter any additional notes..."></textarea>
+                </div>
+                <div class="text-end">
+                  <button type="submit" class="btn btn-success my-auto border-dark fw-semibold">Assign Medicine</button>
+                  <a href="{% url 'patient-detail' patient.patientID %}" class="btn btn-secondary ms-2 my-auto fw-semibold">Cancel</a>
+                </div>
+              </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}
+
+{% block script %}
+<script>
+    $(document).ready(function(){
+      flatpickr(".flatpickr", {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "M. j, Y",
+        allowInput: true,
+        autoClose: true
+      });
+      
+      // Calculate Total Dosage when quantity changes
+      $("#quantity").on("input", function(){
+        var quantity = parseFloat($(this).val());
+        var baseDosageStr = $(this).data("base-dosage");
+        var totalDosage = "";
+        // Extract numeric value and unit (e.g., "500mg" => 500 and "mg")
+        var matches = baseDosageStr.match(/^([\d\.]+)\s*(.*)$/);
+        if(matches){
+          var baseValue = parseFloat(matches[1]);
+          var unit = matches[2];
+          totalDosage = (quantity * baseValue) + (unit ? " " + unit : "");
+        }
+        $("#total_dosage").val(totalDosage);
+      });
+    });
+</script>
+{% endblock script %}

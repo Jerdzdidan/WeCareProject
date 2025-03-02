@@ -1,7 +1,7 @@
 $(document).ready(function() {
     // ==================== patientMedicineTracking DataTable ====================
     const $patientMedicineTrackingDataTable = $('#patientMedicineTrackingDataTable').DataTable({
-        order: [3, 'desc'],
+        order: [5, 'desc'],
         layout: {
             topStart: null,
             topEnd: null,

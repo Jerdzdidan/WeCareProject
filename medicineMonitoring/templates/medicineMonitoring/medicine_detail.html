@@ -32,7 +32,6 @@
     margin-top: -1px;
     border-radius: 0 0 0.25rem 0.25rem;
   }
-  /* Nested Tabs Styling (for individual stocks) */
   .nested-nav-tabs {
     border-bottom: 1px solid #dee2e6;
     margin-bottom: 0;
@@ -118,21 +117,25 @@
               <h4 class="text-uppercase small text-secondary mb-0">Basic Information</h4>
             </div>
             <dl class="row g-2">
-              <div class="col-6">
+              <div class="col-4">
                 <dt class="text-secondary small">Generic Name</dt>
                 <dd class="mb-0">{{ medicine.generic_name|default:"-" }}</dd>
               </div>
-              <div class="col-6">
+              <div class="col-4">
                 <dt class="text-secondary small">Brand Name</dt>
                 <dd class="mb-0">{{ medicine.brand_name|default:"-" }}</dd>
               </div>
-              <div class="col-6">
+              <div class="col-4">
                 <dt class="text-secondary small">Unit Price</dt>
                 <dd class="mb-0">₱{{ medicine.unit_price|floatformat:2 }}</dd>
               </div>
-              <div class="col-6">
+              <div class="col-4">
                 <dt class="text-secondary small">Last Stocked</dt>
-                <dd class="mb-0">{{ medicine.date_last_stock|date:"M d, Y"|default:"-" }}</dd>
+                <dd class="mb-0">{{ medicine.date_last_stock|date:"M. d, Y"|default:"-" }}</dd>
+              </div>
+              <div class="col-4">
+                <dt class="text-secondary small">Dosage</dt>
+                <dd class="mb-0">{{ medicine.dosage|default:"-" }}</dd>
               </div>
             </dl>
           </div>
@@ -243,7 +246,7 @@
             {% for stock in valid_stocks %}
             <tr>
               <td class="align-middle">{{ stock.quantity }}</td>
-              <td class="align-middle">{{ stock.expiration_date|date:"M d, Y" }}</td>
+              <td class="align-middle">{{ stock.expiration_date|date:"M. d, Y" }}</td>
               <td class="align-middle">₱{{ stock.total_price|floatformat:2 }}</td>
               <td class="align-middle">{{ stock.notes }}</td>
               <td class="align-middle text-center">
@@ -298,7 +301,7 @@
             {% for stock in expired_stocks %}
             <tr>
               <td class="align-middle text-center">{{ stock.quantity }}</td>
-              <td class="align-middle text-center">{{ stock.expiration_date|date:"M d, Y" }}</td>
+              <td class="align-middle text-center">{{ stock.expiration_date|date:"M. d, Y" }}</td>
               <td class="align-middle text-center">{{ stock.total_price|floatformat:2 }}</td>
               <td class="align-middle">{{ stock.notes }}</td>
               <td class="align-middle text-center">

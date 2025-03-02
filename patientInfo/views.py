@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import datetime, date
 from django.utils import timezone
 from patientInfo.models import (
     Patient,
@@ -12,6 +12,8 @@ from patientInfo.models import (
     PresentIllness,
     MedicineTracking
 )
+from medicineMonitoring.models import Medicine, MedicineStock
+from medicineMonitoring.views import update_medicine_date_last_stocked, update_medicine_totals
 from residentInfo.models import Resident
 
 # === PATIENT RECORD FUNCTIONALITY ===
@@ -448,32 +450,111 @@ def medical_record_delete(request, record_id):
         return redirect('patient-detail', pk=patientID)
     return render(request, 'patientInfo/medical_record_delete.html', {'record': record})
 
+
+
+
+# ===== PATIENT_MEDICINE_TRACKING =====
 @login_required
-def medicine_tracking_create(request, pk):
+def medicine_tracking_select(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
+    available_medicines = Medicine.objects.all().order_by("medicine_name")
+    context = {
+        "patient": patient,
+        "available_medicines": available_medicines,
+    }
+    return render(request, "patientInfo/medicinetracking_select.html", context)
+
+@login_required
+def medicine_tracking_create_details(request, pk, medicine_id):
+    patient = get_object_or_404(Patient, patientID=pk)
+    medicine = get_object_or_404(Medicine, id=medicine_id)
+    
     if request.method == "POST":
-        medicine_name = request.POST.get('medicine_name', '').strip()
-        dosage = request.POST.get('dosage', '').strip()
-        frequency = request.POST.get('frequency', '').strip()
-        start_date_str = request.POST.get('start_date', '').strip()
-        end_date_str = request.POST.get('end_date', '').strip()
+        quantity_str = request.POST.get("quantity", "").strip()
+        total_dosage = request.POST.get("total_dosage", "").strip()
+        frequency = request.POST.get("frequency", "").strip()
+        chief_complain = request.POST.get("chief_complain", "").strip()
+        date_given_str = request.POST.get("date_given", "").strip()
+        follow_up_date_str = request.POST.get("follow_up_date", "").strip()
+        start_date_str = request.POST.get("start_date", "").strip()
+        end_date_str = request.POST.get("end_date", "").strip()
+        notes = request.POST.get("notes", "").strip()
+
         try:
-            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+            quantity = int(quantity_str)
+            if quantity <= 0:
+                raise ValueError("Quantity must be positive.")
         except ValueError:
-            start_date = None
+            messages.error(request, "Please enter a valid quantity.")
+            return redirect("medicine-tracking-create-details", pk=patient.patientID, medicine_id=medicine.id)
+
+        try:
+            date_given = datetime.strptime(date_given_str, "%Y-%m-%d").date() if date_given_str else date.today()
+        except ValueError:
+            date_given = date.today()
+
+        try:
+            follow_up_date = datetime.strptime(follow_up_date_str, "%Y-%m-%d").date() if follow_up_date_str else None
+        except ValueError:
+            follow_up_date = None
+
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date() if start_date_str else date.today()
+        except ValueError:
+            start_date = date.today()
+
         try:
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date() if end_date_str else None
         except ValueError:
             end_date = None
 
+        available_stock = medicine.stocks.filter(
+            expiration_date__gt=date.today(),
+            quantity__gte=quantity
+        ).order_by("expiration_date").first()
+
+        if not available_stock:
+            messages.error(request, "Insufficient stock available for the selected medicine.")
+            return redirect("medicine-tracking-create-details", pk=patient.patientID, medicine_id=medicine.id)
+
+        available_stock.quantity -= quantity
+        available_stock.save(update_fields=["quantity"])
+
         MedicineTracking.objects.create(
             patient=patient,
-            medicine_name=medicine_name,
-            dosage=dosage,
+            medicine=medicine,
+            medicine_stock=available_stock,
+            quantity_used=quantity,
+            total_dosage=total_dosage,
             frequency=frequency,
+            chief_complain=chief_complain,
+            date_given=date_given,
+            follow_up_date=follow_up_date,
             start_date=start_date,
-            end_date=end_date
+            end_date=end_date,
+            notes=notes,
         )
+
+        update_medicine_totals(medicine)
+        update_medicine_date_last_stocked(medicine)
+
         messages.success(request, "Medicine tracking record created successfully!")
-        return redirect('patient-detail', pk=patient.patientID)
-    return render(request, 'patientInfo/medicine_tracking_create.html', {'patient': patient})
+        return redirect("patient-detail", pk=patient.patientID)
+    
+    context = {
+        "patient": patient,
+        "medicine": medicine,
+    }
+    return render(request, "patientInfo/medicinetracking_create_details.html", context)
+
+@login_required
+def medicine_tracking_delete(request, tracking_id):
+    tracking = get_object_or_404(MedicineTracking, id=tracking_id)
+    patient = tracking.patient  
+
+    if request.method == "POST":
+        tracking.delete()
+        messages.success(request, "Medicine tracking record deleted successfully!")
+        return redirect("patient-detail", pk=patient.patientID)
+    
+    return render(request, "patientInfo/medicinetracking_delete.html", {"tracking": tracking})

@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block style %}
-<link rel="stylesheet" href="{% static 'medicine/main.css' %}">
 <style>
   .info-card {
     margin-bottom: 1.5rem;
@@ -72,7 +71,7 @@
             <td class="align-middle">₱{{ med.total_value|floatformat:2 }}</td>
             <td class="align-middle">{{ med.total_quantity }}</td>
             <td class="align-middle">{{ med.supplier_name }}</td>
-            <td class="align-middle">{{ med.date_last_stock|date:"M d, Y" }}</td>
+            <td class="align-middle">{{ med.date_last_stock|date:"M. d, Y" }}</td>
             <td class="align-middle">{{ med.notes }}</td>
             <td class="align-middle">
               <div class="d-flex">
