@@ -356,7 +356,7 @@
       </div>
       <!-- Medical Records Table -->
       <div class="table-responsive">
-        <table class="table table-striped" id="patientMedicalRecordDataTable">
+        <table class="table table-striped responsive_text" id="patientMedicalRecordDataTable">
           <thead class="table-dark">
             <tr>
               <th class="text-start">Concern</th>
@@ -371,9 +371,9 @@
               <td class="text-start align-middle">{{ record.concern }}</td>
               <td class="text-start align-middle">{{ record.description }}</td>
               <td class="text-start align-middle">{{ record.last_visited|date:"M d, Y" }}</td>
-              <td class="text-center align-middle">
-                <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success mx-0 px-4 ms-auto me-auto"><i class="ri-edit-2-fill"></i></a>
-                <a href="{% url 'medical-record-delete' record.id %}" class="btn btn-sm btn-outline-danger mx-0 px-4 ms-auto me-auto"><i class="ri-delete-bin-5-fill"></i></a>
+              <td class="text-center">
+                <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success responsive_text" title="Edit"><i class="ri-edit-2-fill"></i></a>
+                <a href="{% url 'medical-record-delete' record.id %}" class="btn btn-sm btn-outline-danger responsive_text" title="Delete"><i class="ri-delete-bin-5-fill"></i></a>
               </td>
             </tr>
             {% endfor %}
@@ -417,7 +417,7 @@
       </div>
       <!-- Medicine Tracking Table -->
       <div class="table-responsive">
-        <table class="table table-striped" id="patientMedicineTrackingDataTable">
+        <table class="table table-striped responsive_text" id="patientMedicineTrackingDataTable">
           <thead class="table-dark">
             <tr>
               <th class="text-start">Chief Complain</th>
@@ -429,13 +429,14 @@
               <th class="text-start">Follow Up Date</th>
               <th class="text-start">Start Date</th>
               <th class="text-start">End Date</th>
+              <th class="text-start">Total Price</th>
               <th class="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
             {% for tracking in medicine_trackings %}
             <tr>
-              <td class=" text-start">{{ tracking.chief_complain|default:"-" }}</td>
+              <td class="align-middle text-start">{{ tracking.chief_complain|default:"-" }}</td>
               <td class="align-middle text-start">{{ tracking.medicine.medicine_name }}</td>
               <td class="align-middle text-center">{{ tracking.quantity_used }}</td>
               <td class="align-middle text-start">{{ tracking.total_dosage }}</td>
@@ -456,11 +457,15 @@
                   Ongoing
                 {% endif %}
               </td>
-              <td class="text-center my-auto">
-                <a href="#" class="btn btn-sm btn-outline-success mx-0 px-4">
+              <td class="align-middle text-center">{{ tracking.total_price }}</td>
+              <td class="text-center">
+                <a href="{% url "medicine-tracking-update" tracking.id %}" class="btn btn-sm btn-outline-success responsive_text mb-1" title="Edit">
                   <i class="ri-edit-2-fill"></i>
                 </a>
-                <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger mx-0 px-4">
+                <a href="{% url 'medicine-tracking-redo' tracking.id %}" class="btn btn-sm btn-outline-primary responsive_text mb-1" title="Undo/Redo">
+                  <i class="ri-arrow-go-back-fill"></i>
+                </a>
+                <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger mb-1 responsive_text" title="Delete">
                   <i class="ri-delete-bin-5-fill"></i>
                 </a>
               </td>

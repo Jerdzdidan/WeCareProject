@@ -123,10 +123,10 @@
                 </td>
                 <td>
                     <div class="d-flex">
-                      <a href="{% url "patient-update" patient.patientID %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1">
+                      <a href="{% url "patient-update" patient.patientID %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
                         <i class="ri-edit-2-fill"></i>
                       </a>
-                      <a href="{% url "patient-delete-confirm" patient.patientID %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill">
+                      <a href="{% url "patient-delete-confirm" patient.patientID %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill" title="Delete">
                         <i class="ri-delete-bin-5-fill"></i>
                       </a>
                     </div>

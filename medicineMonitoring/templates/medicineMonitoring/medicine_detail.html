@@ -201,6 +201,9 @@
       <button class="nav-link active fs-6 fw-bold" id="stocks-tab" data-bs-toggle="tab" data-bs-target="#stocks" type="button" role="tab" aria-controls="stocks" aria-selected="true">Stocks</button>
     </li>
     <li class="nav-item" role="presentation">
+      <button class="nav-link fs-6 fw-bold" id="released-tab" data-bs-toggle="tab" data-bs-target="#released" type="button" role="tab" aria-controls="released" aria-selected="false">Released Qty</button>
+    </li>
+    <li class="nav-item" role="presentation">
       <button class="nav-link fs-6 fw-bold" id="expired-tab" data-bs-toggle="tab" data-bs-target="#expired" type="button" role="tab" aria-controls="expired" aria-selected="false">Expired</button>
     </li>
   </ul>
@@ -258,6 +261,61 @@
           </tbody>
         </table>
         <div id="stocksCustomPagination"></div>
+      </div>
+    </div>
+
+     <!-- === RELEASED QTY Tab Content === -->
+    <div class="tab-pane fade" id="released" role="tabpanel" aria-labelledby="released-tab">
+      <div class="container px-3 pt-3">
+        <div class="row mt-2">
+          <div class="col-auto ms-auto">
+            <a href="{% url 'stock-delete-all-expired' medicine.pk %}" class="btn btn-danger info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
+              <i class="fa-solid fa-minus"></i> Delete ALL
+            </a>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-auto">
+            <select id="expiredStocksCustomEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <span class="d-inline ms-2" style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">Entries per page</span>
+          </div>
+          <div class="col-auto ms-auto">
+            <input type="text" id="expiredStocksSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive mt-2">
+        <table id="expiredStocksDataTable" class="table table-danger table-striped projectTables">
+          <thead class="table-dark">
+            <tr>
+              <th class="text-center">Quantity</th>
+              <th class="text-center">Expiration Date</th>
+              <th class="text-center">Total Price</th>
+              <th class="text-center">Notes</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for stock in expired_stocks %}
+            <tr>
+              <td class="align-middle text-center">{{ stock.quantity }}</td>
+              <td class="align-middle text-center">{{ stock.expiration_date|date:"M. d, Y" }}</td>
+              <td class="align-middle text-center">{{ stock.total_price|floatformat:2 }}</td>
+              <td class="align-middle">{{ stock.notes }}</td>
+              <td class="align-middle text-center">
+                <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1"><i class="ri-edit-2-fill"></i></a>
+                <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div id="expiredStocksCustomPagination"></div>
       </div>
     </div>
 

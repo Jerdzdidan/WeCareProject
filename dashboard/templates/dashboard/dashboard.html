@@ -3,16 +3,18 @@
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'dashboard/main.css' %}">
+<style>
+    article
+</style>
 {% endblock style %}
 
 {% block body %}
 <h3 class="mb-4">Dashboard</h3>
-    
 <div class="row">
     <div class="col-6">
 
-        <article class="content-section border-secondary-subtle rounded p-3 shadow-lg">
-            <h4 class="text-start mb-3 fw-bold"><i class="fa-solid fa-address-book me-2"></i>RESIDENT SUMMARY</h4>
+        <article class="content-section border-secondary-subtle rounded p-3 shadow-lg responsive_text">
+            <h4 class="text-start mb-3 fw-bold responsive_header"><i class="fa-solid fa-address-book me-2"></i>RESIDENT SUMMARY</h4>
             <div class="row">
                 <div class="col">
                     <div class="card mb-4 shadow" style="">
@@ -29,7 +31,7 @@
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-question-circle"></i> N/A <small class="text-muted">(Adult)</small></span>
+                            <i class="fa-solid fa-question-circle"></i><span class="fw-medium"> N/A <small class="text-muted">(Adult)</small></span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_na }}</span>
@@ -39,7 +41,7 @@
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-wheelchair"></i> PWD</span>
+                            <span class="fw-medium"><i class="fa-solid fa-wheelchair responsive_text"></i> PWD</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_pwd }}</span>
@@ -49,7 +51,7 @@
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-user-plus"></i> Solo Parent</span>
+                            <span class="fw-medium"><i class="fa-solid fa-user-plus responsive_text"></i> Solo Parent</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_solo_parent }}</span>
@@ -59,7 +61,7 @@
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-child"></i> Children</span>
+                            <span class="fw-medium"><i class="fa-solid fa-child responsive_text"></i> Children</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_children }}</span>
@@ -69,7 +71,7 @@
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-person"></i> Senior</span>
+                            <span class="fw-medium"><i class="fa-solid fa-person responsive_text"></i> Senior</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_senior }}</span>
@@ -79,7 +81,7 @@
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-heart"></i> Pregnant</span>
+                            <span class="fw-medium"><i class="fa-solid fa-heart responsive_text"></i> Pregnant</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_pregnant }}</span>
@@ -91,7 +93,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-mars"></i> Male</span>
+                            <span class="fw-medium"><i class="fa-solid fa-mars responsive_text"></i> Male</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-success rounded-pill fs-6">{{ residentCount_male }}</span>
@@ -101,7 +103,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-venus"></i> Female</span>
+                            <span class="fw-medium"><i class="fa-solid fa-venus responsive_text"></i> Female</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-success rounded-pill fs-6">{{ residentCount_female }}</span>
@@ -111,7 +113,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-genderless"></i> Other</span>
+                            <span class="fw-medium"><i class="fa-solid fa-genderless responsive_text"></i> Other</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-success rounded-pill fs-6">{{ residentCount_other }}</span>
@@ -126,18 +128,18 @@
 
     <div class="col-6">
 
-        <article class="content-section border-secondary-subtle rounded p-3 shadow-lg">
-            <h4 class="text-start mb-3 fw-bold"><i class="fa-solid fa-hospital-user me-2"></i>PATIENT SUMMARY</h4>
+        <article class="content-section border-secondary-subtle rounded p-3 shadow-lg responsive_text">
+            <h4 class="text-start mb-3 fw-bold responsive_header"><i class="fa-solid fa-hospital-user me-2"></i>PATIENT SUMMARY</h4>
             <!-- Total Patients -->
             <div class="row">
                 <div class="col">
                     <div class="card mb-4 shadow">
                         <div class="card-header card-title bg-secondary-subtle">
-                            <i class="fa-solid fa-users me-2"></i>Total Patients
-                            <span><small class="text-muted fs-6">(registered)</small></span>
+                            <i class="fa-solid fa-users me-2 responsive_text"></i>Total Patients
+                            <span><small class="text-muted fs-6 responsive_text">(registered)</small></span>
                         </div>
                         <div class="card-body text-center">
-                            <h5 class="card-title">{{ patientCount_total }}</h5>
+                            <h5 class="card-title responsive_text">{{ patientCount_total }}</h5>
                         </div>
                     </div>
                 </div>
@@ -147,7 +149,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-child"></i> Ages 0-6</span>
+                            <span class="fw-medium"><i class="fa-solid fa-child responsive_text"></i> Ages 0-6</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_0_6 }}</span>
@@ -157,7 +159,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-child"></i> Ages 6-18</span>
+                            <span class="fw-medium"><i class="fa-solid fa-child responsive_text"></i> Ages 6-18</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_6_18 }}</span>
@@ -167,7 +169,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-user"></i> Ages 19-59</span>
+                            <span class="fw-medium"><i class="fa-solid fa-user responsive_text"></i> Ages 19-59</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_19_59 }}</span>
@@ -177,7 +179,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-user"></i> Ages 59 &amp; Above</span>
+                            <i class="fa-solid fa-user responsive_text"></i><span class="fw-medium responsive_text"> Ages 59 &amp; Above</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_59_above }}</span>
@@ -187,7 +189,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-person"></i> Senior</span>
+                            <span class="fw-medium"><i class="fa-solid fa-person responsive_text"></i> Senior</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_senior }}</span>
@@ -197,7 +199,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-wheelchair"></i> PWD</span>
+                            <span class="fw-medium"><i class="fa-solid fa-wheelchair responsive_text"></i> PWD</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_pwd }}</span>
@@ -207,7 +209,7 @@
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-user-plus"></i> Solo Parent</span>
+                            <span class="fw-medium"><i class="fa-solid fa-user-plus responsive_text"></i> Solo Parent</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_solo_parent }}</span>
@@ -217,7 +219,7 @@
                 <div class="col-sm-6">
                     <div class="card mb-4 shadow">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-heart"></i> Pregnant</span>
+                            <span class="fw-medium"><i class="fa-solid fa-heart responsive_text"></i> Pregnant</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_pregnant }}</span>
@@ -230,7 +232,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-mars"></i> Male</span>
+                            <span class="fw-medium"><i class="fa-solid fa-mars responsive_text"></i> Male</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-success rounded-pill fs-6">{{ patientCount_male }}</span>
@@ -240,7 +242,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-venus"></i> Female</span>
+                            <span class="fw-medium"><i class="fa-solid fa-venus responsive_text"></i> Female</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-success rounded-pill fs-6">{{ patientCount_female }}</span>
@@ -250,7 +252,7 @@
                 <div class="col-sm-4">
                     <div class="card mb-4 shadow" style="">
                         <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-genderless"></i> Other</span>
+                            <span class="fw-medium"><i class="fa-solid fa-genderless responsive_text"></i> Other</span>
                         </div>
                         <div class="card-body text-center">
                             <span class="badge bg-success rounded-pill fs-6">{{ patientCount_other }}</span>

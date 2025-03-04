@@ -131,18 +131,22 @@
                 <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
                 
                 <div class="row">
-                  <div class="col-md-4 mb-3">
+                  <div class="col-md-3 mb-3">
                     <label for="quantity" class="form-label">Quantity: <span><small class="text-muted">(max: {{ medicine.total_quantity }})</small></span></label>
-                    <input type="number" name="quantity" id="quantity" class="form-control" min="1" max="{{ medicine.total_quantity }}" data-base-dosage="{{ medicine.dosage }}" required>
+                    <input type="number" name="quantity" id="quantity" class="form-control" min="1" max="{{ medicine.total_quantity }}" data-unit-price="{{ medicine.unit_price }}" data-base-dosage="{{ medicine.dosage }}" required>
                   </div>
-                  <div class="col-md-4 mb-3">
+                  <div class="col-md-3 mb-3">
                     <label for="frequency" class="form-label">Frequency:</label>
                     <input type="text" name="frequency" id="frequency" class="form-control" placeholder="e.g., Twice a day" required>
                   </div>
-                  <div class="col-md-4 mb-3">
+                  <div class="col-md-3 mb-3">
                     <label for="total_dosage" class="form-label">Total Dosage: <span><small class="text-muted">(Automatically calculated)</small></span></label>
                     <input type="text" id="total_dosage" name="total_dosage" class="form-control unselectable" readonly>
-                  </div>                
+                  </div>      
+                  <div class="col-md-3 mb-3">
+                    <label for="total_price" class="form-label">Total PRICE: <span><small class="text-muted">(Automatically calculated)</small></span></label>
+                    <input type="text" id="total_price" name="total_price" class="form-control unselectable" readonly>
+                  </div>                        
                 </div>
                 
                 <div class="mb-3">
@@ -215,16 +219,31 @@
       $("#quantity").on("input", function(){
         var quantity = parseFloat($(this).val());
         var baseDosageStr = $(this).data("base-dosage");
+        var unitPriceStr = $(this).data("unit-price");
         var totalDosage = "";
+        var totalPrice = 0;
+        var totalPriceStr = "";
+      
         // Extract numeric value and unit (e.g., "500mg" => 500 and "mg")
         var matches = baseDosageStr.match(/^([\d\.]+)\s*(.*)$/);
-        if(matches){
+        if (matches) {
           var baseValue = parseFloat(matches[1]);
           var unit = matches[2];
-          totalDosage = (quantity * baseValue) + (unit ? " " + unit : "");
+          var unitPrice = parseFloat(unitPriceStr);
+      
+          if (!isNaN(quantity) && !isNaN(baseValue)) {
+            totalDosage = (quantity * baseValue) + (unit ? " " + unit : "");
+          }
+          if (!isNaN(quantity) && !isNaN(unitPrice)) {
+            totalPrice = (quantity * unitPrice).toFixed(2); // Fix decimal places
+            totalPriceStr = "₱" + totalPrice;
+          }
         }
+        
         $("#total_dosage").val(totalDosage);
+        $("#total_price").val(totalPriceStr);
       });
+      
     });
 </script>
 {% endblock script %}

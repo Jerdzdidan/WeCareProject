@@ -75,13 +75,13 @@
             <td class="align-middle">{{ med.notes }}</td>
             <td class="align-middle">
               <div class="d-flex">
-                <a href="{% url 'medicine-detail' med.pk %}" class="btn btn-sm btn-outline-primary fw-bold flex-fill me-1">
+                <a href="{% url 'medicine-detail' med.pk %}" class="btn btn-sm btn-outline-primary fw-bold flex-fill me-1" title="Inventory">
                   <i class="fa-solid fa-boxes-stacked"></i>
                 </a>
-                <a href="{% url 'medicine-update' med.pk %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1">
+                <a href="{% url 'medicine-update' med.pk %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
                   <i class="ri-edit-2-fill"></i>
                 </a>
-                <a href="{% url 'medicine-delete' med.pk %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill">
+                <a href="{% url 'medicine-delete' med.pk %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill" title="Delete">
                   <i class="ri-delete-bin-5-fill"></i>
                 </a>
               </div>

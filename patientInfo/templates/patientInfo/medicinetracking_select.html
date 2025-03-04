@@ -63,8 +63,8 @@
             <td class="text-center">{{ medicine.supplier_name|default:"--" }}</td>
             <td class="text-center">{{ medicine.dosage|default:"--" }}</td>
             <td class="text-center">{{ medicine.total_quantity|default:"--" }}</td>
-            <td class="text-center">{{ medicine.unit_price|default:"--" }}</td>
-            <td class="text-center">{{ medicine.total_value|default:"--" }}</td>
+            <td class="text-center">₱{{ medicine.unit_price|default:"--" }}</td>
+            <td class="text-center">₱{{ medicine.total_value|default:"--" }}</td>
             <td class="text-center">{{ medicine.notes|default:"--" }}</td>
           </tr>
           {% endfor %}
@@ -74,7 +74,7 @@
     </div>
     <div class="mt-3 text-end mb-2">
       <a href="#" id="proceedButton" class="btn btn-primary" style="pointer-events: none; opacity: 0.5;">Proceed</a>
-      <a href="{% url 'medicine-list' %}" id="cancelButton" class="btn btn-secondary ms-2">Cancel</a>
+      <a href="{% url 'patient-detail' patient.patientID %}" id="cancelButton" class="btn btn-secondary ms-2">Cancel</a>
     </div>
   </div>
 </article>

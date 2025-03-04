@@ -2,6 +2,7 @@ from django.db import models, transaction
 from residentInfo.models import Resident  
 from medicineMonitoring.models import Medicine, MedicineStock
 from datetime import datetime, date
+from decimal import Decimal
 
 
 class Patient(models.Model):
@@ -105,6 +106,7 @@ class MedicineTracking(models.Model):
     date_given = models.DateField(default=date.today)
     follow_up_date = models.DateField(null=True, blank=True)
     notes = models.TextField(blank=True, null=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
 
     def __str__(self):
         return f"{self.medicine.medicine_name} for {self.patient.patientID} ({self.quantity_used} units)"

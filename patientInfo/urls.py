@@ -17,6 +17,8 @@ urlpatterns = [
     path('detail/<str:pk>/medicine-tracking/select/', views.medicine_tracking_select, name='medicine-tracking-select'),
     path('detail/<str:pk>/medicine-tracking/create/<int:medicine_id>/', views.medicine_tracking_create_details, name='medicine-tracking-create-details'),
     path('medicine-tracking/delete/<int:tracking_id>/', views.medicine_tracking_delete, name='medicine-tracking-delete'),
+    path('medicine-tracking/redo/<int:tracking_id>/', views.medicine_tracking_redo, name='medicine-tracking-redo'),
+    path('medicine-tracking/update/<int:tracking_id>/', views.medicine_tracking_update, name='medicine-tracking-update'),
 
     path('detail/<str:pk>/record/create/', views.medical_record_create, name='medical-record-create'),
     path('medical-record/update/<int:record_id>/', views.medical_record_update, name='medical-record-update'),

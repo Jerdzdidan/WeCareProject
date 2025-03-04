@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from decimal import Decimal, InvalidOperation
 from .models import Medicine, MedicineStock
 from datetime import datetime, date
+from patientInfo.models import MedicineTracking
 
 # Helper function to update total value and total quantity
 def update_medicine_totals(medicine):
@@ -32,6 +33,8 @@ def medicine_list(request):
 @login_required
 def medicine_detail(request, pk):
     medicine = get_object_or_404(Medicine, pk=pk)
+    patient_medicine_tracking = MedicineTracking.objects.filter(medicine=medicine)
+
     today = date.today()
     
     valid_stocks = medicine.stocks.filter(expiration_date__gt=today)
@@ -42,6 +45,8 @@ def medicine_detail(request, pk):
         'valid_stocks': valid_stocks,
         'expired_stocks': expired_stocks,
         'expired_count': expired_stocks.count(),  
+
+        'released_qty': patient_medicine_tracking,
     }
     return render(request, 'medicineMonitoring/medicine_detail.html', context)
 

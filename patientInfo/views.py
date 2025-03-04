@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, date
 from django.utils import timezone
+import re
 from patientInfo.models import (
     Patient,
     VitalSigns,
@@ -479,6 +480,7 @@ def medicine_tracking_create_details(request, pk, medicine_id):
         start_date_str = request.POST.get("start_date", "").strip()
         end_date_str = request.POST.get("end_date", "").strip()
         notes = request.POST.get("notes", "").strip()
+        total_priceStr = request.POST.get("total_price", "").strip()
 
         try:
             quantity = int(quantity_str)
@@ -486,6 +488,12 @@ def medicine_tracking_create_details(request, pk, medicine_id):
                 raise ValueError("Quantity must be positive.")
         except ValueError:
             messages.error(request, "Please enter a valid quantity.")
+            return redirect("medicine-tracking-create-details", pk=patient.patientID, medicine_id=medicine.id)
+        
+        try:
+            total_price = float(total_priceStr[1:])
+        except ValueError:
+            messages.error(request, "Error on parsing total price.")
             return redirect("medicine-tracking-create-details", pk=patient.patientID, medicine_id=medicine.id)
 
         try:
@@ -533,6 +541,7 @@ def medicine_tracking_create_details(request, pk, medicine_id):
             start_date=start_date,
             end_date=end_date,
             notes=notes,
+            total_price=total_price,
         )
 
         update_medicine_totals(medicine)
@@ -548,6 +557,101 @@ def medicine_tracking_create_details(request, pk, medicine_id):
     return render(request, "patientInfo/medicinetracking_create_details.html", context)
 
 @login_required
+def medicine_tracking_update(request, tracking_id):
+    tracking = get_object_or_404(MedicineTracking, id=tracking_id)
+    patient = tracking.patient
+    medicine = tracking.medicine
+    old_quantity = tracking.quantity_used
+
+    if request.method == "POST":
+        quantity_str = request.POST.get("quantity", "").strip()
+        frequency = request.POST.get("frequency", "").strip()
+        chief_complain = request.POST.get("chief_complain", "").strip()
+        date_given_str = request.POST.get("date_given", "").strip()
+        follow_up_date_str = request.POST.get("follow_up_date", "").strip()
+        start_date_str = request.POST.get("start_date", "").strip()
+        end_date_str = request.POST.get("end_date", "").strip()
+        notes = request.POST.get("notes", "").strip()
+
+        try:
+            new_quantity = int(quantity_str)
+            if new_quantity <= 0:
+                raise ValueError("Quantity must be positive.")
+        except ValueError:
+            messages.error(request, "Please enter a valid quantity.")
+            return redirect("medicine-tracking-update", tracking_id=tracking.id)
+
+        try:
+            new_date_given = datetime.strptime(date_given_str, "%Y-%m-%d").date() if date_given_str else date.today()
+        except ValueError:
+            new_date_given = date.today()
+
+        try:
+            new_follow_up_date = datetime.strptime(follow_up_date_str, "%Y-%m-%d").date() if follow_up_date_str else None
+        except ValueError:
+            new_follow_up_date = None
+
+        try:
+            new_start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date() if start_date_str else date.today()
+        except ValueError:
+            new_start_date = date.today()
+
+        try:
+            new_end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date() if end_date_str else None
+        except ValueError:
+            new_end_date = None
+
+        quantity_diff = new_quantity - old_quantity
+
+        if quantity_diff > 0:
+            additional_needed = quantity_diff
+            if tracking.medicine_stock.quantity >= additional_needed:
+                tracking.medicine_stock.quantity -= additional_needed
+                tracking.medicine_stock.save(update_fields=["quantity"])
+            else:
+                messages.error(request, "Insufficient stock available for the additional quantity.")
+                return redirect("medicine-tracking-update", tracking_id=tracking.id)
+        elif quantity_diff < 0:
+            tracking.medicine_stock.quantity += abs(quantity_diff)
+            tracking.medicine_stock.save(update_fields=["quantity"])
+
+        new_total_price = medicine.unit_price * new_quantity
+
+        new_total_dosage = ""
+        if medicine.dosage:
+            match = re.match(r"^([\d\.]+)\s*(.*)$", medicine.dosage.strip())
+            if match:
+                base_value = float(match.group(1))
+                unit = match.group(2)
+                new_total_dosage = f"{new_quantity * base_value} {unit}".strip()
+
+        tracking.quantity_used = new_quantity
+        tracking.frequency = frequency
+        tracking.chief_complain = chief_complain
+        tracking.date_given = new_date_given
+        tracking.follow_up_date = new_follow_up_date
+        tracking.start_date = new_start_date
+        tracking.end_date = new_end_date
+        tracking.notes = notes
+        tracking.total_price = new_total_price
+        tracking.total_dosage = new_total_dosage
+        tracking.save()
+
+        update_medicine_totals(medicine)
+        update_medicine_date_last_stocked(medicine)
+
+        messages.success(request, "Medicine tracking record updated successfully!")
+        return redirect("patient-detail", pk=patient.patientID)
+    
+    context = {
+        "tracking": tracking,
+        "patient": patient,
+        "medicine": medicine,
+    }
+    return render(request, "patientInfo/medicinetracking_update.html", context)
+
+
+@login_required
 def medicine_tracking_delete(request, tracking_id):
     tracking = get_object_or_404(MedicineTracking, id=tracking_id)
     patient = tracking.patient  
@@ -558,3 +662,17 @@ def medicine_tracking_delete(request, tracking_id):
         return redirect("patient-detail", pk=patient.patientID)
     
     return render(request, "patientInfo/medicinetracking_delete.html", {"tracking": tracking})
+
+@login_required
+def medicine_tracking_redo(request, tracking_id):
+    tracking = get_object_or_404(MedicineTracking, id=tracking_id)
+    medicine = tracking.medicine
+    if tracking.medicine_stock:
+        tracking.medicine_stock.quantity += tracking.quantity_used
+        tracking.medicine_stock.save(update_fields=["quantity"])
+
+    update_medicine_totals(medicine)
+    update_medicine_date_last_stocked(medicine)
+    tracking.delete()
+    messages.success(request, "Redo successful! The medicine's total value has been restored.")
+    return redirect("patient-detail", pk=tracking.patient.patientID)
