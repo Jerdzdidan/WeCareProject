@@ -153,18 +153,21 @@
                 <dt class="text-secondary small">Total Quantity (not expired)</dt>
                 <dd class="mb-0">{{ medicine.total_quantity|default:"-" }}</dd>
               </div>
-              <div class="col-6">
-                <dt class="text-secondary small">Total Value (not expired)</dt>
-                <dd class="mb-0">₱{{ medicine.total_value|default:"-" }}</dd>
-              </div>
               <div class="col-6 mt-2">
                 <dt class="text-secondary small">Expired Quantity</dt>
                 <dd class="mb-0">{{ medicine.expired_quantity }}</dd>
               </div>
+
+            </dl>
+            <dl class="row g-2">
+              <div class="col-6">
+                <dt class="text-secondary small">Total Value (not expired)</dt>
+                <dd class="mb-0">₱{{ medicine.total_value|default:"-" }}</dd>
+              </div>       
               <div class="col-6 mt-2">
                 <dt class="text-secondary small">Expired Value</dt>
                 <dd class="mb-0">₱{{ medicine.expired_value|floatformat:2 }}</dd>
-              </div>
+              </div>         
             </dl>
           </div>
         </div>
@@ -269,7 +272,7 @@
       <div class="container px-3 pt-3">
         <div class="row mt-2">
           <div class="col-auto ms-auto">
-            <a href="{% url 'stock-delete-all-expired' medicine.pk %}" class="btn btn-danger info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
+            <a href="{% url 'medicine-tracking-delete-all-records' medicine.pk %}" class="btn btn-danger info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
               <i class="fa-solid fa-minus"></i> Delete ALL
             </a>
           </div>

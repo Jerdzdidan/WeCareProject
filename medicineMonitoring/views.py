@@ -197,3 +197,17 @@ def medicine_stock_delete_all_expired(request, medicine_pk):
         messages.success(request, "All expired stocks have been deleted successfully!")
         return redirect("medicine-detail", pk=medicine.pk)
     return render(request, "medicineMonitoring/medicine_stock_delete_all_expired.html", {"expired_stocks": expired_stocks})
+
+
+# Medicine Tracking DELETE ALL
+
+@login_required
+def medicine_tracking_delete_all_records(request, medicine_pk):
+    medicine = get_object_or_404(Medicine, pk=medicine_pk)
+    medicine_patient_records = MedicineTracking.objects.filter(medicine=medicine)
+
+    if request.method == "POST":
+        medicine_patient_records.delete()
+        messages.success(request, "All released qty of stocks have been deleted successfully!")
+        return redirect("medicine-detail", pk=medicine.pk)
+    return render(request, "medicineMonitoring/medicine_tracking_delete_all_records.html", {"medicine_patient_records": medicine_patient_records})

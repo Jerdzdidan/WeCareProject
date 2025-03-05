@@ -11,4 +11,6 @@ urlpatterns = [
     path('stock/update/<int:stock_pk>/', views.medicine_stock_update, name='stock-update'),
     path('stock/delete/<int:stock_pk>/', views.medicine_stock_delete, name='stock-delete'),
     path('stock/delete-all-expired/<int:medicine_pk>/', views.medicine_stock_delete_all_expired, name='stock-delete-all-expired'),
+
+    path('medicine-tracking/delete-all-records/<int:medicine_pk>/', views.medicine_tracking_delete_all_records, name='medicine-tracking-delete-all-records'),
 ]
