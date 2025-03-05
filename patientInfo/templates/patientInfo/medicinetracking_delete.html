@@ -58,7 +58,7 @@
     {% csrf_token %}
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn btn-danger">Yes, Delete</button>
-      <a href="{% url 'patient-detail' tracking.patient.patientID %}" class="btn btn-secondary ms-2">Cancel</a>
+      <a href="{% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'patient-detail' tracking.patient.patientID %}{% endif %}" class="btn btn-secondary ms-2">Cancel</a>
     </div>
   </form>
 </article>

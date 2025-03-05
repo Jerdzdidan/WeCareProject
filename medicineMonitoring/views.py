@@ -46,7 +46,7 @@ def medicine_detail(request, pk):
         'expired_stocks': expired_stocks,
         'expired_count': expired_stocks.count(),  
 
-        'released_qty': patient_medicine_tracking,
+        'patient_medicine_tracking': patient_medicine_tracking,
     }
     return render(request, 'medicineMonitoring/medicine_detail.html', context)
 

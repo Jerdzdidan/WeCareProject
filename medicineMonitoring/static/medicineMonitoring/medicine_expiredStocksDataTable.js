@@ -31,7 +31,7 @@ $(document).ready(function() {
     // Stock Pagination Function
     function updateExpiredStocksPagination() {
         const info = $expiredStocksDataTable.page.info();
-        let paginationHtml = '<ul class="pagination justify-content-center">';
+        let paginationHtml = '<ul class="pagination justify-content-start ms-2">';
         
         // Previous Button
         if (info.page > 0) {

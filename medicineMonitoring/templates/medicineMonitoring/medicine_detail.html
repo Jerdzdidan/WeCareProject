@@ -276,7 +276,7 @@
         </div>
         <div class="row mt-2">
           <div class="col-auto">
-            <select id="expiredStocksCustomEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
+            <select id="trackingCustomEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
@@ -285,37 +285,42 @@
             <span class="d-inline ms-2" style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">Entries per page</span>
           </div>
           <div class="col-auto ms-auto">
-            <input type="text" id="expiredStocksSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
+            <input type="text" id="trackingSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
           </div>
         </div>
       </div>
       <div class="table-responsive mt-2">
-        <table id="expiredStocksDataTable" class="table table-danger table-striped projectTables">
+        <table id="trackingDataTable" class="table table-success table-striped projectTables">
           <thead class="table-dark">
             <tr>
-              <th class="text-center">Quantity</th>
-              <th class="text-center">Expiration Date</th>
+              <th class="text-center">Date Given</th>
+              <th class="text-center">Patient</th>
+              <th class="text-center">Last Name</th>
+              <th class="text-center">First Name</th>
+              <th class="text-center">Quantity Used</th>
+              <th class="text-center">Dosage</th>
               <th class="text-center">Total Price</th>
-              <th class="text-center">Notes</th>
               <th class="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
-            {% for stock in expired_stocks %}
+            {% for tracking in patient_medicine_tracking %}
             <tr>
-              <td class="align-middle text-center">{{ stock.quantity }}</td>
-              <td class="align-middle text-center">{{ stock.expiration_date|date:"M. d, Y" }}</td>
-              <td class="align-middle text-center">{{ stock.total_price|floatformat:2 }}</td>
-              <td class="align-middle">{{ stock.notes }}</td>
+              <td class="align-middle text-center">{{ tracking.date_given|date:"M. d, Y" }}</td>
+              <td class="align-middle text-center">{{ tracking.patient.patientID }}</td>
+              <td class="align-middle text-center">{{ tracking.patient.resident.last_name }}</td>
+              <td class="align-middle text-center">{{ tracking.patient.resident.first_name }}</td>
+              <td class="align-middle text-center">{{ tracking.quantity_used }}</td>
+              <td class="align-middle text-center">{{ tracking.total_dosage }}</td>
+              <td class="align-middle text-center">{{ tracking.total_price }}</td>
               <td class="align-middle text-center">
-                <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1"><i class="ri-edit-2-fill"></i></a>
-                <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></a>
+                <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></a>
               </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
-        <div id="expiredStocksCustomPagination"></div>
+        <div id="trackingCustomPagination"></div>
       </div>
     </div>
 
@@ -379,6 +384,7 @@
 {% block script %}
 <script src="{% static "medicineMonitoring/medicine_expiredStocksDataTable.js" %}"></script>
 <script src="{% static "medicineMonitoring/medicine_stocksDataTable.js" %}"></script>
+<script src="{% static "medicineMonitoring/medicine_trackingDataTable.js" %}"></script>
 <script>
   $(document).ready(function(){
     flatpickr(".flatpickr-range", {

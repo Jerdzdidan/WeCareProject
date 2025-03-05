@@ -1,6 +1,6 @@
 $(document).ready(function() {
     // ==================== Stocks DataTable ====================
-    const $stocksDataTable = $('#stocksDataTable').DataTable({
+    const $trackingDataTable = $('#trackingDataTable').DataTable({
         order: [],
         layout: {
             topStart: null,
@@ -15,22 +15,22 @@ $(document).ready(function() {
     });
 
     // Stock Table Elements (correct IDs)
-    const $stocksEntries = $('#stocksCustomEntries');
-    const $stocksSearch = $('#stocksSearchBar');
-    const $stocksPagination = $('#stocksCustomPagination');
+    const $trackingEntries = $('#trackingCustomEntries');
+    const $trackingSearch = $('#trackingSearchBar');
+    const $trackingPagination = $('#trackingCustomPagination');
 
     // Stock Controls Event Handlers
-    $stocksEntries.on('change', function() {
-        $stocksDataTable.page.len(parseInt(this.value, 10)).draw();
+    $trackingEntries.on('change', function() {
+        $trackingDataTable.page.len(parseInt(this.value, 10)).draw();
     });
 
-    $stocksSearch.on('keyup', function() {
-        $stocksDataTable.search(this.value).draw();
+    $trackingSearch.on('keyup', function() {
+        $trackingDataTable.search(this.value).draw();
     });
 
     // Stock Pagination Function
-    function updateStocksPagination() {
-        const info = $stocksDataTable.page.info();
+    function updatetrackingPagination() {
+        const info = $trackingDataTable.page.info();
         let paginationHtml = '<ul class="pagination justify-content-start ms-2">';
         
         // Previous Button
@@ -55,15 +55,16 @@ $(document).ready(function() {
             </li>`;
         }
         
-        $stocksPagination.html(paginationHtml + '</ul>');
+        $trackingPagination.html(paginationHtml + '</ul>');
     }
 
     // Stock Pagination Events
-    $stocksDataTable.on('draw', updateStocksPagination);
-    $stocksPagination.on('click', 'a.page-link', function(e) {
+    $trackingDataTable.on('draw', updatetrackingPagination);
+    $trackingPagination.on('click', 'a.page-link', function(e) {
         e.preventDefault();
-        $stocksDataTable.page(parseInt($(this).data('page'), 10).draw('page'));
+        $trackingDataTable.page(parseInt($(this).data('page'), 10).draw('page'));
     });
-    updateStocksPagination();
+    updatetrackingPagination();
+
 
 });

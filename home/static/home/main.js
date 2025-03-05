@@ -108,7 +108,7 @@ $(document).ready(function() {
         var paginationHtml = '';
     
         // Previous button
-        paginationHtml += '<ul class="pagination justify-content-center">';
+        paginationHtml += '<ul class="pagination justify-content-start ms-2">';
         if (info.page > 0) {
             paginationHtml += '<li class="page-item"><a href="#" class="page-link text-success" data-page="' + (info.page - 1) + '">Prev</a></li>';
         }
