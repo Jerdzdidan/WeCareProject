@@ -26,6 +26,7 @@ urlpatterns = [
     path('residents/', include('residentInfo.urls')),
     path('patients/', include('patientInfo.urls')),
     path('medicines/', include('medicineMonitoring.urls')),
+    path('scheduled-checkup/', include('scheduledcheckup.urls')),
     path('users/', include('users.urls')),
     path('login/', user_views.custom_login, name='login'),
     path('logout/', user_views.custom_logout, name='logout'),
