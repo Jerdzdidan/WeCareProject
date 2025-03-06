@@ -5,6 +5,7 @@ from decimal import Decimal, InvalidOperation
 from .models import Medicine, MedicineStock
 from datetime import datetime, date
 from patientInfo.models import MedicineTracking
+import re
 
 # Helper function to update total value and total quantity
 def update_medicine_totals(medicine):
@@ -97,7 +98,22 @@ def medicine_update(request, pk):
         medicine.supplier_name = request.POST.get("supplier_name", "").strip()
         medicine.notes = request.POST.get("notes", "").strip()
         medicine.save()
-        messages.success(request, "Medicine updated successfully!")
+
+        update_medicine_totals(medicine)
+        update_medicine_date_last_stocked(medicine)
+        
+        trackings = MedicineTracking.objects.filter(medicine=medicine)
+        for tracking in trackings:
+            tracking.total_price = tracking.quantity_used * medicine.unit_price
+            if medicine.dosage:
+                match = re.match(r"^([\d\.]+)\s*(.*)$", medicine.dosage.strip())
+                if match:
+                    base_value = float(match.group(1))
+                    unit = match.group(2)
+                    tracking.total_dosage = f"{tracking.quantity_used * base_value} {unit}".strip()
+            tracking.save(update_fields=["total_price", "total_dosage"])
+        
+        messages.success(request, "Medicine updated successfully, and tracking records have been updated!")
         return redirect("medicine-list")
     return render(request, "medicineMonitoring/medicine_update.html", {"medicine": medicine})
 

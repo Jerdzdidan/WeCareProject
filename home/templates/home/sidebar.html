@@ -34,14 +34,14 @@
           </a>
         </ul>
         <ul class="list-group my-1">
-            <a class="nav-link rounded patient-nav-toggle {% if '/patients/' in request.path or '/medicines/' in request.path %}active{% endif %}" href="#" id="patientToggle">
+            <a class="nav-link rounded patient-nav-toggle {% if '/patients/' in request.path %}active{% endif %}" href="#" id="patientToggle">
             <li class="list-group-item d-flex align-items-center menu-item">
               <i class="ri-user-heart-fill me-1 menu-icons"></i>
               <span>Patient Information</span>
               <i class="ri-arrow-down-s-line ms-auto"></i>
             </li>
             </a>
-            <div class="collapse {% if '/patients/' in request.path or '/medicines/' in request.path %}show{% endif %}" id="patientDropdown">
+            <div class="collapse {% if '/patients/' in request.path %}show{% endif %}" id="patientDropdown">
             <a href="{% url "patient-list" %}" class="nav-link rounded patient-nav-item {% if '/patients/' in request.path %}active{% endif %}">
               <li class="list-group-item d-flex align-items-center menu-item">
               <i class="ri-file-list-2-fill me-1 menu-icons"></i>
@@ -54,15 +54,16 @@
               Scheduled Checkup
               </li>
             </a>
-            <a href="{% url "medicine-list" %}" class="nav-link rounded patient-nav-item {% if '/medicines/' in request.path %}active{% endif %}">
-              <li class="list-group-item d-flex align-items-center menu-item">
-              <i class="ri-medicine-bottle-fill me-1 menu-icons"></i>
-              Medicine Record
-              </li>
-            </a>
             </div>
         </ul>
-        
+        <ul class="list-group my-1">
+          <a href="{% url "medicine-list" %}" class="nav-link rounded {% if '/medicines/' in request.path %}active{% endif %}">
+            <li class="list-group-item d-flex align-items-center menu-item">
+            <i class="ri-medicine-bottle-fill me-1 menu-icons"></i>
+              Medicine Record
+            </li>
+          </a>
+        </ul>
         <ul class="list-group my-1">
           <a href="#" class="nav-link rounded">
             <li class="list-group-item d-flex align-items-center menu-item">
