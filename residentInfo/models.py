@@ -5,7 +5,6 @@ from django.utils import timezone
 GENDER_CHOICES = (
     ('Male', 'Male'),
     ('Female', 'Female'),
-    ('Other', 'Other'),
 )
 
 CATEGORY_CHOICES = (

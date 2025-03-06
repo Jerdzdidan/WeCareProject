@@ -1,0 +1,122 @@
+{% extends "home/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+<style>
+  .input-group-text {
+    background-color: #e9ecef;
+  }
+  .flatpickr-input {
+    background-color: #fff;
+    height: 2.5rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+  .input-group .form-control {
+    height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    box-sizing: border-box;
+  }
+  /* Patient Info Card */
+  .patient-info-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: #fff;
+  }
+  .patient-info-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .patient-info-card p {
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  hr.divider {
+    border: 0;
+    border-top: 2px solid #dee2e6;
+    margin: 2rem 0;
+  }
+</style>
+{% endblock style %}
+
+{% block body %}
+<h3 class="mb-3">Update Scheduled Checkup for <span class="text-primary">{{ patient.patientID }}</span></h3>
+
+<!-- Patient Info Card -->
+<div class="patient-info-card">
+  <h3>Patient Information</h3>
+  <p><strong>Patient ID:</strong> {{ patient.patientID }}</p>
+  <p><strong>Name:</strong> {{ patient.resident.last_name }}, {{ patient.resident.first_name }}</p>
+  <p><strong>Age:</strong> {{ patient.resident.age }}</p>
+  <p><strong>Address:</strong> {{ patient.resident.present_address }}</p>
+</div>
+
+<hr class="divider">
+
+<!-- Scheduled Checkup Update Form -->
+<article class="content-section border rounded shadow-sm p-4">
+  <form method="POST" action="{% url 'scheduled-checkup-update' checkup.id %}">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-6">
+        <div class="mb-3">
+          <label for="checkup_date" class="form-label">Checkup Date</label>
+          <div class="input-group">
+            <input type="text" name="checkup_date" id="checkup_date" class="form-control flatpickr-date" placeholder="Select checkup date" required value="{{ checkup.checkup_date|date:'Y-m-d' }}">
+            <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="mb-3">
+          <label for="checkup_time" class="form-label">Checkup Time (Optional)</label>
+          <div class="input-group">
+            <input type="text" name="checkup_time" id="checkup_time" class="form-control flatpickr-time" placeholder="Select checkup time" value="{% if checkup.checkup_time %}{{ checkup.checkup_time|time:'h:i A' }}{% endif %}">
+            <span class="input-group-text"><i class="ri-clock-line"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="notes" class="form-label">Additional Notes</label>
+      <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="Enter any notes...">{{ checkup.notes }}</textarea>
+    </div>
+    <div class="text-end">
+      <button type="submit" class="btn btn-success">Update Checkup</button>
+      <a href="{% url 'scheduled-checkup-list' %}" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+  </form>
+</article>
+{% endblock body %}
+
+{% block script %}
+<script src="{% static 'js/flatpickr.js' %}"></script>
+<script>
+$(document).ready(function(){
+  flatpickr(".flatpickr-date", {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "M. d, Y",
+    allowInput: true,
+    autoClose: true,
+    enableTime: false
+  });
+  
+  flatpickr(".flatpickr-time", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "h:i",
+    altInput: true,
+    altFormat: "h:i A",
+    time_24hr: false,
+    allowInput: true,
+    autoClose: true
+  });
+});
+</script>
+{% endblock script %}

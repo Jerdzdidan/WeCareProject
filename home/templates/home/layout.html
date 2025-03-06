@@ -27,6 +27,13 @@
   {% comment %} Flatpickr {% endcomment %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+  {% comment %} Fonts {% endcomment %}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+
+  {% comment %} Calendar {% endcomment %}
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar/daygrid@6.1.15/index.global.min.js'></script>
+
   {% block extrahead %}{% endblock %}
 
   {% block style %}{% endblock %}
@@ -34,6 +41,8 @@
 <body>
   <!-- Sidebar -->
   {% include "home/sidebar.html" %}
+
+  {% include "home/deletePopUp.html" %}
 
     <!-- Content Wrapper (Header + Main Content) -->
     <div id="content-wrapper" class="flex-grow-1">
@@ -94,6 +103,7 @@
 
   {% comment %} DataTables.Net {% endcomment %}
   <script src="//cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
 
   {% comment %} Main Javascript File {% endcomment %}
   <script src="{% static "home/main.js" %}"></script>

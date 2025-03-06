@@ -24,7 +24,6 @@
                   <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders (Default)</option>
                   <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
                   <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
-                  <option value="Other" {% if request.GET.gender == "Other" %}selected{% endif %}>Other</option>
                 </select>
                 <select name="street" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
                   <option value="" {% if not request.GET.street %}selected{% endif %}>All Streets (Default)</option>

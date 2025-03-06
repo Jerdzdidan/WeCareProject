@@ -1,0 +1,140 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block style %}
+<style>
+  .record-table th, .record-table td {
+    vertical-align: middle;
+    padding: 0.75rem;
+  }
+  .input-group-text {
+    background-color: #f8f9fa;
+  }
+  .flatpickr-input {
+    background-color: #fff;
+  }
+</style>
+{% endblock style %}
+
+{% block body %}
+<h3 class="mb-3">Scheduled Checkups - <span class="text-primary">List</span></h3>
+<article class="content-section border rounded p-0 shadow">
+  <div class="container">
+    <!-- Date Filter Form -->
+    <div class="row mt-2">
+      <div class="col-auto">
+        <small class="text-muted">Pick a date range to show data on the table:</small>
+        <form method="get" id="dateFilterForm" class="my-auto">
+          <div class="input-group mt-2" style="font-size: calc(0.8rem + 0.2vw);">
+            <input type="text" id="filter_start_date" name="start_date" class="form-control flatpickr-range" placeholder="From Date" value="{{ request.GET.start_date }}" style="font-size: calc(0.8rem + 0.2vw);">
+            <span class="input-group-text">
+              <i class="ri-calendar-line"></i>
+            </span>
+            <i class="ri-arrow-right-long-fill my-auto mx-2"></i>
+            <input type="text" id="filter_end_date" name="end_date" class="form-control flatpickr-range" placeholder="To Date" value="{{ request.GET.end_date }}" style="font-size: calc(0.8rem + 0.2vw);">
+            <span class="input-group-text">
+              <i class="ri-calendar-line"></i>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div class="col-auto ms-auto">
+        <a href="{% url 'scheduled-checkup-patient-select' %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
+          <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Scheduled Checkup
+        </a>
+      </div>
+    </div>
+    <!-- Entries and Search Bar -->
+    <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+      <div>
+        <select id="Entries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        <span class="ms-2">Entries per page</span>
+      </div>
+      <div>
+        <input type="text" id="SearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
+      </div>
+    </div>
+    <!-- Scheduled Checkups Table -->
+    <div class="table-responsive">
+      <table class="table table-striped responsive_text record-table" id="dataTable">
+        <thead class="table-dark">
+          <tr>
+            <th class="text-start">Checkup Date</th>
+            <th class="text-start">Checkup Time</th>
+            <th class="text-start">Patient ID</th>
+            <th class="text-start">Patient Name</th>
+            <th class="text-start">Notes</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for checkup in scheduled_checkups %}
+          <tr>
+            <td class="align-middle text-start">{{ checkup.checkup_date|date:"M. d, Y" }}</td>
+            <td class="align-middle text-start">
+              {% if checkup.checkup_time %}
+                {{ checkup.checkup_time|time:"H:i" }}
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+            <td class="align-middle text-start">{{ checkup.patient.patientID }}</td>
+            <td class="align-middle text-start">{{ checkup.patient.resident.last_name }}, {{ checkup.patient.resident.first_name }}</td>
+            <td class="align-middle text-start">
+              {% if checkup.notes %}
+                {{ checkup.notes }}
+              {% else %}
+                <span class="text-muted">No notes</span>
+              {% endif %}
+            </td>
+            <td class="align-middle text-center">
+              <a href="{% url "scheduled-checkup-update" checkup.id %}" class="btn btn-sm btn-outline-success" title="Edit Checkup"><i class="ri-edit-2-fill"></i></a>
+              {% comment %} <a href="{% url "scheduled-checkup-delete" checkup.id %}" class="btn btn-sm btn-outline-danger" title="Delete Checkup"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
+              <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ checkup.patient.patientID }}" data-ID="{{ checkup.id }}" data-patientName="{{ checkup.patient.resident.last_name }}, {{ checkup.patient.resident.first_name }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- Pagination Container -->
+    <div id="customPagination"></div>
+  </div>
+</article>
+{% endblock body %}
+
+{% block script %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/flatpickr.js' %}"></script>
+<script>
+$(document).ready(function(){
+    flatpickr(".flatpickr-range", {
+        dateFormat: "M j, Y",
+        allowInput: true,
+        autoClose: true,
+        onChange: function(selectedDates, dateStr, instance) {
+            if($('#filter_start_date').val() && $('#filter_end_date').val()){
+            $("#dateFilterForm").submit();
+            }
+        }
+    });
+  
+
+});
+$('#myModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var deleteData = button.attr('data-deleteData');
+    var dataID = button.attr('data-ID')
+    var dataPatientName = button.attr('data-patientName')
+    var txtDeleteData = deleteData.concat(": ", dataPatientName)
+    $(this).find('#deleteMessage').text('Are you sure you want to delete checkup for: ');
+    $(this).find('#txtDeleteData').text(txtDeleteData);
+    $(this).find('#btnDelete').attr('href', '{% url "scheduled-checkup-delete" 0 %}'.replace('0', dataID));
+});
+</script>
+{% endblock script %}

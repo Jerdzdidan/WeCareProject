@@ -1,0 +1,57 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'checkupcalendar/calendar.css' %}">
+
+<style>
+</style>
+{% endblock style %}
+
+{% block body %}
+<h3 class="mb-3">Scheduled Checkups Calendar</h3>
+    <div id="calendar"></div>
+{% endblock body %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('calendar');
+      const events = {{ events|safe }};
+    
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        themeSystem: 'bootstrap5',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next',
+          center: 'title',
+          right: 'dayGridMonth'
+        },
+        events: events,
+        eventColor: '#3498db',
+        eventTextColor: 'white',
+        eventTimeFormat: {
+          hour: 'numeric',
+          minute: '2-digit',
+          meridiem: 'short'
+        },
+        eventDidMount: function(info) {
+          info.el.style.cursor = 'pointer';
+          info.el.style.borderLeft = '4px solid #2980b9';
+        },
+        eventClick: function(info) {
+          window.location.href = info.event.url;
+          info.jsEvent.preventDefault();
+        },
+        buttonIcons: {
+          prev: 'chevron-left',
+          next: 'chevron-right',
+          today: 'circle'
+        }
+      });
+    
+      calendar.render();
+    });
+    
+</script>
+{% endblock script %}
