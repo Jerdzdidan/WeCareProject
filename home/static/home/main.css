@@ -81,7 +81,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===== Sidebar ===== */
 .sidebar {
-  width: clamp(250px, 20vw, 300px);
+  width: clamp(270px, 20vw, 300px);
   position: relative; 
   background: #ffffff;
   border-right: 1px solid #ddd;
@@ -127,7 +127,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Responsive Sidebar (mobile) */
 @media (max-width: 992px) {
   .sidebar {
-    width: 280px;
+    width: 300px;
     position: fixed;
     height: 100vh;
     z-index: 1001;
@@ -136,7 +136,7 @@ h1, h2, h3, h4, h5, h6 {
   
   .sidebar.sidebar-hidden {
     transform: translateX(-100%);
-    width: 280px; 
+    width: 300px; 
   }
   
   .sidebar-active::after {
@@ -175,7 +175,6 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===== Table Styles ===== */
 .projectTables {
-  min-width: 992px; 
   font-size: calc(0.55rem + 0.2vw);
   margin-bottom: 0;
 }

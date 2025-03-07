@@ -59,7 +59,7 @@ $(document).ready(function() {
       },
       language: {
           emptyTable: "No data available in table"
-      }
+      },
     //   "paging": true,
     //   "ordering": true,
     //   "info": true,
