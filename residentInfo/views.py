@@ -219,11 +219,15 @@ def resident_update(request, pk):
 
 @login_required
 def resident_delete_confirm(request, pk):
-    resident = get_object_or_404(Resident, pk=pk)
-    
-    if request.method == 'POST':
-        resident.delete()
-        messages.success(request, "Resident record deleted successfully!")
+    try:
+        resident = Resident.objects.get(pk=pk)
+    except Resident.DoesNotExist:
+        messages.warning(request, "No resident records found!")
         return redirect('resident-list')
     
-    return render(request, 'residentInfo/resident_delete.html', {'resident': resident})
+    resident.delete()
+    messages.success(
+        request,
+        f"Resident record deleted for {resident.id}: {resident.last_name}, {resident.first_name} successfully!"
+    )
+    return redirect('resident-list')

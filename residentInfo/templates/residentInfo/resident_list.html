@@ -109,10 +109,10 @@
                 <td class="text-center">{{ resident.present_address }}</td>
                 <td class="text-center">{{ resident.contact_number }}</td>
                 <td class="text-center">{{ resident.date_updated|date:"M d, Y" }}</td>
-                <td>
+                <td class="text-center align-middle">
                     <div class="d-flex">
-                      <a href="{% url 'resident-update' resident.id %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit"><i class="ri-edit-2-fill"></i></a>
-                      <a href="{% url 'resident-delete-confirm' resident.id %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill" title="Delete"><i class="ri-delete-bin-5-fill"></i></a>
+                      <a href="{% url 'resident-update' resident.id %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1 " title="Edit"><i class="ri-edit-2-fill"></i></a>
+                      <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ resident.last_name }}, {{ resident.first_name }}" data-ID="{{ resident.id }}" data-moduleName="Delete resident record" class="btn btn-sm btn-outline-danger responsive_text fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></button>
                     </div>
                 </td>
             </tr>
@@ -126,6 +126,21 @@
 
 {% block script %}
 
-<script src="{% static "residentInfo/main.js" %}"></script>
+<script src="{% static 'residentInfo/main.js' %}"></script>
+
+<script>
+  $('#myModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var deleteData = button.attr('data-deleteData');
+    var dataID = button.attr('data-ID')
+    var dataUrl = button.attr('data-Url')
+    var moduleName = button.attr('data-moduleName')
+    
+    var txtDeleteData = deleteData
+    $(this).find('#deleteMessage').text('Are you sure you want to 0 for: '.replace('0', moduleName));
+    $(this).find('#txtDeleteData').text(txtDeleteData);
+    $(this).find('#btnDelete').attr('href', '{% url "resident-delete-confirm" 0 %}'.replace('0', dataID));
+  });
+</script>
 
 {% endblock %}
