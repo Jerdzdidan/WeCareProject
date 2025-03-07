@@ -6,6 +6,7 @@ from .models import Medicine, MedicineStock
 from datetime import datetime, date
 from patientInfo.models import MedicineTracking
 import re
+from django.db.models import Sum
 
 # Helper function to update total value and total quantity
 def update_medicine_totals(medicine):
@@ -36,6 +37,9 @@ def medicine_detail(request, pk):
     medicine = get_object_or_404(Medicine, pk=pk)
     patient_medicine_tracking = MedicineTracking.objects.filter(medicine=medicine)
 
+    releasedQty = patient_medicine_tracking.aggregate(total=Sum('quantity_used'))['total'] or 0
+    releasedValue = patient_medicine_tracking.aggregate(total=Sum('total_price'))['total'] or 0
+
     today = date.today()
     
     valid_stocks = medicine.stocks.filter(expiration_date__gt=today)
@@ -48,6 +52,8 @@ def medicine_detail(request, pk):
         'expired_count': expired_stocks.count(),  
 
         'patient_medicine_tracking': patient_medicine_tracking,
+        'releasedQty': releasedQty,
+        'releasedValue': releasedValue
     }
     return render(request, 'medicineMonitoring/medicine_detail.html', context)
 
@@ -119,12 +125,15 @@ def medicine_update(request, pk):
 
 @login_required
 def medicine_delete(request, pk):
-    medicine = get_object_or_404(Medicine, pk=pk)
-    if request.method == "POST":
-        medicine.delete()
-        messages.success(request, "Medicine deleted successfully!")
-        return redirect("medicine-list")
-    return render(request, "medicineMonitoring/medicine_delete.html", {"medicine": medicine})
+    try:
+        medicine = Medicine.objects.get(pk=pk)
+    except Medicine.DoesNotExist:
+        messages.warning(request, "No medicine records found!")
+        return redirect('medicine-list')
+    
+    medicine.delete()
+    messages.success(request, "Medicine deleted successfully!")
+    return redirect("medicine-list")
 
 
 
@@ -191,39 +200,45 @@ def medicine_stock_update(request, stock_pk):
 
 
 @login_required
-def medicine_stock_delete(request, stock_pk):
-    stock = get_object_or_404(MedicineStock, pk=stock_pk)
-    if request.method == 'POST':
-        medicine_pk = stock.medicine.pk
-        stock.delete()
-        update_medicine_totals(stock.medicine)
-        update_medicine_date_last_stocked(stock.medicine)
-        messages.success(request, "Stock deleted successfully!")
+def medicine_stock_delete(request, medicine_pk, stock_pk):
+    try:
+        stock = MedicineStock.objects.get(pk=stock_pk)
+    except MedicineStock.DoesNotExist:
+        messages.warning(request, "No stock records found!")
         return redirect("medicine-detail", pk=medicine_pk)
-    return render(request, "medicineMonitoring/medicine_stock_delete.html", {"stock": stock})
+    
+    stock.delete()
+    update_medicine_totals(stock.medicine)
+    update_medicine_date_last_stocked(stock.medicine)
+    messages.success(request, f"Stock deleted for {stock.medicine.medicine_name} successfully!")
+    return redirect("medicine-detail", pk=medicine_pk)
+
 
 @login_required
 def medicine_stock_delete_all_expired(request, medicine_pk):
     medicine = get_object_or_404(Medicine, pk=medicine_pk)
     expired_stocks = medicine.stocks.filter(expiration_date__lte=date.today())
-    if request.method == "POST":
+
+    if not expired_stocks.exists():
+        messages.warning(request, f"No expired stocks found for {medicine.medicine_name}!")
+    else:
         expired_stocks.delete()
         update_medicine_totals(medicine)
         update_medicine_date_last_stocked(medicine)
-        messages.success(request, "All expired stocks have been deleted successfully!")
-        return redirect("medicine-detail", pk=medicine.pk)
-    return render(request, "medicineMonitoring/medicine_stock_delete_all_expired.html", {"expired_stocks": expired_stocks})
+        messages.success(request, f"All expired stocks have been deleted for {medicine.medicine_name} successfully!")
+    return redirect("medicine-detail", pk=medicine.pk)
 
 
 # Medicine Tracking DELETE ALL
-
 @login_required
 def medicine_tracking_delete_all_records(request, medicine_pk):
     medicine = get_object_or_404(Medicine, pk=medicine_pk)
     medicine_patient_records = MedicineTracking.objects.filter(medicine=medicine)
 
-    if request.method == "POST":
+    if not medicine_patient_records.exists():
+        messages.warning(request, f"No patient entry of stocks found for {medicine.medicine_name}!")
+    else:
         medicine_patient_records.delete()
-        messages.success(request, "All released qty of stocks have been deleted successfully!")
-        return redirect("medicine-detail", pk=medicine.pk)
-    return render(request, "medicineMonitoring/medicine_tracking_delete_all_records.html", {"medicine_patient_records": medicine_patient_records})
+        messages.success(request, f"All patient entry of stocks have been deleted for {medicine.medicine_name} successfully!")
+    
+    return redirect("medicine-detail", pk=medicine.pk)

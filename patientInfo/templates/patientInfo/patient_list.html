@@ -126,9 +126,7 @@
                       <a href="{% url "patient-update" patient.patientID %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
                         <i class="ri-edit-2-fill"></i>
                       </a>
-                      <a href="{% url "patient-delete-confirm" patient.patientID %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill" title="Delete">
-                        <i class="ri-delete-bin-5-fill"></i>
-                      </a>
+                      <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ patient.patientID }}" data-moduleName="Delete the patient record" class="btn btn-sm btn-outline-danger fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></button>
                     </div>
                 </td>
             </tr>
@@ -139,3 +137,23 @@
     </div>
 </article>
 {% endblock body %}
+
+{% block script %}
+<script>
+
+  $('#myModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var deleteData = button.attr('data-deleteData');
+    var dataID = button.attr('data-ID')
+    var dataUrl = button.attr('data-Url')
+    var moduleName = button.attr('data-moduleName')
+    
+
+    var txtDeleteData = deleteData
+    $(this).find('#deleteMessage').text('Are you sure you want to 0 for: '.replace('0', moduleName));
+    $(this).find('#txtDeleteData').text(txtDeleteData);
+    $(this).find('#btnDelete').attr('href', '{% url "patient-delete-confirm" 0 %}'.replace('0', dataID));
+  });
+
+</script>
+{% endblock script %}

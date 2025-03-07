@@ -338,14 +338,18 @@ def patient_update(request, pk):
 
 @login_required
 def patient_delete_confirm(request, pk):
-    patient = get_object_or_404(Patient, patientID=pk)
-    if request.method == 'POST':
-        patient.delete()
-        messages.success(request, "Patient record deleted successfully!")
+    try:
+        patient = Patient.objects.get(patientID=pk)
+    except Patient.DoesNotExist:
+        messages.warning(request, "No patient records found!")
         return redirect('patient-list')
     
-    return render(request, 'patientInfo/patient_delete.html', {'patient': patient})
-
+    patient.delete()
+    messages.success(
+        request,
+        f"Patient record deleted for {patient.patientID}: {patient.resident.last_name}, {patient.resident.first_name} successfully!"
+    )
+    return redirect('patient-list')
 
 
 
@@ -654,25 +658,7 @@ def medicine_tracking_update(request, tracking_id):
 @login_required
 def medicine_tracking_delete(request, tracking_id):
     tracking = get_object_or_404(MedicineTracking, id=tracking_id)
-    patient = tracking.patient  
 
-    if request.method == "POST":
-        tracking.delete()
-        messages.success(request, "Medicine tracking record deleted successfully!")
-        return redirect("patient-detail", pk=patient.patientID)
-    
-    return render(request, "patientInfo/medicinetracking_delete.html", {"tracking": tracking})
-
-@login_required
-def medicine_tracking_redo(request, tracking_id):
-    tracking = get_object_or_404(MedicineTracking, id=tracking_id)
-    medicine = tracking.medicine
-    if tracking.medicine_stock:
-        tracking.medicine_stock.quantity += tracking.quantity_used
-        tracking.medicine_stock.save(update_fields=["quantity"])
-
-    update_medicine_totals(medicine)
-    update_medicine_date_last_stocked(medicine)
     tracking.delete()
-    messages.success(request, "Redo successful! The medicine's total value has been restored.")
-    return redirect("patient-detail", pk=tracking.patient.patientID)
+    messages.success(request, "Medicine tracking record deleted successfully!")
+    return redirect(request.META.get('HTTP_REFERER', '/'))

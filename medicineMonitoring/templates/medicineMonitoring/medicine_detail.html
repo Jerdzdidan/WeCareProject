@@ -144,30 +144,38 @@
         <!-- Inventory Section -->
         <div class="col-md-6">
           <div class="info-box border border-secondary rounded p-3 mb-1">
-            <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="d-flex align-items-center gap-2 mb-2">
               <i class="ri-archive-line text-secondary"></i>
               <h4 class="text-uppercase small text-secondary mb-0">Inventory</h4>
             </div>
             <dl class="row g-2">
-              <div class="col-6">
+              <div class="col-4">
                 <dt class="text-secondary small">Total Quantity (not expired)</dt>
                 <dd class="mb-0">{{ medicine.total_quantity|default:"-" }}</dd>
               </div>
-              <div class="col-6 mt-2">
+              <div class="col-4 mt-2">
                 <dt class="text-secondary small">Expired Quantity</dt>
                 <dd class="mb-0">{{ medicine.expired_quantity }}</dd>
+              </div>
+              <div class="col-4 mt-2">
+                <dt class="text-secondary small">Released Quantity</dt>
+                <dd class="mb-0">{{ releasedQty }}</dd>
               </div>
 
             </dl>
             <dl class="row g-2">
-              <div class="col-6">
+              <div class="col-4">
                 <dt class="text-secondary small">Total Value (not expired)</dt>
                 <dd class="mb-0">₱{{ medicine.total_value|default:"-" }}</dd>
               </div>       
-              <div class="col-6 mt-2">
+              <div class="col-4 mt-2">
                 <dt class="text-secondary small">Expired Value</dt>
                 <dd class="mb-0">₱{{ medicine.expired_value|floatformat:2 }}</dd>
-              </div>         
+              </div>       
+              <div class="col-4 mt-2">
+                <dt class="text-secondary small">Released Value</dt>
+                <dd class="mb-0">₱{{ releasedValue }}</dd>
+              </div>  
             </dl>
           </div>
         </div>
@@ -257,7 +265,8 @@
               <td class="align-middle">{{ stock.notes }}</td>
               <td class="align-middle text-center">
                 <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1 px-3"><i class="ri-edit-2-fill"></i></a>
-                <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></a>
+                {% comment %} <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
+                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ stock.pk }}" data-moduleName="Delete the stocks entry" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></button>
               </td>
             </tr>
             {% endfor %}
@@ -272,9 +281,7 @@
       <div class="container px-3 pt-3">
         <div class="row mt-2">
           <div class="col-auto ms-auto">
-            <a href="{% url 'medicine-tracking-delete-all-records' medicine.pk %}" class="btn btn-danger info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
-              <i class="fa-solid fa-minus"></i> Delete ALL
-            </a>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ medicine.pk }}" data-moduleName="Delete all patient entry" class="btn btn-danger info border-dark fw-bold"><i class="fa-solid fa-minus"></i> Delete ALL</button>
           </div>
         </div>
         <div class="row mt-2">
@@ -317,7 +324,8 @@
               <td class="align-middle text-center">{{ tracking.total_dosage }}</td>
               <td class="align-middle text-center">{{ tracking.total_price }}</td>
               <td class="align-middle text-center">
-                <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></a>
+                {% comment %} <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
+                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ tracking.patient.resident.last_name }}, {{ tracking.patient.resident.first_name }}" data-ID="{{ tracking.pk }}" data-moduleName="Delete the medicine tracking entry" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
               </td>
             </tr>
             {% endfor %}
@@ -332,9 +340,7 @@
       <div class="container px-3 pt-3">
         <div class="row mt-2">
           <div class="col-auto ms-auto">
-            <a href="{% url 'stock-delete-all-expired' medicine.pk %}" class="btn btn-danger info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
-              <i class="fa-solid fa-minus"></i> Delete ALL
-            </a>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ medicine.pk }}" data-moduleName="Delete all expired stocks entry" class="btn btn-danger info border-dark fw-bold"><i class="fa-solid fa-minus"></i> Delete ALL</button>
           </div>
         </div>
         <div class="row mt-2">
@@ -372,7 +378,7 @@
               <td class="align-middle">{{ stock.notes }}</td>
               <td class="align-middle text-center">
                 <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1"><i class="ri-edit-2-fill"></i></a>
-                <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></a>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ stock.pk }}" data-moduleName="Delete the expired stocks entry" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
               </td>
             </tr>
             {% endfor %}
@@ -414,5 +420,36 @@
       }
     }
   });
+
+  $('#myModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var deleteData = button.attr('data-deleteData');
+    var dataID = button.attr('data-ID')
+    var dataUrl = button.attr('data-Url')
+    var moduleName = button.attr('data-moduleName')
+    
+    
+    if (moduleName == "Delete the stocks entry"){
+      var txtDataUrl = '{% url "stock-delete" medicine.pk 0 %}'
+    }
+    else if (moduleName == "Delete all patient entry"){
+      var txtDataUrl = '{% url "medicine-tracking-delete-all-records" 0 %}'
+    }
+    else if (moduleName == "Delete the medicine tracking entry"){
+      var txtDataUrl = '{% url "medicine-tracking-delete" 0 %}'
+    }
+    else if (moduleName == "Delete all expired stocks entry"){
+      var txtDataUrl = '{% url "stock-delete-all-expired" 0 %}'
+    }
+    else{
+      var txtDataUrl = '{% url "stock-delete" medicine.pk 0 %}'
+    }
+
+    var txtDeleteData = deleteData
+    $(this).find('#deleteMessage').text('Are you sure you want to 0 for: '.replace('0', moduleName));
+    $(this).find('#txtDeleteData').text(txtDeleteData);
+    $(this).find('#btnDelete').attr('href', txtDataUrl.replace('0', dataID));
+  });
+
 </script>
 {% endblock script %}
