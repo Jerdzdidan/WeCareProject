@@ -446,14 +446,16 @@ def medical_record_update(request, record_id):
     return render(request, 'patientInfo/medical_record_update.html', {'record': record})
 
 @login_required
-def medical_record_delete(request, record_id):
-    record = get_object_or_404(MedicalRecord, id=record_id)
-    if request.method == 'POST':
-        patientID = record.patient.patientID
-        record.delete()
-        messages.success(request, "Medical record deleted successfully!")
-        return redirect('patient-detail', pk=patientID)
-    return render(request, 'patientInfo/medical_record_delete.html', {'record': record})
+def medical_record_delete(request, patient_pk, record_id):
+    try:
+        record = MedicalRecord.objects.get(id=record_id)
+    except Patient.DoesNotExist:
+        messages.warning(request, "No medical records found!")
+        return redirect('patient-detail', pk=patient_pk)
+
+    record.delete()
+    messages.success(request, f"Medical record deleted for {record.patient.patientID}: {record.patient.resident.last_name}, {record.patient.resident.first_name} successfully!")
+    return redirect('patient-detail', pk=patient_pk)
 
 
 

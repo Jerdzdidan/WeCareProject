@@ -371,9 +371,10 @@
               <td class="text-start align-middle">{{ record.concern }}</td>
               <td class="text-start align-middle">{{ record.description }}</td>
               <td class="text-start align-middle">{{ record.last_visited|date:"M d, Y" }}</td>
-              <td class="text-center">
-                <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success responsive_text" title="Edit"><i class="ri-edit-2-fill"></i></a>
-                <a href="{% url 'medical-record-delete' record.id %}" class="btn btn-sm btn-outline-danger responsive_text" title="Delete"><i class="ri-delete-bin-5-fill"></i></a>
+              <td class="text-center align-middle">
+                <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success responsive_text fw-bold flex-fill" title="Edit"><i class="ri-edit-2-fill"></i></a>
+
+                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ record.id }}" data-moduleName="Delete the medical record" class="btn btn-sm btn-outline-danger responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button>
               </td>
             </tr>
             {% endfor %}
@@ -457,14 +458,12 @@
                   Ongoing
                 {% endif %}
               </td>
-              <td class="align-middle text-center">{{ tracking.total_price }}</td>
+              <td class="align-middle text-center">₱{{ tracking.total_price }}</td>
               <td class="text-center">
-                <a href="{% url "medicine-tracking-update" tracking.id %}" class="btn btn-sm btn-outline-success responsive_text mb-1" title="Edit">
+                <a href="{% url 'medicine-tracking-update' tracking.id %}" class="btn btn-sm btn-outline-success responsive_text mb-1" title="Edit">
                   <i class="ri-edit-2-fill"></i>
                 </a>
-                <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger mb-1 responsive_text" title="Delete">
-                  <i class="ri-delete-bin-5-fill"></i>
-                </a>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ tracking.id }}" data-moduleName="Delete the medicine record" class="btn btn-sm btn-outline-danger mb-1 responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button>
               </td>
             </tr>
             {% endfor %}
@@ -478,8 +477,8 @@
 {% endblock body %}
 
 {% block script %}
-<script src="{% static "patientInfo/patientMedicalRecordDataTable.js" %}"></script>
-<script src="{% static "patientInfo/patientMedicineTrackingDataTable.js" %}"></script>
+<script src="{% static 'patientInfo/patientMedicalRecordDataTable.js' %}"></script>
+<script src="{% static 'patientInfo/patientMedicineTrackingDataTable.js' %}"></script>
 <script>
   $(document).ready(function(){
     flatpickr(".flatpickr-range", {
@@ -506,6 +505,26 @@
         tab.show();
       }
     }
+  });
+
+  $('#myModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var deleteData = button.attr('data-deleteData');
+    var dataID = button.attr('data-ID')
+    var dataUrl = button.attr('data-Url')
+    var moduleName = button.attr('data-moduleName')
+    
+    if (moduleName == "Delete the medical record"){
+      var txtDataUrl = '{% url "medical-record-delete" patient.patientID 0 %}'
+    }
+    else{
+      var txtDataUrl = '{% url "medicine-tracking-delete" 0 %}'
+    }
+
+    var txtDeleteData = deleteData
+    $(this).find('#deleteMessage').text('Are you sure you want to 0 for: '.replace('0', moduleName));
+    $(this).find('#txtDeleteData').text(txtDeleteData);
+    $(this).find('#btnDelete').attr('href', txtDataUrl.replace('0', dataID));
   });
 </script>
 {% endblock script %}

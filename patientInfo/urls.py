@@ -21,6 +21,6 @@ urlpatterns = [
 
     path('detail/<str:pk>/record/create/', views.medical_record_create, name='medical-record-create'),
     path('medical-record/update/<int:record_id>/', views.medical_record_update, name='medical-record-update'),
-    path('medical-record/delete/<int:record_id>/', views.medical_record_delete, name='medical-record-delete'),
+    path('<str:patient_pk>/medical-record/delete/<int:record_id>/', views.medical_record_delete, name='medical-record-delete'),
 
 ]
