@@ -228,6 +228,6 @@ def resident_delete_confirm(request, pk):
     resident.delete()
     messages.success(
         request,
-        f"Resident record deleted for {resident.id}: {resident.last_name}, {resident.first_name} successfully!"
+        f"Resident record deleted for: {resident.last_name}, {resident.first_name} successfully!"
     )
     return redirect('resident-list')

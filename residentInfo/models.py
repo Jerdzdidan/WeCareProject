@@ -1,6 +1,7 @@
-from django.db import models, transaction
+from django.db import models, transaction, connection
 import datetime
 from django.utils import timezone
+import re
 
 GENDER_CHOICES = (
     ('Male', 'Male'),
@@ -73,21 +74,13 @@ class Resident(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             with transaction.atomic():
-                last_resident = Resident.objects.select_for_update().order_by('-id').first()
-                last_number = 0
-                if last_resident:
-                    last_id = str(last_resident.id)
-                    if last_id.startswith('R'):
-                        try:
-                            last_number = int(last_id[1:])
-                        except ValueError:
-                            last_number = 0
-                    else:
-                        try:
-                            last_number = int(last_id)
-                        except ValueError:
-                            last_number = 0
-                new_number = last_number + 1
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT MAX(CAST(SUBSTR(id, 2) AS INTEGER)) FROM residentInfo_resident WHERE id LIKE 'R%'"
+                    )
+                    max_number_row = cursor.fetchone()
+                    max_number = max_number_row[0] or 0 if max_number_row[0] is not None else 0
+                new_number = max_number + 1
                 self.id = f"R{new_number}"
         super().save(*args, **kwargs)
 
