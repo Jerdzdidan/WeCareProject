@@ -36,7 +36,7 @@ def family_resident_list(request):
 
     residents = residents.order_by('family__family_no', 'id')
 
-    return render(request, 'reports/residentInfoReport.html', {'residents': residents})
+    return render(request, 'residentInfo/resident_list.html', {'residents': residents})
 
 @login_required
 def family_resident_create(request):

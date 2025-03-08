@@ -39,25 +39,25 @@
     <div class="row">
       <div class="col-md-4 mb-3">
         <label for="bp" class="form-label">Blood Pressure (BP):</label>
-        <input type="text" id="bp" name="bp" class="form-control" placeholder="e.g., 120/80">
+        <input type="text" id="bp" name="bp" class="form-control" required>
       </div>
       <div class="col-md-4 mb-3">
         <label for="pr" class="form-label">Pulse Rate (PR):</label>
-        <input type="number" id="pr" name="pr" class="form-control" placeholder="e.g., 72">
+        <input type="number" id="pr" name="pr" class="form-control" required>
       </div>
       <div class="col-md-4 mb-3">
         <label for="temp" class="form-label">Temperature (TEMP):</label>
-        <input type="number" step="0.1" id="temp" name="temp" class="form-control" placeholder="e.g., 37.0">
+        <input type="number" step="0.1" id="temp" name="temp" class="form-control" required>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6 mb-3">
         <label for="height" class="form-label">Height (cm):</label>
-        <input type="number" step="0.1" id="height" name="height" class="form-control" placeholder="e.g., 170">
+        <input type="number" step="0.1" id="height" name="height" class="form-control" required>
       </div>
       <div class="col-md-6 mb-3">
         <label for="weight" class="form-label">Weight (kg):</label>
-        <input type="number" step="0.1" id="weight" name="weight" class="form-control" placeholder="e.g., 65">
+        <input type="number" step="0.1" id="weight" name="weight" class="form-control" required>
       </div>
     </div>
     
@@ -101,61 +101,61 @@
     <div class="checkbox-group row">
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[hepatitis_a]" id="hepatitis_a">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[hepatitis_a]" id="hepatitis_a">
           <label class="form-check-label cursor" for="hepatitis_a">Hepatitis A</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[hepatitis_b]" id="hepatitis_b">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[hepatitis_b]" id="hepatitis_b">
           <label class="form-check-label cursor" for="hepatitis_b">Hepatitis B</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[hpv_vaccine]" id="hpv_vaccine">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[hpv_vaccine]" id="hpv_vaccine">
           <label class="form-check-label cursor" for="hpv_vaccine">HPV Vaccine</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[pre_announced_vaccine]" id="pre_announced_vaccine">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[pre_announced_vaccine]" id="pre_announced_vaccine">
           <label class="form-check-label cursor" for="pre_announced_vaccine">Pre-announced Vaccine</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[typhoid]" id="typhoid">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[typhoid]" id="typhoid">
           <label class="form-check-label cursor" for="typhoid">Typhoid</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[mmr]" id="mmr">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[mmr]" id="mmr">
           <label class="form-check-label cursor" for="mmr">MMR</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[dpt]" id="dpt">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[dpt]" id="dpt">
           <label class="form-check-label cursor" for="dpt">DPT</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[chicken_pox]" id="chicken_pox">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[chicken_pox]" id="chicken_pox">
           <label class="form-check-label cursor" for="chicken_pox">Chicken Pox</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[tetanus_toxoid]" id="tetanus_toxoid">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[tetanus_toxoid]" id="tetanus_toxoid">
           <label class="form-check-label cursor" for="tetanus_toxoid">Tetanus Toxoid</label>
         </div>
       </div>
       <div class="col-md-12 mt-2">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="vaccinations[others]" id="vaccination_others" onchange="document.getElementById('vaccination_others_text').disabled = !this.checked;">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="vaccinations[others]" id="vaccination_others" onchange="document.getElementById('vaccination_others_text').disabled = !this.checked;">
           <label class="form-check-label cursor" for="vaccination_others">Others <small class="text-muted">(click to activate textarea)</small></label>
         </div>
         <textarea name="vaccinations[others_text]" id="vaccination_others_text" class="form-control mt-1" placeholder="Specify other vaccinations..." disabled></textarea>
@@ -166,69 +166,69 @@
     <div class="checkbox-group row">
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[asthma]" id="asthma">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[asthma]" id="asthma">
           <label class="form-check-label cursor" for="asthma">Asthma</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[anemia]" id="anemia">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[anemia]" id="anemia">
           <label class="form-check-label cursor" for="anemia">Anemia</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[bad_teeth]" id="bad_teeth">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[bad_teeth]" id="bad_teeth">
           <label class="form-check-label cursor" for="bad_teeth">Bad Teeth</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[diabetes]" id="diabetes">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[diabetes]" id="diabetes">
           <label class="form-check-label cursor" for="diabetes">Diabetes</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[depression]" id="depression">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[depression]" id="depression">
           <label class="form-check-label cursor" for="depression">Depression</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[heart_disease]" id="heart_disease">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[heart_disease]" id="heart_disease">
           <label class="form-check-label cursor" for="heart_disease">Heart Disease</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[hearing_problem]" id="hearing_problem">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[hearing_problem]" id="hearing_problem">
           <label class="form-check-label cursor" for="hearing_problem">Hearing Problem</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[high_blood_pressure]" id="high_blood_pressure">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[high_blood_pressure]" id="high_blood_pressure">
           <label class="form-check-label cursor" for="high_blood_pressure">High Blood Pressure</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[heart_attack]" id="heart_attack">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[heart_attack]" id="heart_attack">
           <label class="form-check-label cursor" for="heart_attack">Heart Attack</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[drug_allergy]" id="drug_allergy" onchange="document.getElementById('allergy_details').disabled = !this.checked;">
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[drug_allergy]" id="drug_allergy" onchange="document.getElementById('allergy_details').disabled = !this.checked;">
           <label class="form-check-label cursor" for="drug_allergy">Drug Allergy/Reaction <small class="text-muted">(click to activate textarea)</small></label>
         </div>
         <textarea name="past_history[allergy_details]" id="allergy_details" class="form-control mt-1" placeholder="List any allergies or reactions..." disabled></textarea>
       </div>
       <div class="col-md-12 mt-4">
         <div class="form-check">
-          <input class="form-check-input cursor" type="checkbox" name="past_history[med_history_others]" id="med_history_others" onchange="document.getElementById('med_history_others_text').disabled = !this.checked;">
-          <label class="form-check-label cursor" for="med_history_others">Others <small class="text-muted">(click to activate textarea)</small></label>
+          <input class="form-check-input cursor border-dark" type="checkbox" name="past_history[med_history_others]" id="med_history_others" onchange="document.getElementById('med_history_others_text').disabled = !this.checked;">
+          <label class="form-check-label cursor border" for="med_history_others">Others <small class="text-muted">(click to activate textarea)</small></label>
         </div>
         <textarea name="past_history[others]" id="med_history_others_text" class="form-control mt-1" placeholder="Specify other vaccinations..." disabled></textarea>
       </div>

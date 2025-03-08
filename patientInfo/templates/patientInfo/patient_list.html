@@ -26,26 +26,6 @@
                   <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
                   <option value="Other" {% if request.GET.gender == "Other" %}selected{% endif %}>Other</option>
                 </select>
-                <select name="street" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
-                  <option value="" {% if not request.GET.street %}selected{% endif %}>All Streets (Default)</option>
-                  <option value="SITIO 2" {% if request.GET.street == "SITIO 2" %}selected{% endif %}>SITIO 2</option>
-                  <option value="PRIMO CRUZ STREET" {% if request.GET.street == "PRIMO CRUZ STREET" %}selected{% endif %}>PRIMO CRUZ STREET</option>
-                  <option value="P. CRUZ STREET" {% if request.GET.street == "P. CRUZ STREET" %}selected{% endif %}>P. CRUZ STREET</option>
-                  <option value="I. LOPEZ STREET" {% if request.GET.street == "I. LOPEZ STREET" %}selected{% endif %}>I. LOPEZ STREET</option>
-                  <option value="BALLESTEROS STREET" {% if request.GET.street == "BALLESTEROS STREET" %}selected{% endif %}>BALLESTEROS STREET</option>
-                  <option value="F. ORTIGAS STREET" {% if request.GET.street == "F. ORTIGAS STREET" %}selected{% endif %}>F. ORTIGAS STREET</option>
-                  <option value="L. GONZALES STREET" {% if request.GET.street == "L. GONZALES STREET" %}selected{% endif %}>L. GONZALES STREET</option>
-                  <option value="DR. JOSE FABELLA STREET" {% if request.GET.street == "DR. JOSE FABELLA STREET" %}selected{% endif %}>DR. JOSE FABELLA STREET</option>
-                  <option value="SAN JOSE STREET" {% if request.GET.street == "SAN JOSE STREET" %}selected{% endif %}>SAN JOSE STREET</option>
-                  <option value="PARADA STREET" {% if request.GET.street == "PARADA STREET" %}selected{% endif %}>PARADA STREET</option>
-                  <option value="A. BONIFACIO STREET" {% if request.GET.street == "A. BONIFACIO STREET" %}selected{% endif %}>A. BONIFACIO STREET</option>
-                  <option value="PINAGTIPUNAN STREET" {% if request.GET.street == "PINAGTIPUNAN STREET" %}selected{% endif %}>PINAGTIPUNAN STREET</option>
-                  <option value="GEN. KALENTONG STREET" {% if request.GET.street == "GEN. KALENTONG STREET" %}selected{% endif %}>GEN. KALENTONG STREET</option>
-                  <option value="STAR STREET" {% if request.GET.street == "STAR STREET" %}selected{% endif %}>STAR STREET</option>
-                  <option value="C. FERNANDO STREET" {% if request.GET.street == "C. FERNANDO STREET" %}selected{% endif %}>C. FERNANDO STREET</option>
-                  <option value="MAYSILO CIRCLE" {% if request.GET.street == "MAYSILO CIRCLE" %}selected{% endif %}>MAYSILO CIRCLE</option>
-                  <option value="PRINCETON STREET" {% if request.GET.street == "PRINCETON STREET" %}selected{% endif %}>PRINCETON STREET</option>
-                </select>
                 <button type="submit" class="btn btn-outline-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw);">Filter</button>
             </div>
           </form>
@@ -126,7 +106,6 @@
                       <a href="{% url "patient-update" patient.patientID %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
                         <i class="ri-edit-2-fill"></i>
                       </a>
-                      <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ patient.patientID }}" data-moduleName="Delete the patient record" class="btn btn-sm btn-outline-danger fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></button>
                     </div>
                 </td>
             </tr>
