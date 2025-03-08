@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from residentInfo.models import Resident
-from dateutil.relativedelta import relativedelta
 
 # Create your views here.
 def residentInfoReport(request):
