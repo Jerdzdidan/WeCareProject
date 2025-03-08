@@ -68,6 +68,7 @@
             <th class="text-start">Checkup Time</th>
             <th class="text-start">Patient ID</th>
             <th class="text-start">Patient Name</th>
+            <th class="text-start">Contact Number</th>
             <th class="text-start">Notes</th>
             <th class="text-center">Action</th>
           </tr>
@@ -85,6 +86,7 @@
             </td>
             <td class="align-middle text-start">{{ checkup.patient.patientID }}</td>
             <td class="align-middle text-start">{{ checkup.patient.resident.last_name }}, {{ checkup.patient.resident.first_name }}</td>
+            <td class="align-middle text-start">{{ checkup.patient.resident.contact_number }}</td>
             <td class="align-middle text-start">
               {% if checkup.notes %}
                 {{ checkup.notes }}

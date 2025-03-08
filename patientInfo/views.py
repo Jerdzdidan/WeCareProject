@@ -16,6 +16,7 @@ from patientInfo.models import (
 from medicineMonitoring.models import Medicine, MedicineStock
 from medicineMonitoring.views import update_medicine_date_last_stocked, update_medicine_totals
 from residentInfo.models import Resident
+from scheduledcheckup.models import ScheduledCheckup
 
 # === PATIENT RECORD FUNCTIONALITY ===
 @login_required
@@ -94,21 +95,16 @@ def patient_create_details(request, resident_id):
             if illness_key in request.POST:
                 illness_name = request.POST.get(illness_key, "").strip()
                 start_date_str = request.POST.get(f"present_illness[{index}][start_date]", "").strip()
-                end_date_str = request.POST.get(f"present_illness[{index}][end_date]", "").strip()
                 treatment = request.POST.get(f"present_illness[{index}][treatment]", "").strip()
                 try:
                     start_date = datetime.strptime(start_date_str, "%b %d, %Y").date() if start_date_str else None
                 except ValueError:
                     start_date = None
-                try:
-                    end_date = datetime.strptime(end_date_str, "%b %d, %Y").date() if end_date_str else None
-                except ValueError:
-                    end_date = None
+            
                 if illness_name and start_date:
                     patient.present_illnesses.create(
                         illness_name=illness_name,
                         start_date=start_date,
-                        end_date=end_date,
                         treatment=treatment
                     )
                 index += 1
@@ -151,6 +147,8 @@ def patient_create_details(request, resident_id):
         heart_attack = request.POST.get("past_history[heart_attack]") == "on"
         drug_allergy = request.POST.get("past_history[drug_allergy]") == "on"
         allergy_details = request.POST.get("past_history[allergy_details]", "").strip()
+        med_history_others = request.POST.get("past_history[others]", "").strip()
+
         
         PastMedicalHistory.objects.create(
             patient=patient,
@@ -164,7 +162,8 @@ def patient_create_details(request, resident_id):
             high_blood_pressure=high_blood_pressure,
             heart_attack=heart_attack,
             drug_allergy=drug_allergy,
-            allergy_details=allergy_details
+            allergy_details=allergy_details,
+            others = med_history_others
         )
         
         MedicalRecord.objects.create(
@@ -222,21 +221,16 @@ def patient_update(request, pk):
             if illness_key in request.POST:
                 illness_name = request.POST.get(illness_key, "").strip()
                 start_date_str = request.POST.get(f"present_illness[{index}][start_date]", "").strip()
-                end_date_str = request.POST.get(f"present_illness[{index}][end_date]", "").strip()
                 treatment = request.POST.get(f"present_illness[{index}][treatment]", "").strip()
                 try:
                     start_date = datetime.strptime(start_date_str, "%b %d, %Y").date() if start_date_str else None
                 except ValueError:
                     start_date = None
-                try:
-                    end_date = datetime.strptime(end_date_str, "%b %d, %Y").date() if end_date_str else None
-                except ValueError:
-                    end_date = None
+               
                 if illness_name and start_date:
                     patient.present_illnesses.create(
                         illness_name=illness_name,
                         start_date=start_date,
-                        end_date=end_date,
                         treatment=treatment
                     )
                 index += 1
@@ -293,6 +287,7 @@ def patient_update(request, pk):
         heart_attack = request.POST.get("past_history[heart_attack]") == "on"
         drug_allergy = request.POST.get("past_history[drug_allergy]") == "on"
         allergy_details = request.POST.get("past_history[allergy_details]", "").strip()
+        med_history_others = request.POST.get("past_history[others]", "").strip()
         
         if past_medical_history:
             past_medical_history.asthma = asthma
@@ -306,6 +301,7 @@ def patient_update(request, pk):
             past_medical_history.heart_attack = heart_attack
             past_medical_history.drug_allergy = drug_allergy
             past_medical_history.allergy_details = allergy_details
+            past_medical_history.others = med_history_others
             past_medical_history.save()
         else:
             if (asthma or anemia or bad_teeth or diabetes or depression or heart_disease or
@@ -322,7 +318,8 @@ def patient_update(request, pk):
                     high_blood_pressure=high_blood_pressure,
                     heart_attack=heart_attack,
                     drug_allergy=drug_allergy,
-                    allergy_details=allergy_details
+                    allergy_details=allergy_details,
+                    others = med_history_others
                 )
         
         messages.success(request, "Patient record updated successfully!")
@@ -534,7 +531,7 @@ def medicine_tracking_create_details(request, pk, medicine_id):
         available_stock.quantity -= quantity
         available_stock.save(update_fields=["quantity"])
 
-        MedicineTracking.objects.create(
+        tracking = MedicineTracking.objects.create(
             patient=patient,
             medicine=medicine,
             medicine_stock=available_stock,
@@ -549,6 +546,13 @@ def medicine_tracking_create_details(request, pk, medicine_id):
             notes=notes,
             total_price=total_price,
         )
+
+        if follow_up_date:
+            ScheduledCheckup.objects.create(
+                patient=patient,
+                checkup_date=follow_up_date,
+                notes=f"Follow-up checkup for medication: {medicine.generic_name} ({tracking.date_given.strftime('%Y-%m-%d')})"
+            )
 
         update_medicine_totals(medicine)
         update_medicine_date_last_stocked(medicine)

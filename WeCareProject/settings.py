@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'medicineMonitoring',
     'scheduledcheckup',
     'checkupcalendar',
+    'reports',
     'crispy_forms',
     'crispy_bootstrap5',
 ]

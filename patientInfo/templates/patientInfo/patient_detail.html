@@ -143,7 +143,7 @@
               </div>
               <div class="col-md-4">
               <p class="info-label">Temperature (TEMP):</p>
-              <p class="info-value">{{ patient.vital_signs.temperature|default:"N/A" }}</p>
+              <p class="info-value">{{ patient.vital_signs.temperature|default:"N/A" }}°C</p>
               </div>
               <div class="col-md-4">
               <p class="info-label">Height (cm):</p>
@@ -166,7 +166,6 @@
                   <tr>
                   <th>Illness Name</th>
                   <th>Start Date</th>
-                  <th>End Date</th>
                   <th>Treatment</th>
                   </tr>
               </thead>
@@ -175,13 +174,6 @@
                   <tr>
                   <td>{{ illness.illness_name }}</td>
                   <td>{{ illness.start_date|date:"M d, Y" }}</td>
-                  <td>
-                      {% if illness.end_date %}
-                      {{ illness.end_date|date:"M d, Y" }}
-                      {% else %}
-                      Ongoing
-                      {% endif %}
-                  </td>
                   <td>{{ illness.treatment|default:"N/A" }}</td>
                   </tr>
                   {% empty %}
@@ -292,6 +284,12 @@
               <div class="col-md-12">
                   <p class="info-label">Allergy Details:</p>
                   <p class="info-value">{{ patient.past_medical_history.allergy_details|default:"None" }}</p>
+              </div>
+              {% endif %}
+              {% if patient.past_medical_history.others %}
+              <div class="col-md-12">
+                  <p class="info-label">Others:</p>
+                  <p class="info-value">{{ patient.past_medical_history.others|default:"None" }}</p>
               </div>
               {% endif %}
               </div>

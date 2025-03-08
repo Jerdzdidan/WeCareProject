@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 def family_resident_list(request):
     category = request.GET.get('category', '')
     gender = request.GET.get('gender', '')
-    street = request.GET.get('street', '') 
+    age_group = request.GET.get('age', '')
 
     residents = Resident.objects.select_related('family').all()
 
@@ -17,12 +17,26 @@ def family_resident_list(request):
         residents = residents.filter(category=category)
     if gender:
         residents = residents.filter(gender=gender)
-    if street:
-        residents = residents.filter(present_address__icontains=street)
+    
+    if age_group:
+        try:
+            age_group = int(age_group)
+        except ValueError:
+            age_group = None
+        
+        if age_group is not None:
+            if age_group == 6:
+                residents = residents.filter(age__lte=6)
+            elif age_group == 18:
+                residents = residents.filter(age__gte=7, age__lte=18)
+            elif age_group == 59:
+                residents = residents.filter(age__gte=19, age__lte=59)
+            elif age_group == 150:
+                residents = residents.filter(age__gte=60)
 
     residents = residents.order_by('family__family_no', 'id')
 
-    return render(request, 'residentInfo/resident_list.html', {'residents': residents})
+    return render(request, 'reports/residentInfoReport.html', {'residents': residents})
 
 @login_required
 def family_resident_create(request):

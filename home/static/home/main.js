@@ -19,6 +19,14 @@ $(document).ready(function() {
         $(this).toggleClass("active"); 
       });
     });
+
+    $(document).ready(function () {
+      $("#reportsToggle").click(function (e) {
+        e.preventDefault();
+        $("#reportsDropdown").slideToggle(300); 
+        $(this).toggleClass("active"); 
+      });
+    });
     
     $('a.nav-link.rounded[data-bs-toggle="collapse"]').on('click', function(e) {
       e.preventDefault(); 
@@ -60,6 +68,8 @@ $(document).ready(function() {
       language: {
           emptyTable: "No data available in table"
       },
+      responsive: true,
+      autoWidth: false,
     //   "paging": true,
     //   "ordering": true,
     //   "info": true,

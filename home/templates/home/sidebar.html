@@ -71,13 +71,25 @@
             </li>
           </a>
         </ul>
+
         <ul class="list-group my-1">
-          <a href="#" class="nav-link rounded">
+          <a class="nav-link rounded patient-nav-toggle {% if '/reports/' in request.path %}active{% endif %}" href="#" id="reportsToggle">
+          <li class="list-group-item d-flex align-items-center menu-item">
+            <i class="ri-file-list-2-fill me-1 menu-icons"></i>
+            <span>Reports</span>
+            <i class="ri-arrow-down-s-line ms-auto"></i>
+          </li>
+          </a>
+          <div class="collapse {% if '/reports/' in request.path %}show{% endif %}" id="reportsDropdown">
+          <a href="{% url "reports-resident-info" %}" class="nav-link rounded patient-nav-item {% if '/reports/residentInfo/' in request.path %}active{% endif %}">
             <li class="list-group-item d-flex align-items-center menu-item">
-              <i class="ri-file-chart-fill me-1 menu-icons"></i>Reports
+              <i class="ri-file-list-2-fill me-1 menu-icons"></i>
+                Residents Report
             </li>
           </a>
+          </div>
         </ul>
+
         <ul class="list-group my-1">
           <a href="{% url "account-list" %}" class="nav-link {% if '/users/' in request.path %}active{% endif %} rounded">
             <li class="list-group-item d-flex align-items-center menu-item">

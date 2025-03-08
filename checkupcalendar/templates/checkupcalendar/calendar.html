@@ -5,53 +5,169 @@
 <link rel="stylesheet" type="text/css" href="{% static 'checkupcalendar/calendar.css' %}">
 
 <style>
-</style>
+  /* Add these modal styles */
+  .calendar-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      width: 400px;
+      animation: modalEnter 0.3s ease-out;
+  }
+  
+  @keyframes modalEnter {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+  }
+  
+  .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+  }
+  
+  .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+  }
+  
+  .year-selector {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+  }
+  
+  .month-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+  }
+  
+  .month-btn {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+  }
+  
+  .month-btn:hover {
+      background: #3498db;
+      color: white;
+      border-color: #3498db;
+  }
+  </style>
 {% endblock style %}
 
 {% block body %}
 <h3 class="mb-3">Scheduled Checkups Calendar</h3>
     <div id="calendar"></div>
+<div id="calendarModal" class="calendar-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>Select Month & Year</h5>
+      <button class="close-btn">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="year-selector">
+        <button class="year-change btn fs-1 text-success"><i class="ri-arrow-left-circle-fill"></i></button>
+        <span class="current-year">2023</span>
+        <button class="year-change btn fs-1 text-success"><i class="ri-arrow-right-circle-fill"></i></button>
+      </div>
+      <div class="month-grid">
+        {% for month in months %}
+        <button class="month-btn" data-month="{{ forloop.counter }}">{{ month }}</button>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock body %}
 
 {% block script %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const calendarEl = document.getElementById('calendar');
-      const events = {{ events|safe }};
-    
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        themeSystem: 'bootstrap5',
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          left: 'prev,next',
-          center: 'title',
-          right: 'dayGridMonth'
-        },
-        events: events,
-        eventColor: '#3498db',
-        eventTextColor: 'white',
-        eventTimeFormat: {
-          hour: 'numeric',
-          minute: '2-digit',
-          meridiem: 'short'
-        },
-        eventDidMount: function(info) {
-          info.el.style.cursor = 'pointer';
-          info.el.style.borderLeft = '4px solid #2980b9';
-        },
-        eventClick: function(info) {
-          window.location.href = info.event.url;
-          info.jsEvent.preventDefault();
-        },
-        buttonIcons: {
-          prev: 'chevron-left',
-          next: 'chevron-right',
-          today: 'circle'
+  document.addEventListener('DOMContentLoaded', function() {
+    // Calendar initialization
+    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+      headerToolbar: {
+        left: 'prev',
+        center: 'title',
+        right: 'next today customDatePicker'
+      },
+      customButtons: {
+        customDatePicker: {
+          text: '📅 Select Date',
+          click: function() {
+            const modal = document.getElementById('calendarModal');
+            modal.style.display = 'flex';
+            updateYearDisplay(calendar.getDate().getFullYear());
+          }
         }
-      });
-    
-      calendar.render();
+      },
+      // ... rest of your calendar config ...
     });
-    
+  
+    // Modal functionality
+    const modal = document.getElementById('calendarModal');
+    const currentYearSpan = document.querySelector('.current-year');
+    let selectedYear = new Date().getFullYear();
+  
+    // Update year display
+    function updateYearDisplay(year) {
+      selectedYear = year;
+      currentYearSpan.textContent = year;
+    }
+  
+    // Year navigation
+    document.querySelectorAll('.year-change').forEach(btn => {
+      btn.addEventListener('click', () => {
+        updateYearDisplay(selectedYear + (btn.textContent === '>' ? 1 : -1));
+      });
+    });
+  
+    // Month selection
+    document.querySelectorAll('.month-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const selectedMonth = parseInt(btn.dataset.month) - 1;
+        calendar.gotoDate(new Date(selectedYear, selectedMonth));
+        modal.style.display = 'none';
+      });
+    });
+  
+    // Close modal
+    document.querySelector('.close-btn').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+  
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  
+    calendar.render();
+  });
 </script>
 {% endblock script %}

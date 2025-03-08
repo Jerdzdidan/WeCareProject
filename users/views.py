@@ -22,7 +22,6 @@ def accountCreate(request):
     if request.method == 'POST':
         form = AccountForm(request.POST)
         if form.is_valid():
-            # Pass the current user as 'created_by' so it's stored on the profile.
             profile = form.save(commit=True, created_by=request.user)
             messages.success(request, "Account created successfully!")
             return redirect('account-list')

@@ -58,7 +58,7 @@
             <div class="col-md-4 form-group">
                 <label for="category">Category:</label>
                 <select id="category" name="category" class="form-control">
-                  <option value="N/A" {% if resident.category == "N/A" %}selected{% endif %}>N/A</option>
+                  <option value="N/A" {% if resident.category == "Adult" %}selected{% endif %}>Adult</option>
                   <option value="Senior" {% if resident.category == "Senior" %}selected{% endif %}>Senior</option>
                   <option value="Solo Parent" {% if resident.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
                   <option value="Pregnant" {% if resident.category == "Pregnant" %}selected{% endif %}>Pregnant</option>

@@ -41,7 +41,6 @@ class PresentIllness(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="present_illnesses")
     illness_name = models.CharField(max_length=100)
     start_date = models.DateField()
-    end_date = models.DateField(null=True, blank=True)
     treatment = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -78,6 +77,7 @@ class PastMedicalHistory(models.Model):
     heart_attack = models.BooleanField(default=False)
     drug_allergy = models.BooleanField(default=False)
     allergy_details = models.TextField(null=True, blank=True)
+    others = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"Medical History for {self.patient.resident.first_name}"
