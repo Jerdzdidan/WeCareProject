@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from users.decorators import role_required
 
 @login_required
-@role_required(['ADMIN', 'BRGY-STAFF', 'BHW', 'DOCTOR'], 'Resident Info')
 def family_resident_list(request):
     category = request.GET.get('category', '')
     gender = request.GET.get('gender', '')
@@ -39,6 +38,19 @@ def family_resident_list(request):
     residents = residents.order_by('family__family_no', 'id')
 
     return render(request, 'residentInfo/resident_list.html', {'residents': residents})
+
+@login_required
+def family_details(request, pk):
+    family = get_object_or_404(Family, pk=pk)
+    head = family.residents.filter(relationship_to_head__iexact='head of the family').first()
+    members = family.residents.exclude(relationship_to_head__iexact='head of the family')
+
+    context = {
+        'family': family,
+        'head': head,
+        'members': members,
+    }
+    return render(request, 'residentInfo/family_details.html', context)
 
 @login_required
 @role_required(['BRGY-STAFF'], 'Resident Info')
@@ -108,7 +120,7 @@ def family_resident_create(request):
     return render(request, 'residentInfo/resident_create.html')
 
 @login_required
-@role_required(['BRGY-STAFF'], 'Resident Info')
+@role_required(['BRGY-STAFF', 'ADMIN'], 'Resident Info')
 def family_resident_update(request, pk):
     family = get_object_or_404(Family, pk=pk)
     head = family.residents.filter(relationship_to_head__iexact='head of the family').first()

@@ -40,7 +40,7 @@
             </div>
           </form>
         </div>
-        {% if request.user.userprofile.userrole in '[ADMIN,BRGY-STAFF]' %}
+        {% if request.user.userprofile.userrole in '[BRGY-STAFF]' %}
         <div class="col-auto ms-auto">
           <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
             <i class="ri-add-fill my-auto" style="font-size: calc(0.6rem + 0.4vw);"></i>
@@ -82,7 +82,7 @@
             <th class="text-center">Address</th>
             <th class="text-center">Contact Number</th>
             <th class="text-center">Date Updated</th>
-            {% if request.user.userprofile.userrole in '[ADMIN,BRGY-STAFF]' %}
+            {% if request.user.userprofile.userrole in '[BRGY-STAFF]' %}
               <th class="text-center">Action</th>
             {% endif %}
           </tr>
@@ -90,7 +90,13 @@
         <tbody>
             {% for resident in residents %}
             <tr>
-                <td><a href="{% url 'family-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold px-4 text-center"><i class="ri-edit-2-line"></i>{{ resident.family.family_no }}</a></td>
+                <td>
+                  {% if request.user.userprofile.userrole in '[BRGY-STAFF]' %}
+                    <a href="{% url 'family-update' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold px-4 text-center"><i class="ri-edit-2-line"></i>{{ resident.family.family_no }}</a>
+                  {% else %}
+                  <a href="{% url 'family-detail' resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold px-4 text-center"><i class="ri-team-fill"></i>{{ resident.family.family_no }}</a>
+                  {% endif %}
+                </td>
                 <td class="text-center">{{ resident.id }}</td>
                 <td class="text-center">{{ resident.last_name }}</td>
                 <td class="text-center">{{ resident.first_name }}</td>
@@ -104,7 +110,7 @@
                 <td class="text-center">{{ resident.present_address }}</td>
                 <td class="text-center">{{ resident.contact_number }}</td>
                 <td class="text-center">{{ resident.date_updated|date:"M d, Y" }}</td>
-                {% if request.user.userprofile.userrole in '[ADMIN,BRGY-STAFF]' %}
+                {% if request.user.userprofile.userrole in '[BRGY-STAFF]' %}
                 <td class="text-center align-middle">
                     <div class="d-flex">
                       <a href="{% url 'resident-update' resident.id %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1 " title="Edit"><i class="ri-edit-2-fill"></i></a>

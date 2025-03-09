@@ -223,13 +223,15 @@
     <!-- === Stocks Tab Content === -->
     <div class="tab-pane fade show active" id="stocks" role="tabpanel" aria-labelledby="stocks-tab">
       <div class="container px-3 pt-3">
-        <div class="row mt-2">
-          <div class="col-auto ms-auto">
-            <a href="{% url 'stock-add' medicine.pk %}" class="btn btn-success info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
-              <i class="fa-solid fa-plus"></i> Add Stock
-            </a>
+        {% if request.user.userprofile.userrole in "[ADMIN]" %}
+          <div class="row mt-2">
+            <div class="col-auto ms-auto">
+              <a href="{% url 'stock-add' medicine.pk %}" class="btn btn-success info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
+                <i class="fa-solid fa-plus"></i> Add Stock
+              </a>
+            </div>
           </div>
-        </div>
+        {% endif %}
         <div class="row mt-2">
           <div class="col-auto">
             <select id="stocksCustomEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
@@ -253,7 +255,9 @@
               <th>Expiration Date</th>
               <th>Total Price</th>
               <th>Notes</th>
-              <th class="text-center">Action</th>
+              {% if request.user.userprofile.userrole in "[ADMIN]" %}
+                <th class="text-center">Action</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -263,11 +267,13 @@
               <td class="align-middle">{{ stock.expiration_date|date:"M. d, Y" }}</td>
               <td class="align-middle">₱{{ stock.total_price|floatformat:2 }}</td>
               <td class="align-middle">{{ stock.notes }}</td>
-              <td class="align-middle text-center">
-                <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1 px-3"><i class="ri-edit-2-fill"></i></a>
-                {% comment %} <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
-                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ stock.pk }}" data-moduleName="Delete the stocks entry" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></button>
-              </td>
+              {% if request.user.userprofile.userrole in "[ADMIN]" %}
+                <td class="align-middle text-center">
+                  <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1 px-3"><i class="ri-edit-2-fill"></i></a>
+                  {% comment %} <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ stock.pk }}" data-moduleName="Delete the stocks entry" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></button>
+                </td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>
@@ -279,11 +285,13 @@
      <!-- === RELEASED QTY Tab Content === -->
     <div class="tab-pane fade" id="released" role="tabpanel" aria-labelledby="released-tab">
       <div class="container px-3 pt-3">
+        {% if request.user.userprofile.userrole in "[ADMIN]" %}
         <div class="row mt-2">
           <div class="col-auto ms-auto">
-            <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ medicine.pk }}" data-moduleName="Delete all patient entry" class="btn btn-danger info border-dark fw-bold"><i class="fa-solid fa-minus"></i> Delete ALL</button>
-          </div>
+              <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ medicine.pk }}" data-moduleName="Delete all patient entry" class="btn btn-danger info border-dark fw-bold"><i class="fa-solid fa-minus"></i> Delete ALL</button>
+           </div>
         </div>
+        {% endif %}
         <div class="row mt-2">
           <div class="col-auto">
             <select id="trackingCustomEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
@@ -310,7 +318,9 @@
               <th class="text-center">Quantity Used</th>
               <th class="text-center">Dosage</th>
               <th class="text-center">Total Price</th>
-              <th class="text-center">Action</th>
+              {% if request.user.userprofile.userrole in "[ADMIN]" %}
+                <th class="text-center">Action</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -323,10 +333,12 @@
               <td class="align-middle text-center">{{ tracking.quantity_used }}</td>
               <td class="align-middle text-center">{{ tracking.total_dosage }}</td>
               <td class="align-middle text-center">{{ tracking.total_price }}</td>
-              <td class="align-middle text-center">
-                {% comment %} <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
-                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ tracking.patient.resident.last_name }}, {{ tracking.patient.resident.first_name }}" data-ID="{{ tracking.pk }}" data-moduleName="Delete the medicine tracking entry" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
-              </td>
+              {% if request.user.userprofile.userrole in "[ADMIN]" %}
+                <td class="align-middle text-center">
+                  {% comment %} <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ tracking.patient.resident.last_name }}, {{ tracking.patient.resident.first_name }}" data-ID="{{ tracking.pk }}" data-moduleName="Delete the medicine tracking entry" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
+                </td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>
@@ -338,11 +350,13 @@
     <!-- === Expired Tab Content === -->
     <div class="tab-pane fade" id="expired" role="tabpanel" aria-labelledby="expired-tab">
       <div class="container px-3 pt-3">
+        {% if request.user.userprofile.userrole in "[ADMIN]" %}
         <div class="row mt-2">
           <div class="col-auto ms-auto">
             <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ medicine.pk }}" data-moduleName="Delete all expired stocks entry" class="btn btn-danger info border-dark fw-bold"><i class="fa-solid fa-minus"></i> Delete ALL</button>
           </div>
         </div>
+        {% endif %}
         <div class="row mt-2">
           <div class="col-auto">
             <select id="expiredStocksCustomEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">

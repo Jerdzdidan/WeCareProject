@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.family_resident_list, name='resident-list'),
+    path('familydetails/<str:pk>/', views.family_details, name='family-detail'),
     
     # create, update, delete
     path('create/', views.family_resident_create, name="resident-create"),

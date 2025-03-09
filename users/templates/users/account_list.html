@@ -43,6 +43,7 @@
             </thead>
             <tbody>
                 {% for account in accounts %}
+                    {% if account.user.username != 'root' %}
                     <tr>
                         <td style="vertical-align: middle;">{{ account.user.username }}</td>
                         <td style="vertical-align: middle;">{{ account.userrole }}</td>
@@ -54,6 +55,8 @@
                             <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="User: {{ account.user.username }} - {{ account.user.last_name }}, {{ account.user.first_name }}" data-ID="{{ account.user.id }}" data-moduleName="Delete the account record" class="btn btn-sm btn-outline-danger responsive_text fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></button> 
                         </td>
                     </tr>
+                    {% endif %}
+
                 {% endfor %}
             </tbody>
         </table>

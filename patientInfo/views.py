@@ -183,7 +183,7 @@ def patient_create_details(request, resident_id):
     return render(request, 'patientInfo/patient_create_details.html', {'resident': resident})
 
 @login_required
-@role_required(['BHW'], 'Patient Info')
+@role_required(['BHW', 'DOCTOR'], 'Patient Info')
 def patient_update(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
     

@@ -134,7 +134,7 @@
             </td>
             <td>
               <select name="members[{{ forloop.counter0 }}][category]" class="form-control">
-                <option value="N/A" {% if member.category == "N/A" %}selected{% endif %}>N/A</option>
+                <option value="Adult" {% if member.category == "Adult" %}selected{% endif %}>Adult</option>
                 <option value="Senior" {% if member.category == "Senior" %}selected{% endif %}>Senior</option>
                 <option value="Children" {% if member.category == "Children" %}selected{% endif %}>Children (17 and below)</option>
                 <option value="PWD" {% if resident.category == "PWD" %}selected{% endif %}>PWD</option>

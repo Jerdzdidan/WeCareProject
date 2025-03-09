@@ -20,6 +20,7 @@
       <!-- Add any additional buttons or filters here -->
     </div>
     <div class="container">
+      {% if request.user.userprofile.userrole in "[ADMIN]" %}
       <div class="row mt-2">
         <div class="col-auto ms-auto">
           <a href="{% url 'medicine-add' %}" class="btn btn-success info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
@@ -28,6 +29,7 @@
           </a>
         </div>
       </div>
+      {% endif %}
       <div class="row mt-2">
         <div class="col-auto">
           <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
@@ -78,14 +80,16 @@
                 <a href="{% url 'medicine-detail' med.pk %}" class="btn btn-sm btn-outline-primary fw-bold flex-fill me-1" title="Inventory">
                   <i class="fa-solid fa-boxes-stacked"></i>
                 </a>
-                <a href="{% url 'medicine-update' med.pk %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
-                  <i class="ri-edit-2-fill"></i>
-                </a>
-                {% comment %} <a href="{% url 'medicine-delete' med.pk %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill" title="Delete">
-                  <i class="ri-delete-bin-5-fill"></i>
-                </a> {% endcomment %}
-                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ med.medicine_name }}" data-ID="{{ med.pk }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
-              </div>
+                {% if request.user.userprofile.userrole in "[ADMIN]" %}
+                  <a href="{% url 'medicine-update' med.pk %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
+                    <i class="ri-edit-2-fill"></i>
+                  </a>
+                  {% comment %} <a href="{% url 'medicine-delete' med.pk %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill" title="Delete">
+                    <i class="ri-delete-bin-5-fill"></i>
+                  </a> {% endcomment %}
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ med.medicine_name }}" data-ID="{{ med.pk }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
+                {% endif %}
+              </div>  
             </td>
           </tr>
           {% endfor %}
