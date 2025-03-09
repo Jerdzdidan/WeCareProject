@@ -1,22 +1,144 @@
 {% extends "home/layout.html" %}
-{% load crispy_forms_tags %}
+{% load static %}
 
-{% comment %} Insert Custom Page Style Here
 {% block style %}
+<style>
+    .password-toggle {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        z-index: 5;
+    }
+    .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    .invalid-feedback {
+        display: block;
+        color: #dc3545;
+    }
+    .role-description {
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+</style>
+{% endblock style %}
 
-{% endblock style %} {% endcomment %}
-
-{% comment %} Page Body {% endcomment %}
 {% block body %}
+<article class="content-section border rounded p-3 shadow-sm" style="max-width: 600px; margin: 0 auto;">
+    <h2 class="mb-4">Add User</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if error_message %}
+        <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
 
-    <article class="content-section border rounded p-3 shadow-sm">
-        <h2>Add User</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <button type="submit" class="btn btn-success">Create Account</button>
-            <a href="{% url 'account-list' %}" class="btn btn-secondary">Cancel</a>
-        </form>
-    </article>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_first_name">First Name</label>
+                    <input type="text" name="first_name" class="form-control" 
+                           id="id_first_name" required value="{{ first_name|default:'' }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_last_name">Last Name</label>
+                    <input type="text" name="last_name" class="form-control" 
+                           id="id_last_name" required value="{{ last_name|default:'' }}">
+                </div>
+            </div>
+        </div>
 
-{% endblock %}
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            <input type="text" name="username" class="form-control {% if username_error %}is-invalid{% endif %}" 
+                   id="id_username" required value="{{ username|default:'' }}">
+            {% if username_error %}
+                <div class="invalid-feedback">{{ username_error }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_email">Email</label>
+            <input type="email" name="email" class="form-control {% if email_error %}is-invalid{% endif %}" 
+                   id="id_email" value="{{ email|default:'' }}">
+            {% if email_error %}
+                <div class="invalid-feedback">{{ email_error }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password1">Password</label>
+            <div class="position-relative">
+                <input type="password" name="password1" class="form-control {% if password_error %}is-invalid{% endif %}" 
+                       id="id_password1" required>
+                <button type="button" class="btn btn-sm btn-outline-secondary password-toggle" 
+                        onclick="togglePasswordVisibility('id_password1', this)">
+                    <i class="ri-eye-off-line"></i>
+                </button>
+            </div>
+            {% if password_error %}
+                <div class="invalid-feedback">{{ password_error }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2">Confirm Password</label>
+            <div class="position-relative">
+                <input type="password" name="password2" class="form-control {% if password_error %}is-invalid{% endif %}" 
+                       id="id_password2" required>
+                <button type="button" class="btn btn-sm btn-outline-secondary password-toggle" 
+                        onclick="togglePasswordVisibility('id_password2', this)">
+                    <i class="ri-eye-off-line"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_userrole">User Role</label>
+            <select name="userrole" class="form-select" id="id_userrole" required>
+                <option value="">Select a role...</option>
+                <option value="ADMIN" {% if userrole == "Admin" %}selected{% endif %}>Admin</option>
+                <option value="DOCTOR" {% if userrole == "DOCTOR" %}selected{% endif %}>Doctor</option>
+                <option value="BRGY-STAFF" {% if userrole == "BRGY-STAFF" %}selected{% endif %}>Barangay Staff</option>
+                <option value="BHW" {% if userrole == "BHW" %}selected{% endif %}>Barangay Health Worker</option>
+            </select>
+            <div class="role-description mt-2">
+                <strong>Role permissions:</strong>
+                <ul class="mb-0">
+                    <li>Admin: Full system access</li>
+                    <li>Doctor: Medical records access</li>
+                    <li>Staff: Barangay management</li>
+                    <li>BHW: Basic health worker access</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group mt-4 text-end">
+            <button type="submit" class="btn btn-success px-4">Create Account</button>
+            <a href="{% url 'account-list' %}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</article>
+
+<script>
+    function togglePasswordVisibility(inputId, button) {
+        const passwordInput = document.getElementById(inputId);
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            button.innerHTML = '<i class="ri-eye-line"></i>';
+            button.classList.add('btn-primary');
+            button.classList.remove('btn-outline-secondary');
+        } else {
+            passwordInput.type = 'password';
+            button.innerHTML = '<i class="ri-eye-off-line"></i>';
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-secondary');
+        }
+    }
+</script>
+{% endblock body %}

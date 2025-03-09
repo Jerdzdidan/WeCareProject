@@ -3,19 +3,42 @@
 {% block style %}{% endblock style %}
 
 {% block body %}
-
+<h3 class="mb-3">System Users - <span class="text-primary">List</span></h3>
 <article class="content-section border rounded p-0 shadow-sm">
-    <a href="{% url "account-create" %}" class="btn btn-outline-info ms-2 mt-2 fw-bold">Add User</a>
-    <div class="table-responsive w-100 mt-2">
-        <table id="accountsTable" class="table table-light table-striped text-center w-100 m-0">
-            <thead class="table-secondary">
+    <div class="container">
+        <div class="row mt-2">
+          <div class="col-auto ms-auto">
+            <a href="{% url "account-create" %}" class="btn btn-success info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
+                <i class="ri-add-fill my-auto" style="font-size: calc(0.6rem + 0.4vw);"></i>
+                <span class="ms-1">Add User</span>
+            </a>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-auto">
+            <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <span class="d-inline ms-2" style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">Entries per page</span>
+          </div>
+          <div class="col-auto ms-auto">
+            <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
+          </div>
+        </div>
+    </div>
+    <div class="table-responsive table-nowrap mt-2">
+        <table id="dataTable" class="table table-light table-hover table-striped table-striped text-center m-0 projectTables">
+            <thead class="table-dark">
                 <tr>
-                    <th>Username</th>
-                    <th>User Role</th>
-                    <th>Status</th>
-                    <th>Created By</th>
-                    <th>Date Created</th>
-                    <th>Options</th>
+                    <th class="text-center">Username</th>
+                    <th class="text-center">User Role</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Created By</th>
+                    <th class="text-center">Date Created</th>
+                    <th class="text-center">Options</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,16 +50,31 @@
                         <td style="vertical-align: middle;">{{ account.created_by }}</td>
                         <td style="vertical-align: middle;">{{ account.user.date_joined|date:"M. d, Y" }}</td>
                         <td style="vertical-align: middle;">
-                            <a href="{% url "account-update" account.pk %}" class="btn btn-sm btn-outline-success fw-bold">Update</a>
-                            <a href="{% url "account-delete-confirm" account.pk %}" class="btn btn-sm btn-outline-danger fw-bold">Delete</a>
+                            <a href="{% url "account-update" account.pk %}" class="btn btn-sm btn-outline-success fw-bold responsive_text flex-fill me-1 "  title="Edit"><i class="ri-edit-2-fill"></i></a>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="User: {{ account.user.username }} - {{ account.user.last_name }}, {{ account.user.first_name }}" data-ID="{{ account.user.id }}" data-moduleName="Delete the account record" class="btn btn-sm btn-outline-danger responsive_text fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></button> 
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <div id="customPagination"></div>
     </div>
 </article>
-
-
-
 {% endblock %}
+
+{% block script %}
+<script>
+  $('#myModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var deleteData = button.attr('data-deleteData');
+    var dataID = button.attr('data-ID')
+    var dataUrl = button.attr('data-Url')
+    var moduleName = button.attr('data-moduleName')
+    
+    var txtDeleteData = deleteData
+    $(this).find('#deleteMessage').text('Are you sure you want to 0 for: '.replace('0', moduleName));
+    $(this).find('#txtDeleteData').text(txtDeleteData);
+    $(this).find('#btnDelete').attr('href', '{% url "account-delete-confirm" 0 %}'.replace('0', dataID));
+  });
+</script>
+{% endblock script %}

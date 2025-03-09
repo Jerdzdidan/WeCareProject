@@ -38,11 +38,13 @@
           </div>
         </form>
       </div>
+      {% if request.user.userprofile.userrole in "[BHW]" %}
       <div class="col-auto ms-auto">
         <a href="{% url 'scheduled-checkup-patient-select' %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
           <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Scheduled Checkup
         </a>
       </div>
+      {% endif %}
     </div>
     <!-- Entries and Search Bar -->
     <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
@@ -68,9 +70,13 @@
             <th class="text-start">Checkup Time</th>
             <th class="text-start">Patient ID</th>
             <th class="text-start">Patient Name</th>
-            <th class="text-start">Contact Number</th>
+            {% if request.user.userprofile.userrole in "[BHW]" %}
+              <th class="text-start">Contact Number</th>
+            {% endif %}
             <th class="text-start">Notes</th>
-            <th class="text-center">Action</th>
+            {% if request.user.userprofile.userrole in "[BHW]" %}
+              <th class="text-center">Action</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
@@ -86,7 +92,9 @@
             </td>
             <td class="align-middle text-start">{{ checkup.patient.patientID }}</td>
             <td class="align-middle text-start">{{ checkup.patient.resident.last_name }}, {{ checkup.patient.resident.first_name }}</td>
-            <td class="align-middle text-start">{{ checkup.patient.resident.contact_number }}</td>
+            {% if request.user.userprofile.userrole in "[BHW]" %}
+              <td class="align-middle text-start">{{ checkup.patient.resident.contact_number }}</td>
+            {% endif %}
             <td class="align-middle text-start">
               {% if checkup.notes %}
                 {{ checkup.notes }}
@@ -94,11 +102,13 @@
                 <span class="text-muted">No notes</span>
               {% endif %}
             </td>
-            <td class="align-middle text-center">
-              <a href="{% url "scheduled-checkup-update" checkup.id %}" class="btn btn-sm btn-outline-success" title="Edit Checkup"><i class="ri-edit-2-fill"></i></a>
-              {% comment %} <a href="{% url "scheduled-checkup-delete" checkup.id %}" class="btn btn-sm btn-outline-danger" title="Delete Checkup"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
-              <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ checkup.patient.patientID }}" data-ID="{{ checkup.id }}" data-patientName="{{ checkup.patient.resident.last_name }}, {{ checkup.patient.resident.first_name }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
-            </td>
+            {% if request.user.userprofile.userrole in "[BHW]" %}
+              <td class="align-middle text-center">
+                <a href="{% url "scheduled-checkup-update" checkup.id %}" class="btn btn-sm btn-outline-success" title="Edit Checkup"><i class="ri-edit-2-fill"></i></a>
+                {% comment %} <a href="{% url "scheduled-checkup-delete" checkup.id %}" class="btn btn-sm btn-outline-danger" title="Delete Checkup"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
+                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ checkup.patient.patientID }}" data-ID="{{ checkup.id }}" data-patientName="{{ checkup.patient.resident.last_name }}, {{ checkup.patient.resident.first_name }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
+              </td>
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>

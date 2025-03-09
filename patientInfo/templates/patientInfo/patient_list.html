@@ -30,12 +30,14 @@
             </div>
           </form>
         </div>
+        {% if request.user.userprofile.userrole in "[BHW]" %}
         <div class="col-auto ms-auto">
           <a href="{% url 'patient-select' %}" class="btn btn-success info border-dark fw-bold d-flex align-items-center" style="font-size: calc(0.8rem + 0.2vw);">
             <i class="ri-add-fill" style="font-size: calc(0.6rem + 0.4vw);"></i>
             <span class="ms-2">Register Patient</span>
           </a>
         </div>
+        {% endif %}
       </div>
       <div class="row mt-2">
         <div class="col-auto">
@@ -68,7 +70,9 @@
             <th class="text-start">Category</th>
             <th class="text-start">Contact Number</th>
             <th class="text-start">Last Visit</th>
-            <th class="text-start">Action</th>
+            {% if request.user.userprofile.userrole in "[BHW, DOCTOR]" %}
+              <th class="text-start">Action</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
@@ -101,13 +105,17 @@
                     --
                   {% endif %}
                 </td>
+                {% if request.user.userprofile.userrole in "[BHW, DOCTOR]" %}
                 <td>
                     <div class="d-flex">
-                      <a href="{% url "patient-update" patient.patientID %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
-                        <i class="ri-edit-2-fill"></i>
-                      </a>
+                     
+                        <a href="{% url "patient-update" patient.patientID %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
+                          <i class="ri-edit-2-fill"></i>
+                        </a>
+                    
                     </div>
                 </td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>

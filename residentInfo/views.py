@@ -4,8 +4,10 @@ from django.contrib import messages
 from .models import Family, Resident
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
+from users.decorators import role_required
 
 @login_required
+@role_required(['ADMIN', 'BRGY-STAFF', 'BHW', 'DOCTOR'], 'Resident Info')
 def family_resident_list(request):
     category = request.GET.get('category', '')
     gender = request.GET.get('gender', '')
@@ -39,6 +41,7 @@ def family_resident_list(request):
     return render(request, 'residentInfo/resident_list.html', {'residents': residents})
 
 @login_required
+@role_required(['BRGY-STAFF'], 'Resident Info')
 def family_resident_create(request):
     if request.method == "POST":
         head_data = {
@@ -105,6 +108,7 @@ def family_resident_create(request):
     return render(request, 'residentInfo/resident_create.html')
 
 @login_required
+@role_required(['BRGY-STAFF'], 'Resident Info')
 def family_resident_update(request, pk):
     family = get_object_or_404(Family, pk=pk)
     head = family.residents.filter(relationship_to_head__iexact='head of the family').first()
@@ -193,6 +197,7 @@ def family_resident_update(request, pk):
     return render(request, 'residentInfo/family_update.html', context)
 
 @login_required
+@role_required(['BRGY-STAFF'], 'Resident Info')
 def family_delete_confirm(request, pk):
     family = get_object_or_404(Family, pk=pk)
 
@@ -204,6 +209,7 @@ def family_delete_confirm(request, pk):
     return render(request, 'residentInfo/family_delete.html', {'family': family, 'residents': residents})
 
 @login_required
+@role_required(['BRGY-STAFF'], 'Resident Info')
 def resident_update(request, pk):
     resident = get_object_or_404(Resident, pk=pk)
     
@@ -232,6 +238,7 @@ def resident_update(request, pk):
     return render(request, 'residentInfo/resident_update.html', {'resident': resident})
 
 @login_required
+@role_required(['BRGY-STAFF'], 'Resident Info')
 def resident_delete_confirm(request, pk):
     try:
         resident = Resident.objects.get(pk=pk)

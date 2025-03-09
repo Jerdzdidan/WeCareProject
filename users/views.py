@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from .decorators import role_required
 from .models import UserProfile
 from .forms import AccountForm
 from django.contrib.auth.models import User
@@ -8,52 +9,136 @@ from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
 
 @login_required
+@role_required(['ADMIN'], 'User Management')
 def accountlist(request):
-    if not request.user.is_staff:
-        return HttpResponseForbidden("You do not have perimission to see accounts list.")
     accounts = UserProfile.objects.all()
     return render(request, 'users/account_list.html', {'accounts': accounts})
 
 @login_required
+@role_required(['ADMIN'], 'User Management')
 def accountCreate(request):
-    if not request.user.is_staff:
-        return HttpResponseForbidden("You do not have permissions to create accounts.")
+
+    context = {}
     
     if request.method == 'POST':
-        form = AccountForm(request.POST)
-        if form.is_valid():
-            profile = form.save(commit=True, created_by=request.user)
-            messages.success(request, "Account created successfully!")
-            return redirect('account-list')
-    else:
-        form = AccountForm()
-    
-    return render(request, 'users/create.html', {'form': form})
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+        userrole = request.POST.get('userrole', '')
+
+        context.update({
+            'first_name': first_name,
+            'last_name': last_name,
+            'username': username,
+            'email': email,
+            'userrole': userrole
+        })
+
+        errors = False
+
+        if not all([first_name, last_name, username, password1, password2, userrole]):
+            context['error_message'] = "All fields are required."
+            errors = True
+
+        if password1 != password2:
+            context['password_error'] = "Passwords do not match."
+            errors = True
+
+        if User.objects.filter(username=username).exists():
+            context['username_error'] = "Username already exists."
+            errors = True
+
+        if not errors:
+            try:
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password1,
+                    first_name=first_name,
+                    last_name=last_name
+                )
+
+                UserProfile.objects.create(
+                    user=user,
+                    userrole=userrole,
+                    created_by=request.user
+                )
+
+                messages.success(request, "Account created successfully!")
+                return redirect('account-list')
+
+            except Exception as e:
+                context['error_message'] = f"Error creating account: {str(e)}"
+
+    return render(request, 'users/create.html', context)
 
 
 @login_required
+@role_required(['ADMIN'], 'User Management')
 def accountUpdate(request, pk):
-    if not request.user.is_staff:
-        return HttpResponseForbidden("You do not have permission to update accounts.")
 
-    account = get_object_or_404(UserProfile, pk=pk)
+    profile = get_object_or_404(UserProfile, pk=pk)
+    user = profile.user
+    context = {
+        'user': user,
+        'profile': profile
+    }
 
     if request.method == 'POST':
-        form = AccountForm(request.POST, instance=account)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Account updated successfully!")
-            return redirect('account-list')
-    else:
-        form = AccountForm(instance=account)
+        email = request.POST.get('email', '').strip()
+        userrole = request.POST.get('userrole', 'BHW')
+        status = request.POST.get('status', 'ACTIVE')
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
 
-    return render(request, 'users/update.html', {'form': form})
+        errors = False
+        context.update({
+            'email': email,
+            'userrole': userrole,
+            'status': status
+        })
+
+        if not all([userrole, status]):
+            context['error_message'] = "All required fields must be filled."
+            errors = True
+
+        if password1 or password2:
+            if not (password1 and password2):
+                context['password_error'] = "Both password fields must be filled."
+                errors = True
+            elif password1 != password2:
+                context['password_error'] = "Passwords do not match."
+                errors = True
+
+        if not errors:
+            try:
+                user.email = email
+                
+                if password1:
+                    user.set_password(password1)
+                
+                user.save()
+
+                profile.userrole = userrole
+                profile.status = status
+                profile.save()
+
+                messages.success(request, "Account updated successfully!")
+                return redirect('account-list')
+            except Exception as e:
+                context['error_message'] = f"Error updating account: {str(e)}"
+        else:
+            context['error_message'] = "Please correct the errors below."
+
+    return render(request, 'users/update.html', context)
 
 
 @login_required
+@role_required(['ADMIN'], 'User Management')
 def accountDeleteConfirm(request, pk):
-    if not request.user.is_staff:
-        return HttpResponseForbidden("You do not have permission to delete accounts.")
     
     account = get_object_or_404(UserProfile, pk=pk)
     
@@ -61,21 +146,22 @@ def accountDeleteConfirm(request, pk):
         messages.warning(request, "You cannot delete your own account.")
         return redirect('account-list')
     
-    if request.method == 'POST':
-        account.user.delete() 
+    try:
+        username = account.user.username
+        account.user.delete()
         account.delete()
         
-        return redirect('account-list')
+        messages.success(request, f"Account '{username}' deleted successfully!")
+    except Exception as e:
+        messages.error(request, f"Error deleting account: {str(e)}")
 
-    return render(request, 'users/delete_confirm.html', {'account': account})
+    return redirect('account-list')
 
-# Custom view for logging out.
 def custom_logout(request):
     logout(request)
     messages.success(request, "You Have Been Logged Out!")
     return redirect("login")
 
-# Custom view for logging in
 def custom_login(request):
     if request.method == "POST":
         username = request.POST.get("username").strip()

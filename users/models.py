@@ -4,8 +4,9 @@ from django.db import models
 class UserProfile(models.Model):
     USER_TYPE_CHOICES = [
         ('BHW', 'Barangay Health Worker'),
-        ('Doctor', 'Doctor'),
-        ('Admin', 'Admin'),
+        ('BRGY-STAFF', 'Barangay Staff'),
+        ('DOCTOR', 'Doctor'),
+        ('ADMIN', 'Admin'),
     ]
 
     STATUS_CHOICES = [
@@ -19,7 +20,7 @@ class UserProfile(models.Model):
     created_by = models.ForeignKey(User, related_name='created_user_profiles', on_delete=models.SET_NULL, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.userrole == 'Admin':
+        if self.userrole == 'ADMIN':
             self.user.is_staff = True  
             self.user.is_superuser = True  
         else:

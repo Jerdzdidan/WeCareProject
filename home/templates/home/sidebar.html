@@ -26,6 +26,7 @@
               </li>
             </a>
         </ul>
+        {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
         <ul class="list-group my-1">
           <a href="{% url "checkup-calendar" %}" class="nav-link {% if '/checkup-calendar/' in request.path %}active{% endif %} rounded">
             <li class="list-group-item d-flex align-items-center menu-item">
@@ -33,6 +34,9 @@
             </li>
           </a>
         </ul>
+        {% endif %}
+
+        {% if request.user.userprofile.userrole in '[ADMIN, BRGY-STAFF]' %}
         <ul class="list-group my-1">
           <a href="{% url "resident-list" %}" class="nav-link {% if '/residents/' in request.path %}active{% endif %} rounded">
             <li class="list-group-item d-flex align-items-center menu-item">
@@ -40,6 +44,8 @@
             </li>
           </a>
         </ul>
+        {% endif %}
+
         <ul class="list-group my-1">
             <a class="nav-link rounded patient-nav-toggle {% if '/patients/' in request.path or '/scheduled-checkup/' in request.path %}active{% endif %}" href="#" id="patientToggle">
             <li class="list-group-item d-flex align-items-center menu-item">
@@ -55,14 +61,17 @@
                 Patient List
               </li>
             </a>
+            {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
             <a href="{% url "scheduled-checkup-list" %}" class="nav-link {% if '/scheduled-checkup/' in request.path %}active{% endif %} rounded patient-nav-item">
               <li class="list-group-item d-flex align-items-center menu-item">
               <i class="ri-calendar-todo-fill me-1 menu-icons"></i>
               Checkup
               </li>
             </a>
+            {% endif %}
             </div>
         </ul>
+        {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
         <ul class="list-group my-1">
           <a href="{% url "medicine-list" %}" class="nav-link rounded {% if '/medicines/' in request.path %}active{% endif %}">
             <li class="list-group-item d-flex align-items-center menu-item">
@@ -71,6 +80,7 @@
             </li>
           </a>
         </ul>
+        {% endif %}
 
         <ul class="list-group my-1">
           <a class="nav-link rounded patient-nav-toggle {% if '/reports/' in request.path %}active{% endif %}" href="#" id="reportsToggle">
@@ -90,6 +100,7 @@
           </div>
         </ul>
 
+        {% if request.user.userprofile.userrole in 'ADMIN' %}
         <ul class="list-group my-1">
           <a href="{% url "account-list" %}" class="nav-link {% if '/users/' in request.path %}active{% endif %} rounded">
             <li class="list-group-item d-flex align-items-center menu-item">
@@ -97,5 +108,6 @@
             </li>
           </a>
         </ul>
+        {% endif %}
       </div>
     </div>

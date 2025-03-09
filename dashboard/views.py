@@ -2,8 +2,10 @@ from django.shortcuts import render
 from residentInfo.models import Resident, Family
 from patientInfo.models import Patient
 from django.contrib.auth.decorators import login_required
+from users.decorators import role_required
 
 @login_required
+@role_required(['ADMIN', 'BRGY-STAFF', 'BHW', 'DOCTOR'], 'Dashboard')
 def dashboard(request):
     residents = Resident.objects.all()
     patients = Patient.objects.all()

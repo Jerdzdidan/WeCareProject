@@ -40,12 +40,14 @@
             </div>
           </form>
         </div>
+        {% if request.user.userprofile.userrole in '[ADMIN,BRGY-STAFF]' %}
         <div class="col-auto ms-auto">
           <a href="{% url 'resident-create' %}" class="btn btn-success info border-dark fw-bold" style="font-size: calc(0.8rem + 0.2vw);">
             <i class="ri-add-fill my-auto" style="font-size: calc(0.6rem + 0.4vw);"></i>
             <span class="ms-1">Register Family/Resident</span>
           </a>
         </div>
+        {% endif %}
       </div>
       <div class="row mt-2">
         <div class="col-auto">
@@ -63,7 +65,7 @@
       </div>
     </div>
     <div class="table-responsive table-nowrap mt-2">
-        <table id="dataTable" class="table table-light table-hover table-striped table-striped text-cente m-0 projectTables">
+        <table id="dataTable" class="table table-light table-hover table-striped table-striped text-center m-0 projectTables">
         <thead class="table-dark">
           <tr>
             <th class="text-center">Family No.</th>
@@ -80,7 +82,9 @@
             <th class="text-center">Address</th>
             <th class="text-center">Contact Number</th>
             <th class="text-center">Date Updated</th>
-            <th class="text-center">Action</th>
+            {% if request.user.userprofile.userrole in '[ADMIN,BRGY-STAFF]' %}
+              <th class="text-center">Action</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
@@ -100,12 +104,14 @@
                 <td class="text-center">{{ resident.present_address }}</td>
                 <td class="text-center">{{ resident.contact_number }}</td>
                 <td class="text-center">{{ resident.date_updated|date:"M d, Y" }}</td>
+                {% if request.user.userprofile.userrole in '[ADMIN,BRGY-STAFF]' %}
                 <td class="text-center align-middle">
                     <div class="d-flex">
                       <a href="{% url 'resident-update' resident.id %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1 " title="Edit"><i class="ri-edit-2-fill"></i></a>
                       <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ resident.last_name }}, {{ resident.first_name }}" data-ID="{{ resident.id }}" data-moduleName="Delete resident record" class="btn btn-sm btn-outline-danger responsive_text fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></button>
                     </div>
                 </td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>

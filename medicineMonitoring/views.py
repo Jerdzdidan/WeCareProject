@@ -7,6 +7,7 @@ from datetime import datetime, date
 from patientInfo.models import MedicineTracking
 import re
 from django.db.models import Sum
+from users.decorators import role_required
 
 # Helper function to update total value and total quantity
 def update_medicine_totals(medicine):
@@ -27,12 +28,14 @@ def update_medicine_date_last_stocked(medicine):
 
 # === Medicine List ===
 @login_required
+@role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine Record')
 def medicine_list(request):
     medicines = Medicine.objects.all().order_by("medicine_name")
     return render(request, "medicineMonitoring/medicine_list.html", {"medicines": medicines})
 
 # === Medicine Detail (Stock) ===
 @login_required
+@role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine Record')
 def medicine_detail(request, pk):
     medicine = get_object_or_404(Medicine, pk=pk)
     patient_medicine_tracking = MedicineTracking.objects.filter(medicine=medicine)
@@ -59,6 +62,7 @@ def medicine_detail(request, pk):
 
 # === Medicine Inventory CRUD Operations ===
 @login_required
+@role_required(['ADMIN'], 'Medicine Record')
 def medicine_add(request):
     if request.method == "POST":
         medicine_name = request.POST.get("medicine_name", "").strip()
@@ -90,6 +94,7 @@ def medicine_add(request):
     return render(request, "medicineMonitoring/medicine_add.html")
 
 @login_required
+@role_required(['ADMIN'], 'Medicine Record')
 def medicine_update(request, pk):
     medicine = get_object_or_404(Medicine, pk=pk)
     if request.method == "POST":
@@ -124,6 +129,7 @@ def medicine_update(request, pk):
     return render(request, "medicineMonitoring/medicine_update.html", {"medicine": medicine})
 
 @login_required
+@role_required(['ADMIN'], 'Medicine Record')
 def medicine_delete(request, pk):
     try:
         medicine = Medicine.objects.get(pk=pk)
@@ -139,6 +145,7 @@ def medicine_delete(request, pk):
 
 # === MEDICINE STOCK CRUD OPERATIONS ===
 @login_required
+@role_required(['ADMIN'], 'Medicine Record')
 def medicine_stock_add(request, medicine_pk):
     medicine = get_object_or_404(Medicine, pk=medicine_pk)
     if request.method == "POST":
@@ -174,6 +181,7 @@ def medicine_stock_add(request, medicine_pk):
 
 
 @login_required
+@role_required(['ADMIN'], 'Medicine Record')
 def medicine_stock_update(request, stock_pk):
     stock = get_object_or_404(MedicineStock, pk=stock_pk)
     if request.method == "POST":
@@ -200,6 +208,7 @@ def medicine_stock_update(request, stock_pk):
 
 
 @login_required
+@role_required(['ADMIN'], 'Medicine Record')
 def medicine_stock_delete(request, medicine_pk, stock_pk):
     try:
         stock = MedicineStock.objects.get(pk=stock_pk)
@@ -215,6 +224,7 @@ def medicine_stock_delete(request, medicine_pk, stock_pk):
 
 
 @login_required
+@role_required(['ADMIN'], 'Medicine Record')
 def medicine_stock_delete_all_expired(request, medicine_pk):
     medicine = get_object_or_404(Medicine, pk=medicine_pk)
     expired_stocks = medicine.stocks.filter(expiration_date__lte=date.today())
@@ -231,6 +241,7 @@ def medicine_stock_delete_all_expired(request, medicine_pk):
 
 # Medicine Tracking DELETE ALL
 @login_required
+@role_required(['ADMIN'], 'Medicine Record')
 def medicine_tracking_delete_all_records(request, medicine_pk):
     medicine = get_object_or_404(Medicine, pk=medicine_pk)
     medicine_patient_records = MedicineTracking.objects.filter(medicine=medicine)
