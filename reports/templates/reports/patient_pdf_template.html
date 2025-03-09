@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Patients Report</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      margin: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+    }
+    header {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #343a40;
+      text-align: center;
+    }
+    header .logo {
+      width: 40px;
+      vertical-align: middle;
+    }
+    header h1 {
+      font-size: 16px;
+      margin: 0;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+      color: #343a40;
+    }
+    header h4 {
+      font-size: 10px;
+      margin: 0;
+      color: #6c757d;
+    }
+    header h3 {
+      font-size: 14px;
+      margin-top: 5px;
+      color: #343a40;
+    }
+    .filters {
+      margin-bottom: 10px;
+      font-size: 9px;
+    }
+    .filters p {
+      margin: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9px;
+    }
+    table, th, td {
+      border: 1px solid #dee2e6;
+    }
+    th, td {
+      padding: 4px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .thead-dark th {
+      background-color: #343a40;
+      color: #fff;
+    }
+    td.diagnosis {
+      font-size: 8px;
+      max-width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    footer {
+      margin-top: 10px;
+      font-size: 8px;
+      text-align: center;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="{% static 'home/images/WeCareLogo.svg' %}" alt="WeCare Logo">
+    <h1>WeCare</h1>
+    <br>
+    <h4>A Resident and Patient Management System</h4>
+    <h3 class="mt-2">Patients Report</h3>
+  </header>
+
+  <div class="filters text-center">
+    <p class="text-muted">
+      Filters Applied:&nbsp;
+      Category: {{ filter_category|default:"All" }}, 
+      Gender: {{ filter_gender|default:"All" }}, 
+      Street: {{ filter_street|default:"All" }}, 
+      Age: {{ filter_age|default:"All" }}
+    </p>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <colgroup>
+        <col style="width:10%;">
+        <col style="width:10%;">
+        <col style="width:20%;">
+        <col style="width:5%;">
+        <col style="width:8%;">
+        <col style="width:20%;">
+        <col style="width:15%;">
+        <col style="width:12%;">
+        <col style="width:10%;">
+      </colgroup>
+      <thead class="thead-dark">
+        <tr>
+          <th>Patient ID</th>
+          <th>Resident ID</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Diagnosis</th>
+          <th>Physician</th>
+          <th>Admission Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for patient in patients %}
+        <tr>
+          <td>{{ patient.patientID }}</td>
+          <td>{{ patient.resident.id }}</td>
+          <td>{{ patient.resident.last_name }}, {{ patient.resident.first_name }}</td>
+          <td>{{ patient.resident.age }}</td>
+          <td>{{ patient.resident.gender }}</td>
+          <td class="diagnosis">{{ patient.diagnosis }}</td>
+          <td>{{ patient.physician }}</td>
+          <td>{{ patient.admission_date|date:"M d, Y" }}</td>
+          <td>{{ patient.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <hr>
+    <p>
+      Printed by: {{ printed_by|default:"N/A" }} on {% if printed_on %}{{ printed_on|date:"M d, Y H:i:s" }}{% else %}{% now "M d, Y H:i:s" %}{% endif %}
+    </p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Residents Report</title>
+  <!-- Bootstrap CSS CDN (for basic styling) -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      margin: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 10px; /* overall smaller text */
+    }
+    header {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #343a40;
+      text-align: center;
+    }
+    header .logo {
+      width: 40px;
+      vertical-align: middle;
+    }
+    header h1 {
+      font-size: 16px;
+      margin: 0;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+      color: #343a40;
+    }
+    header h4 {
+      font-size: 10px;
+      margin: 0;
+      color: #6c757d;
+    }
+    header h3 {
+      font-size: 14px;
+      margin-top: 5px;
+      color: #343a40;
+    }
+    .filters {
+      margin-bottom: 10px;
+      font-size: 9px;
+    }
+    .filters p {
+      margin: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9px;
+    }
+    table, th, td {
+      border: 1px solid #dee2e6;
+    }
+    th, td {
+      padding: 4px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .thead-dark th {
+      background-color: #343a40;
+      color: #fff;
+      font-size: 9px;
+    }
+    /* Further reduce Address column styling */
+    td.address {
+      font-size: 6px;
+      max-width: 100px; /* optional: to force ellipsis if needed */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    footer {
+      margin-top: 10px;
+      font-size: 8px;
+      text-align: center;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="{% static 'home/images/WeCareLogo.svg' %}" alt="WeCare Logo">
+    <h1>WeCare</h1>
+    <br>
+    <h4>A Resident and Patient Management System</h4>
+    <h3 class="mt-2">Residents Report</h3>
+  </header>
+
+  <!-- Filtering Options -->
+  <div class="filters text-center">
+    <p class="text-muted">
+      Filters Applied:&nbsp;
+      Category: {{ filter_category|default:"All" }}, 
+      Gender: {{ filter_gender|default:"All" }}, 
+      Age: {{ filter_age|default:"All" }}
+    </p>
+  </div>
+
+  <!-- Residents Table -->
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <!-- Define column widths using colgroup -->
+      <colgroup>
+        <col style="width:5%;">
+        <col style="width:5%;">
+        <col style="width:25%;">
+        <col style="width:10%;">
+        <col style="width:5%;">
+        <col style="width:5%;">
+        <col style="width:5%;">
+        <col style="width:30%;">
+        <col style="width:10%;">
+      </colgroup>
+      <thead class="thead-dark">
+        <tr>
+          <th>Family No.</th>
+          <th>Resident ID</th>
+          <th>Name</th>
+          <th>Birthdate</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Category</th>
+          <th>Address</th>
+          <th>Contact No.</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for resident in residents %}
+        <tr>
+          <td>{{ resident.family.family_no }}</td>
+          <td>{{ resident.id }}</td>
+          <td>{{ resident.last_name }}, {{ resident.first_name }}, {{ resident.middle_name }}</td>
+          <td>{{ resident.birthdate|date:"M d, Y" }}</td>
+          <td>{{ resident.age }}</td>
+          <td>{{ resident.gender }}</td>
+          <td>{{ resident.category }}</td>
+          <td class="address">{{ resident.present_address }}</td>
+          <td>{{ resident.contact_number }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <hr>
+    <p>
+      Printed by: {{ printed_by|default:"N/A" }} on {% if printed_on %}{{ printed_on|date:"M d, Y H:i:s" }}{% else %}{% now "M d, Y H:i:s" %}{% endif %}
+    </p>
+  </footer>
+</body>
+</html>

@@ -1,15 +1,11 @@
 {% extends "home/layout.html" %}
 {% load static %}
 
-{% block style %}
-<style>
-
-</style>
-{% endblock style %}
+{% block style %}{% endblock style %}
 
 {% block body %}
-<h3 class="mb-3">Reports - <span class="text-primary">Resident Info</span></h3>
-<article class="content-section border rounded p-0 shadow-sm">
+<h3 class="mb-3">Reports - <span class="text-primary">Patient Info</span></h3>
+<article class="content-section border rounded p-0 shadow">
     <div class="container">
       <div class="row mt-2">
         <div class="col-auto">
@@ -17,7 +13,7 @@
             <div class="input-group">
                 <select name="category" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
                   <option value="" {% if not request.GET.category %}selected{% endif %}>All Categories (Default)</option>
-                  <option value="Adult" {% if request.GET.category == "Adult" %}selected{% endif %}>Adult</option>
+                  <option value="N/A" {% if request.GET.category == "N/A" %}selected{% endif %}>N/A</option>
                   <option value="Senior" {% if request.GET.category == "Senior" %}selected{% endif %}>Senior</option>
                   <option value="PWD" {% if request.GET.category == "PWD" %}selected{% endif %}>PWD</option>
                   <option value="Children" {% if request.GET.category == "Children" %}selected{% endif %}>Children (17 and below)</option>
@@ -28,36 +24,37 @@
                   <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders (Default)</option>
                   <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
                   <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
+                  <option value="Other" {% if request.GET.gender == "Other" %}selected{% endif %}>Other</option>
                 </select>
                 <select name="age" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
                     <option value="" {% if not request.GET.age %}selected{% endif %}>All Ages (Default)</option>
                     <option value="6" {% if request.GET.age == "6" %}selected{% endif %}>0-6</option>
                     <option value="18" {% if request.GET.age == "18" %}selected{% endif %}>7-18</option>
                     <option value="59" {% if request.GET.age == "59" %}selected{% endif %}>19-59</option>
-                </select>                
-              <button type="submit" class="btn btn-outline-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw);">Filter</button>
+                </select>   
+                <button type="submit" class="btn btn-outline-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw);">Filter</button>
             </div>
           </form>
         </div>
         <div class="col-md-auto ms-sm-auto"> 
-          <div class="dropdown">
-            <button class="btn btn-outline-primary dropdown-toggle px-4" type="button" id="exportBtn" data-bs-toggle="dropdown" aria-expanded="false" title="Export">
-              <i class="ri-download-2-line"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="exportBtn">
-              <li>
-                <a class="dropdown-item" href="{% url 'resident-export-xlsx' %}?{{ request.GET.urlencode }}">
-                  Export as CSV
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{% url 'resident-export-pdf' %}?{{ request.GET.urlencode }}">
-                  Export as PDF
-                </a>
-              </li>
-            </ul>
-          </div>          
-        </div>
+            <div class="dropdown">
+              <button class="btn btn-outline-primary dropdown-toggle px-4" type="button" id="exportBtn" data-bs-toggle="dropdown" aria-expanded="false" title="Export">
+                <i class="ri-download-2-line"></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="exportBtn">
+                <li>
+                  <a class="dropdown-item" href="{% url 'patient-export-xlsx' %}?{{ request.GET.urlencode }}">
+                    Export as CSV
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'patient-export-pdf' %}?{{ request.GET.urlencode }}">
+                    Export as PDF
+                  </a>
+                </li>
+              </ul>
+            </div>          
+          </div>
       </div>
       <div class="row mt-2">
         <div class="col-auto">
@@ -70,50 +67,50 @@
           <span class="d-inline ms-2" style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">Entries per page</span>
         </div>
         <div class="col-auto ms-auto">
-            <div class="input-group input-group-merge"> 
-                <span class="input-group-text"><i class="ri-search-line"></i></span> 
-                <input type="text" id="searchBar" class="form-control" placeholder="Search" aria-label="Search"> 
-            </div> 
+          <input type="text" id="searchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw); vertical-align: middle;">
         </div>
       </div>
     </div>
-    <div class="table-responsive table-nowrap mt-2">
-        <table id="dataTable" class="table table-light table-hover table-striped table-striped text-cente m-0 projectTables">
+    
+    <div class="table-responsive mt-2">
+        <table id="dataTable" class="table table-light table-striped text-center m-0 projectTables">
         <thead class="table-dark">
           <tr>
-            <th class="text-center">Family No.</th>
-            <th class="text-center">Resident ID</th>
-            <th class="text-center">Last Name</th>
-            <th class="text-center">First Name</th>
-            <th class="text-center">Middle Name</th>
-            <th class="text-center">Relationship to Head</th>
-            <th class="text-center">Birthdate</th>
-            <th class="text-center">Age</th>
-            <th class="text-center">Civil Status</th>
-            <th class="text-center">Gender</th>
-            <th class="text-center">Category</th>
-            <th class="text-center">Address</th>
-            <th class="text-center">Contact Number</th>
-            <th class="text-center">Date Updated</th>
+            <th class="text-start">Family No.</th>
+            <th class="text-start">Patient ID</th>
+            <th class="text-start">Last Name</th>
+            <th class="text-start">First Name</th>
+            <th class="text-start">Middle Name</th>
+            <th class="text-start">Birthdate</th>
+            <th class="text-start">Age</th>
+            <th class="text-start">Civil Status</th>
+            <th class="text-start">Gender</th>
+            <th class="text-start">Category</th>
+            <th class="text-start">Contact Number</th>
+            <th class="text-start">Last Visit</th>
           </tr>
         </thead>
         <tbody>
-            {% for resident in residents %}
+            {% for patient in patients %}
             <tr>
-                <td class="text-center">{{ resident.family.family_no }}</a></td>
-                <td class="text-center">{{ resident.id }}</td>
-                <td class="text-center">{{ resident.last_name }}</td>
-                <td class="text-center">{{ resident.first_name }}</td>
-                <td class="text-center">{{ resident.middle_name }}</td>
-                <td class="text-center">{{ resident.relationship_to_head|capfirst }}</td>
-                <td class="text-center">{{ resident.birthdate|date:"M d, Y" }}</td>
-                <td class="text-center">{{ resident.age }}</td>
-                <td class="text-center">{{ resident.civil_status }}</td>
-                <td class="text-center">{{ resident.gender }}</td>
-                <td class="text-center">{{ resident.category }}</td>
-                <td class="text-center">{{ resident.present_address }}</td>
-                <td class="text-center">{{ resident.contact_number }}</td>
-                <td class="text-center">{{ resident.date_updated|date:"M d, Y" }}</td>
+                <td class="text-start"> {{ patient.resident.family.family_no }} </td>
+                <td class="text-start"> {{ patient.patientID }} </td>
+                <td class="text-start">{{ patient.resident.last_name }}</td>
+                <td class="text-start">{{ patient.resident.first_name }}</td>
+                <td class="text-start">{{ patient.resident.middle_name }}</td>
+                <td class="text-start">{{ patient.resident.birthdate|date:"M d, Y" }}</td>
+                <td class="text-start">{{ patient.resident.age }}</td>
+                <td class="text-start">{{ patient.resident.civil_status }}</td>
+                <td class="text-start">{{ patient.resident.gender }}</td>
+                <td class="text-start">{{ patient.resident.category }}</td>
+                <td class="text-start">{{ patient.resident.contact_number }}</td>
+                <td class="text-start">
+                  {% if patient.last_visit_date %}
+                    {{ patient.last_visit_date|date:"M d, Y" }}
+                  {% else %}
+                    --
+                  {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -124,10 +121,8 @@
 {% endblock body %}
 
 {% block script %}
-
-<script src="{% static 'residentInfo/main.js' %}"></script>
-
 <script>
+
   $('#myModal').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget);
     var deleteData = button.attr('data-deleteData');
@@ -135,11 +130,12 @@
     var dataUrl = button.attr('data-Url')
     var moduleName = button.attr('data-moduleName')
     
+
     var txtDeleteData = deleteData
     $(this).find('#deleteMessage').text('Are you sure you want to 0 for: '.replace('0', moduleName));
     $(this).find('#txtDeleteData').text(txtDeleteData);
-    $(this).find('#btnDelete').attr('href', '{% url "resident-delete-confirm" 0 %}'.replace('0', dataID));
+    $(this).find('#btnDelete').attr('href', '{% url "patient-delete-confirm" 0 %}'.replace('0', dataID));
   });
-</script>
 
-{% endblock %}
+</script>
+{% endblock script %}
