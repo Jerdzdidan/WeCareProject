@@ -48,7 +48,7 @@ def scheduled_checkup_list(request):
     return render(request, "scheduledcheckup/scheduled_checkup_list.html", context)
 
 @login_required
-@role_required(['BHW'], 'Checkup')
+@role_required(['BHW'], 'Select patient on the Checkup')
 def scheduled_checkup_patient_select(request):
     available_patients = Patient.objects.all().order_by('patientID')
     context = {
@@ -58,7 +58,7 @@ def scheduled_checkup_patient_select(request):
 
 
 @login_required
-@role_required(['BHW'], 'Checkup')
+@role_required(['BHW'], 'Schedule checkup on the Checkup')
 def scheduled_checkup_create(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
     if request.method == "POST":
@@ -98,7 +98,7 @@ def scheduled_checkup_create(request, pk):
     return render(request, "scheduledcheckup/scheduled_checkup_create.html", context)
 
 @login_required
-@role_required(['BHW'], 'Checkup')
+@role_required(['BHW'], 'Update checkup on the Checkup')
 def scheduled_checkup_update(request, checkup_id):
     checkup = get_object_or_404(ScheduledCheckup, id=checkup_id)
     
@@ -136,7 +136,7 @@ def scheduled_checkup_update(request, checkup_id):
     return render(request, "scheduledcheckup/scheduled_checkup_update.html", context)
 
 @login_required
-@role_required(['BHW'], 'Checkup')
+@role_required(['BHW'], 'Delete checkup on the Checkup')
 def scheduled_checkup_delete(request, checkup_id):
     checkup = get_object_or_404(ScheduledCheckup, id=checkup_id)
 

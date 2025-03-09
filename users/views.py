@@ -15,7 +15,7 @@ def accountlist(request):
     return render(request, 'users/account_list.html', {'accounts': accounts})
 
 @login_required
-@role_required(['ADMIN'], 'User Management')
+@role_required(['ADMIN'], 'Account Creation in User Management')
 def accountCreate(request):
 
     context = {}
@@ -77,7 +77,7 @@ def accountCreate(request):
 
 
 @login_required
-@role_required(['ADMIN'], 'User Management')
+@role_required(['ADMIN'], 'Account Update in User Management')
 def accountUpdate(request, pk):
 
     profile = get_object_or_404(UserProfile, pk=pk)
@@ -137,7 +137,7 @@ def accountUpdate(request, pk):
 
 
 @login_required
-@role_required(['ADMIN'], 'User Management')
+@role_required(['ADMIN'], 'Account Deletion in User Management')
 def accountDeleteConfirm(request, pk):
     
     account = get_object_or_404(UserProfile, pk=pk)

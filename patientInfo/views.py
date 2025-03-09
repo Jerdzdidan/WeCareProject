@@ -21,7 +21,7 @@ from users.decorators import role_required
 
 # === PATIENT RECORD FUNCTIONALITY ===
 @login_required
-@role_required(['ADMIN', 'BRGY-STAFF', 'BHW', 'DOCTOR'], 'Patient Info')
+@role_required(['ADMIN', 'BRGY-STAFF', 'BHW', 'DOCTOR'], 'Patient Information')
 def patient_list(request):
     category = request.GET.get('category', '')
     gender = request.GET.get('gender', '')
@@ -41,13 +41,13 @@ def patient_list(request):
     return render(request, 'patientInfo/patient_list.html', {'patients': patients})
 
 @login_required
-@role_required(['BHW'], 'Patient Info')
+@role_required(['BHW'], 'Select patient on the Patient Information')
 def patient_select(request):
     available_residents = Resident.objects.filter(patient__isnull=True).order_by('id')
     return render(request, 'patientInfo/patient_select.html', {'available_residents': available_residents})
 
 @login_required
-@role_required(['BHW'], 'Patient Info')
+@role_required(['BHW'], 'Create patient on the Patient Information')
 def patient_create_details(request, resident_id):
     if not resident_id:
         messages.error(request, "Please select a resident first.")
@@ -183,7 +183,7 @@ def patient_create_details(request, resident_id):
     return render(request, 'patientInfo/patient_create_details.html', {'resident': resident})
 
 @login_required
-@role_required(['BHW', 'DOCTOR'], 'Patient Info')
+@role_required(['BHW', 'DOCTOR'], 'Update patient on the Patient Information')
 def patient_update(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
     
@@ -339,7 +339,7 @@ def patient_update(request, pk):
     })
 
 @login_required
-@role_required(['BHW'], 'Patient Info')
+@role_required(['BHW'], 'Delete patient on the Patient Information')
 def patient_delete_confirm(request, pk):
     try:
         patient = Patient.objects.get(patientID=pk)
@@ -357,7 +357,7 @@ def patient_delete_confirm(request, pk):
 
 
 @login_required
-@role_required(['ADMIN', 'BRGY-STAFF', 'BHW', 'DOCTOR'], 'Patient Info')
+@role_required(['ADMIN', 'BRGY-STAFF', 'BHW', 'DOCTOR'], 'Patient Details')
 def patient_detail(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
     records = patient.medical_records.all().order_by('-last_visited')
@@ -395,7 +395,7 @@ def patient_detail(request, pk):
 
 # === MEDICAL RECORD FUNCTIONALITY ===
 @login_required
-@role_required(['DOCTOR'], 'Patient Info')
+@role_required(['DOCTOR'], 'Create medical record on the Patient Information')
 def medical_record_create(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
     if request.method == "POST":
@@ -415,7 +415,7 @@ def medical_record_create(request, pk):
 
 
 @login_required
-@role_required(['DOCTOR'], 'Patient Info')
+@role_required(['DOCTOR'], 'Update medical record on the Patient Information')
 def medical_record_update(request, record_id):
     record = get_object_or_404(MedicalRecord, id=record_id)
     if request.method == "POST":
@@ -435,7 +435,7 @@ def medical_record_update(request, record_id):
     return render(request, 'patientInfo/medical_record_update.html', {'record': record})
 
 @login_required
-@role_required(['DOCTOR'], 'Patient Info')
+@role_required(['DOCTOR'], 'Delete medical record on the Patient Information')
 def medical_record_delete(request, patient_pk, record_id):
     try:
         record = MedicalRecord.objects.get(id=record_id)
@@ -452,7 +452,7 @@ def medical_record_delete(request, patient_pk, record_id):
 
 # ===== PATIENT_MEDICINE_TRACKING =====
 @login_required
-@role_required(['DOCTOR'], 'Patient Info')
+@role_required(['DOCTOR'], 'Select medicine on the Patient Information')
 def medicine_tracking_select(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
     available_medicines = Medicine.objects.all().order_by("medicine_name")
@@ -463,7 +463,7 @@ def medicine_tracking_select(request, pk):
     return render(request, "patientInfo/medicinetracking_select.html", context)
 
 @login_required
-@role_required(['DOCTOR'], 'Patient Info')
+@role_required(['DOCTOR'], 'Create patient-medicine tracking on the Patient Information')
 def medicine_tracking_create_details(request, pk, medicine_id):
     patient = get_object_or_404(Patient, patientID=pk)
     medicine = get_object_or_404(Medicine, id=medicine_id)
@@ -562,7 +562,7 @@ def medicine_tracking_create_details(request, pk, medicine_id):
     return render(request, "patientInfo/medicinetracking_create_details.html", context)
 
 @login_required
-@role_required(['DOCTOR'], 'Patient Info')
+@role_required(['DOCTOR'], 'Update patient-medicine tracking on the Patient Information')
 def medicine_tracking_update(request, tracking_id):
     tracking = get_object_or_404(MedicineTracking, id=tracking_id)
     patient = tracking.patient
@@ -658,7 +658,7 @@ def medicine_tracking_update(request, tracking_id):
 
 
 @login_required
-@role_required(['DOCTOR'], 'Patient Info')
+@role_required(['DOCTOR'], 'Delete patient-medicine tracking on the Patient Information')
 def medicine_tracking_delete(request, tracking_id):
     tracking = get_object_or_404(MedicineTracking, id=tracking_id)
 

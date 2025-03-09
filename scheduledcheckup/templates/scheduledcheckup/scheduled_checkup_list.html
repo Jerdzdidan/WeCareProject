@@ -1,11 +1,9 @@
 {% extends "home/layout.html" %}
-{% load static %}
 
 {% block style %}
 <style>
   .record-table th, .record-table td {
     vertical-align: middle;
-    padding: 0.75rem;
   }
   .input-group-text {
     background-color: #f8f9fa;
@@ -61,9 +59,11 @@
         <input type="text" id="SearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
       </div>
     </div>
+  </div>
+
     <!-- Scheduled Checkups Table -->
-    <div class="table-responsive">
-      <table class="table table-striped responsive_text record-table" id="dataTable">
+    <div class="table-responsive mt-2">
+      <table class="table table-light table-striped text-center m-0 px-0 projectTables" id="dataTable">
         <thead class="table-dark">
           <tr>
             <th class="text-start">Checkup Date</th>
@@ -113,10 +113,10 @@
           {% endfor %}
         </tbody>
       </table>
+      <div id="customPagination"></div>
     </div>
-    <!-- Pagination Container -->
-    <div id="customPagination"></div>
-  </div>
+
+
 </article>
 {% endblock body %}
 

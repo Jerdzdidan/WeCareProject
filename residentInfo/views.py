@@ -53,7 +53,7 @@ def family_details(request, pk):
     return render(request, 'residentInfo/family_details.html', context)
 
 @login_required
-@role_required(['BRGY-STAFF'], 'Resident Info')
+@role_required(['BRGY-STAFF'], 'Create family-resident on the Resident Information')
 def family_resident_create(request):
     if request.method == "POST":
         head_data = {
@@ -120,7 +120,7 @@ def family_resident_create(request):
     return render(request, 'residentInfo/resident_create.html')
 
 @login_required
-@role_required(['BRGY-STAFF', 'ADMIN'], 'Resident Info')
+@role_required(['BRGY-STAFF', 'ADMIN'], 'Update family-resident on the Resident Information')
 def family_resident_update(request, pk):
     family = get_object_or_404(Family, pk=pk)
     head = family.residents.filter(relationship_to_head__iexact='head of the family').first()
@@ -209,7 +209,7 @@ def family_resident_update(request, pk):
     return render(request, 'residentInfo/family_update.html', context)
 
 @login_required
-@role_required(['BRGY-STAFF'], 'Resident Info')
+@role_required(['BRGY-STAFF'], 'Delete family on the Resident Information')
 def family_delete_confirm(request, pk):
     family = get_object_or_404(Family, pk=pk)
 
@@ -221,7 +221,7 @@ def family_delete_confirm(request, pk):
     return render(request, 'residentInfo/family_delete.html', {'family': family, 'residents': residents})
 
 @login_required
-@role_required(['BRGY-STAFF'], 'Resident Info')
+@role_required(['BRGY-STAFF'], 'Update resident on the Resident Information')
 def resident_update(request, pk):
     resident = get_object_or_404(Resident, pk=pk)
     
@@ -250,7 +250,7 @@ def resident_update(request, pk):
     return render(request, 'residentInfo/resident_update.html', {'resident': resident})
 
 @login_required
-@role_required(['BRGY-STAFF'], 'Resident Info')
+@role_required(['BRGY-STAFF'], 'Delete resident on the Resident Information')
 def resident_delete_confirm(request, pk):
     try:
         resident = Resident.objects.get(pk=pk)
