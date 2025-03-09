@@ -40,23 +40,18 @@
           </form>
         </div>
         <div class="col-md-auto ms-sm-auto"> 
-          <div class="dropdown">
-            <button class="btn btn-outline-primary dropdown-toggle px-4" type="button" id="exportBtn" data-bs-toggle="dropdown" aria-expanded="false" title="Export">
-              <i class="ri-download-2-line"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="exportBtn">
-              <li>
-                <a class="dropdown-item" href="{% url 'resident-export-xlsx' %}?{{ request.GET.urlencode }}">
-                  Export as CSV
+            <div class="d-flex gap-2 mt-3 mt-sm-0"> 
+                <div class="col-6 col-sm-auto"> 
+                  <a class="btn btn btn-outline-primary w-100 d-flex align-items-center justify-content-center px-4" href="{% url 'resident-export-xlsx' %}?{{ request.GET.urlencode }}">
+                    <i class="ri-printer-line"></i> 
+                  </a>
+                </div> 
+                    
+                </button> 
+                <a class="btn btn btn-outline-primary btn-block px-4" href="{% url 'resident-export-pdf' %}?{{ request.GET.urlencode }}">
+                  <i class="ri-download-2-line"></i> 
                 </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{% url 'resident-export-pdf' %}?{{ request.GET.urlencode }}">
-                  Export as PDF
-                </a>
-              </li>
-            </ul>
-          </div>          
+            </div> 
         </div>
       </div>
       <div class="row mt-2">

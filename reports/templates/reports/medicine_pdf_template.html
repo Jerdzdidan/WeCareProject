@@ -3,13 +3,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Patients Report</title>
+  <title>Medicines Report</title>
+  <!-- Bootstrap CSS CDN (for basic styling) -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
       margin: 10px;
       font-family: Arial, sans-serif;
-      font-size: 10px;
+      font-size: 10px; /* overall smaller text */
     }
     header {
       margin-bottom: 10px;
@@ -63,10 +64,12 @@
     .thead-dark th {
       background-color: #343a40;
       color: #fff;
+      font-size: 9px;
     }
-    td.diagnosis {
+    /* Optionally style the Notes column for better fit */
+    td.notes {
       font-size: 8px;
-      max-width: 120px;
+      max-width: 100px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -85,57 +88,65 @@
     <h1>WeCare</h1>
     <br>
     <h4>A Resident and Patient Management System</h4>
-    <h3 class="mt-2">Patients Report</h3>
+    <h3 class="mt-2">Medicines Report</h3>
   </header>
 
+  <!-- Filtering Options (if applicable) -->
   <div class="filters text-center">
     <p class="text-muted">
-      Filters Applied:&nbsp;
-      Category: {{ filter_category|default:"All" }}, 
-      Gender: {{ filter_gender|default:"All" }}, 
-      Street: {{ filter_street|default:"All" }}, 
-      Age: {{ filter_age|default:"All" }}
+      Printed on: {{ printed_on|date:"M d, Y H:i:s" }}
     </p>
   </div>
 
+  <!-- Medicines Table -->
   <div class="table-responsive">
     <table class="table table-striped">
+      <!-- Define column widths using colgroup -->
       <colgroup>
-        <col style="width:10%;">
-        <col style="width:10%;">
-        <col style="width:20%;">
-        <col style="width:5%;">
-        <col style="width:8%;">
-        <col style="width:20%;">
-        <col style="width:15%;">
         <col style="width:12%;">
+        <col style="width:8%;">
         <col style="width:10%;">
+        <col style="width:10%;">
+        <col style="width:8%;">
+        <col style="width:8%;">
+        <col style="width:8%;">
+        <col style="width:8%;">
+        <col style="width:8%;">
+        <col style="width:10%;">
+        <col style="width:8%;">
+        <col style="width:12%;">
       </colgroup>
       <thead class="thead-dark">
         <tr>
-          <th>Patient ID</th>
-          <th>Resident ID</th>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Gender</th>
-          <th>Diagnosis</th>
-          <th>Physician</th>
-          <th>Admission Date</th>
-          <th>Status</th>
+          <th>Medicine Name</th>
+          <th>Dosage</th>
+          <th>Generic Name</th>
+          <th>Brand Name</th>
+          <th>Unit Price</th>
+          <th>Total Value</th>
+          <th>Total Quantity</th>
+          <th>Released Qty</th>
+          <th>Expired Qty</th>
+          <th>Supplier</th>
+          <th>Date Last Stocked</th>
+          <th>Notes</th>
         </tr>
       </thead>
       <tbody>
-        {% for patient in patients %}
+        {% for med in medicines %}
         <tr>
-          <td>{{ patient.patientID }}</td>
-          <td>{{ patient.resident.id }}</td>
-          <td>{{ patient.resident.last_name }}, {{ patient.resident.first_name }}</td>
-          <td>{{ patient.resident.age }}</td>
-          <td>{{ patient.resident.gender }}</td>
-          <td class="diagnosis">{{ patient.diagnosis }}</td>
-          <td>{{ patient.physician }}</td>
-          <td>{{ patient.admission_date|date:"M d, Y" }}</td>
-          <td>{{ patient.status }}</td>
+          <td>{{ med.medicine_name }}</td>
+          <td>{{ med.dosage }}</td>
+          <td>{{ med.generic_name }}</td>
+          <td>{{ med.brand_name }}</td>
+          <td>{{ med.unit_price|floatformat:2 }}Php</td>
+          <td>{{ med.total_value|floatformat:2 }}Php</td>
+          <td>{{ med.total_quantity }}</td>
+          <td>{{ med.releasedQty|default:"0" }}</td>
+          <td>{{ med.expiredQty|default:"0" }}</td>
+          <td>{{ med.supplier_name }}</td>
+          <td>{% if med.date_last_stock %}{{ med.date_last_stock|date:"M d, Y" }}{% endif %}</td>
+          <td class="notes">{{ med.notes }}</td>
         </tr>
         {% endfor %}
       </tbody>
