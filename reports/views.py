@@ -247,40 +247,30 @@ def patient_export_xlsx(request):
 
     ws.merge_cells('A2:L2')
     ws['A2'] = f"Category: {request.GET.get('category', 'All')}"
+    
     ws.merge_cells('A3:L3')
     ws['A3'] = f"Gender: {request.GET.get('gender', 'All')}"
+    
     ws.merge_cells('A4:L4')
     ws['A4'] = f"Age-group: {request.GET.get('age', 'All')}"
-
+    
     headers = [
-        "Family No.",
-        "Patient ID",
-        "Last Name",
-        "First Name",
-        "Middle Name",
-        "Birthdate",
-        "Age",
-        "Civil Status",
-        "Gender",
-        "Category",
-        "Contact Number",
-        "Last Visit",
+        "Family No.", "Patient ID", "Last Name", "First Name", "Middle Name",
+        "Birthdate", "Age", "Civil Status", "Gender", "Category", "Contact Number", "Last Visit"
     ]
-    
     header_font = Font(bold=True)
-    header_fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
     
-    header_row = 6
+    # Set header row (row 6)
     for col_num, header in enumerate(headers, 1):
-        cell = ws.cell(row=header_row, column=col_num)
+        cell = ws.cell(row=6, column=col_num)
         cell.value = header
         cell.font = header_font
-        cell.fill = header_fill
-
-    current_row = header_row + 1
+        cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+    
+    current_row = 7
     for patient in patients:
         resident = patient.resident
-        family_no = resident.family.family_no if hasattr(resident, 'family') and resident.family else ""
+        family_no = resident.family.family_no if resident.family else ""
         ws.cell(row=current_row, column=1, value=family_no)
         ws.cell(row=current_row, column=2, value=patient.patientID)
         ws.cell(row=current_row, column=3, value=resident.last_name)
@@ -297,20 +287,6 @@ def patient_export_xlsx(request):
                 value=patient.last_visit_date.strftime("%b %d, %Y") if patient.last_visit_date else "--")
         current_row += 1
 
-    for column in ws.columns:
-        max_length = 0
-        column_letter = column[0].column_letter
-        for cell in column:
-            try:
-                if cell.value:
-                    length = len(str(cell.value))
-                    if length > max_length:
-                        max_length = length
-            except Exception:
-                pass
-        adjusted_width = (max_length + 2) * 1.2
-        ws.column_dimensions[column_letter].width = adjusted_width
-
     wb.save(output)
     output.seek(0)
     response = HttpResponse(
@@ -319,6 +295,7 @@ def patient_export_xlsx(request):
     )
     response['Content-Disposition'] = 'attachment; filename="WeCare Patients Report.xlsx"'
     return response
+
 
 @login_required
 def patient_export_pdf(request):
@@ -361,10 +338,8 @@ def medicineReport(request):
     return render(request, "reports/medicineReport.html", context)
 
 @login_required
-@role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine Record')
 def medicine_export_xlsx(request):
     today = date.today()
-    # Annotate each medicine with released and expired quantities.
     medicines = Medicine.objects.all().order_by("medicine_name").annotate(
         releasedQty=Sum('medicine_trackings__quantity_used'),
         expiredQty=Sum('stocks__quantity', filter=Q(stocks__expiration_date__lte=today))
@@ -374,34 +349,29 @@ def medicine_export_xlsx(request):
     ws = wb.active
     ws.title = "Medicines Report"
 
-    # Title row
     title_font = Font(bold=True, size=14)
     ws.merge_cells('A1:L1')
     ws['A1'] = "WeCare - Medicine Report"
     ws['A1'].font = title_font
 
-    # Printed date info (optional)
     ws.merge_cells('A2:L2')
     ws['A2'] = f"Printed on: {today.strftime('%b %d, %Y')}"
-
-    # Header row
+    
     headers = [
         "Medicine Name", "Dosage", "Generic Name", "Brand Name",
         "Unit Price", "Total Value", "Total Quantity",
         "Released Quantity", "Expired Quantity",
         "Supplier", "Date Last Stocked", "Notes"
     ]
-    header_row = 4
     header_font = Font(bold=True)
-    header_fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
     
+    header_row = 4
     for col_num, header in enumerate(headers, 1):
         cell = ws.cell(row=header_row, column=col_num)
         cell.value = header
         cell.font = header_font
-        cell.fill = header_fill
-
-    # Data rows
+        cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+    
     current_row = header_row + 1
     for med in medicines:
         ws.cell(row=current_row, column=1, value=med.medicine_name)
@@ -417,21 +387,6 @@ def medicine_export_xlsx(request):
         ws.cell(row=current_row, column=11, value=med.date_last_stock.strftime("%b %d, %Y") if med.date_last_stock else "")
         ws.cell(row=current_row, column=12, value=med.notes)
         current_row += 1
-
-    # Auto-adjust column widths
-    for column in ws.columns:
-        max_length = 0
-        column_letter = column[0].column_letter
-        for cell in column:
-            try:
-                if cell.value:
-                    length = len(str(cell.value))
-                    if length > max_length:
-                        max_length = length
-            except Exception:
-                pass
-        adjusted_width = (max_length + 2) * 1.2
-        ws.column_dimensions[column_letter].width = adjusted_width
 
     wb.save(output)
     output.seek(0)
