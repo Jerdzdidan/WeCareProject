@@ -69,25 +69,21 @@
             <th>Illness Name</th>
             <th>Start Date</th>
             <th>Treatment</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              <input type="text" name="present_illness[0][illness_name]" class="form-control" required>
+              <input type="text" name="present_illness[0][illness_name]" class="form-control">
             </td>
             <td>
               <div class="input-group">
-                <input type="text" name="present_illness[0][start_date]" class="form-control flatpickr" required>
+                <input type="text" name="present_illness[0][start_date]" class="form-control flatpickr">
                 <span class="input-group-text"><i class="ri-calendar-line"></i></span>
               </div>
             </td>
             <td>
-                <textarea name="present_illness[0][treatment]" class="form-control" placeholder="Treatment details" rows="1"></textarea>
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger btn-sm delete-illness-row my-auto">Delete</button>
+              <textarea name="present_illness[0][treatment]" class="form-control" placeholder="Treatment details" rows="1"></textarea>
             </td>
           </tr>
         </tbody>
@@ -276,19 +272,16 @@ document.addEventListener('DOMContentLoaded', function(){
     var newRow = `
       <tr>
         <td>
-          <input type="text" name="present_illness[${rowCount}][illness_name]" class="form-control" required>
+          <input type="text" name="present_illness[${rowCount}][illness_name]" class="form-control">
         </td>
         <td>
           <div class="input-group">
-            <input type="text" name="present_illness[${rowCount}][start_date]" class="form-control flatpickr" required>
+            <input type="text" name="present_illness[${rowCount}][start_date]" class="form-control flatpickr">
             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
           </div>
         </td>
         <td>
           <textarea name="present_illness[${rowCount}][treatment]" class="form-control" placeholder="Treatment details" rows="1"></textarea>
-        </td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm delete-illness-row">Delete</button>
         </td>
       </tr>
     `;
@@ -302,10 +295,6 @@ document.addEventListener('DOMContentLoaded', function(){
   
   $('#addIllnessButton').click(function(){
     addIllnessRow();
-  });
-  
-  $('#illnessTable tbody').on('click', '.delete-illness-row', function(){
-    $(this).closest('tr').remove();
   });
 });
 </script>

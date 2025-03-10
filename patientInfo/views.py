@@ -100,11 +100,18 @@ def patient_create_details(request, resident_id):
                 illness_name = request.POST.get(illness_key, "").strip()
                 start_date_str = request.POST.get(f"present_illness[{index}][start_date]", "").strip()
                 treatment = request.POST.get(f"present_illness[{index}][treatment]", "").strip()
+                
+                # If all fields are empty, ignore this row.
+                if not (illness_name or start_date_str or treatment):
+                    index += 1
+                    continue
+
                 try:
                     start_date = datetime.strptime(start_date_str, "%b %d, %Y").date() if start_date_str else None
                 except ValueError:
                     start_date = None
             
+                # Only create the record if both illness name and start date are provided.
                 if illness_name and start_date:
                     patient.present_illnesses.create(
                         illness_name=illness_name,
@@ -153,7 +160,6 @@ def patient_create_details(request, resident_id):
         allergy_details = request.POST.get("past_history[allergy_details]", "").strip()
         med_history_others = request.POST.get("past_history[others]", "").strip()
 
-        
         PastMedicalHistory.objects.create(
             patient=patient,
             asthma=asthma,
@@ -167,7 +173,7 @@ def patient_create_details(request, resident_id):
             heart_attack=heart_attack,
             drug_allergy=drug_allergy,
             allergy_details=allergy_details,
-            others = med_history_others
+            others=med_history_others
         )
         
         MedicalRecord.objects.create(
@@ -181,6 +187,7 @@ def patient_create_details(request, resident_id):
         return redirect('patient-list')
     
     return render(request, 'patientInfo/patient_create_details.html', {'resident': resident})
+
 
 @login_required
 @role_required(['BHW', 'DOCTOR'], 'Update patient on the Patient Information')
