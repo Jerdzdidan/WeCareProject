@@ -92,6 +92,10 @@ def family_resident_create(request):
                 members[idx][field] = value.strip()
         
         for member in members.values():
+            # Skip this member if both first name and last name are empty.
+            if not (member.get('last_name') or member.get('first_name')):
+                continue
+            
             try:
                 member['birthdate'] = datetime.strptime(member.get('birthdate', 'Jan 01, 2000'), "%b %d, %Y").date()
             except ValueError:
@@ -118,6 +122,7 @@ def family_resident_create(request):
         return redirect('resident-list')
     
     return render(request, 'residentInfo/resident_create.html')
+
 
 @login_required
 @role_required(['BRGY-STAFF', 'ADMIN'], 'Update family-resident on the Resident Information')
@@ -154,6 +159,10 @@ def family_resident_update(request, pk):
 
         submitted_member_ids = []
         for member_data in submitted_members.values():
+            # Skip member rows that are empty (both first and last names are empty)
+            if not (member_data.get('first_name') or member_data.get('last_name')):
+                continue
+
             member_birthdate_str = member_data.get('birthdate', '')
             try:
                 member_birthdate = datetime.strptime(member_birthdate_str, "%b %d, %Y").date()
@@ -161,38 +170,29 @@ def family_resident_update(request, pk):
                 member_birthdate = datetime(2000, 1, 1).date()  
             
             member_id = member_data.get('member_id')
+            defaults = {
+                'last_name': member_data.get('last_name', ''),
+                'first_name': member_data.get('first_name', ''),
+                'middle_name': member_data.get('middle_name', ''),
+                'relationship_to_head': member_data.get('relationship', ''),
+                'birthdate': member_birthdate,
+                'age': member_data.get('age', ''),
+                'civil_status': member_data.get('civil_status', ''),
+                'gender': member_data.get('gender', ''),
+                'category': member_data.get('category', ''),
+                'present_address': member_data.get('present_address', head.present_address),
+                'contact_number': member_data.get('contact_number', ''),
+            }
             if member_id:
                 resident, created = Resident.objects.update_or_create(
                     id=member_id, family=family,
-                    defaults={
-                        'last_name': member_data.get('last_name', ''),
-                        'first_name': member_data.get('first_name', ''),
-                        'middle_name': member_data.get('middle_name', ''),
-                        'relationship_to_head': member_data.get('relationship', ''),
-                        'birthdate': member_birthdate,
-                        'age': member_data.get('age', ''),
-                        'civil_status': member_data.get('civil_status', ''),
-                        'gender': member_data.get('gender', ''),
-                        'category': member_data.get('category', ''),
-                        'present_address': member_data.get('present_address', head.present_address),
-                        'contact_number': member_data.get('contact_number', ''),
-                    }
+                    defaults=defaults
                 )
                 submitted_member_ids.append(resident.id)
             else:
                 new_resident = Resident.objects.create(
                     family=family,
-                    last_name=member_data.get('last_name', ''),
-                    first_name=member_data.get('first_name', ''),
-                    middle_name=member_data.get('middle_name', ''),
-                    relationship_to_head=member_data.get('relationship', ''),
-                    birthdate=member_birthdate,
-                    age=member_data.get('age', ''),
-                    civil_status=member_data.get('civil_status', ''),
-                    gender=member_data.get('gender', ''),
-                    category=member_data.get('category', ''),
-                    present_address=member_data.get('present_address', head.present_address),
-                    contact_number=member_data.get('contact_number', ''),
+                    **defaults
                 )
                 submitted_member_ids.append(new_resident.id)
 
@@ -207,6 +207,7 @@ def family_resident_update(request, pk):
         'members': list(members_qs.values()),
     }
     return render(request, 'residentInfo/family_update.html', context)
+
 
 @login_required
 @role_required(['BRGY-STAFF'], 'Delete family on the Resident Information')

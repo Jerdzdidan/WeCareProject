@@ -225,7 +225,8 @@ def patient_update(request, pk):
                     height=height or None,
                     weight=weight or None,
                 )
-                
+        
+        # Delete all previous present illnesses before adding new ones.
         patient.present_illnesses.all().delete()
         index = 0
         while True:
@@ -234,11 +235,18 @@ def patient_update(request, pk):
                 illness_name = request.POST.get(illness_key, "").strip()
                 start_date_str = request.POST.get(f"present_illness[{index}][start_date]", "").strip()
                 treatment = request.POST.get(f"present_illness[{index}][treatment]", "").strip()
+                
+                # If all illness-related fields are empty, ignore this row.
+                if not (illness_name or start_date_str or treatment):
+                    index += 1
+                    continue
+                
                 try:
                     start_date = datetime.strptime(start_date_str, "%b %d, %Y").date() if start_date_str else None
                 except ValueError:
                     start_date = None
                
+                # Only create a record if both illness name and start date are provided.
                 if illness_name and start_date:
                     patient.present_illnesses.create(
                         illness_name=illness_name,
@@ -331,7 +339,7 @@ def patient_update(request, pk):
                     heart_attack=heart_attack,
                     drug_allergy=drug_allergy,
                     allergy_details=allergy_details,
-                    others = med_history_others
+                    others=med_history_others
                 )
         
         messages.success(request, "Patient record updated successfully!")
@@ -344,6 +352,7 @@ def patient_update(request, pk):
         "vaccination": vaccination,
         "past_medical_history": past_medical_history,
     })
+
 
 @login_required
 @role_required(['BHW'], 'Delete patient on the Patient Information')

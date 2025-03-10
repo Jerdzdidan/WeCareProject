@@ -77,7 +77,6 @@
             <th>Illness Name</th>
             <th>Start Date</th>
             <th>Treatment</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -85,38 +84,32 @@
             {% for illness in present_illnesses %}
               <tr>
                 <td>
-                  <input type="text" name="present_illness[{{ forloop.counter0 }}][illness_name]" class="form-control" value="{{ illness.illness_name }}" required>
+                  <input type="text" name="present_illness[{{ forloop.counter0 }}][illness_name]" class="form-control" value="{{ illness.illness_name }}" >
                 </td>
                 <td>
                   <div class="input-group">
-                    <input type="text" name="present_illness[{{ forloop.counter0 }}][start_date]" class="form-control flatpickr" value="{{ illness.start_date|date:'M j, Y' }}" required>
+                    <input type="text" name="present_illness[{{ forloop.counter0 }}][start_date]" class="form-control flatpickr" value="{{ illness.start_date|date:'M j, Y' }}" >
                     <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                   </div>
                 </td>
                 <td>
                   <textarea name="present_illness[{{ forloop.counter0 }}][treatment]" class="form-control" rows="1" placeholder="Treatment details">{{ illness.treatment }}</textarea>
                 </td>
-                <td>
-                  <button type="button" class="btn btn-danger btn-sm delete-illness-row">Delete</button>
-                </td>
               </tr>
             {% endfor %}
           {% else %}
             <tr>
               <td>
-                <input type="text" name="present_illness[0][illness_name]" class="form-control" required>
+                <input type="text" name="present_illness[0][illness_name]" class="form-control" >
               </td>
               <td>
                 <div class="input-group">
-                  <input type="text" name="present_illness[0][start_date]" class="form-control flatpickr" required>
+                  <input type="text" name="present_illness[0][start_date]" class="form-control flatpickr" >
                   <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                 </div>
               </td>
               <td>
                 <textarea name="present_illness[0][treatment]" class="form-control" placeholder="Treatment details" rows="1"></textarea>
-              </td>
-              <td>
-                <button type="button" class="btn btn-danger btn-sm delete-illness-row">Delete</button>
               </td>
             </tr>
           {% endif %}
@@ -263,7 +256,6 @@
           <label class="form-check-label cursor" for="med_history_others">Others <small class="text-muted">(click to activate textarea)</small></label>
         </div>
         <textarea name="past_history[others]" id="med_history_others_text" class="form-control mt-1" placeholder="Specify other vaccinations..." {% if not past_medical_history or not past_medical_history.others %}disabled{% endif %}>{{ past_medical_history.others|default_if_none:'' }}</textarea>
-
       </div>
     </div>
     
@@ -290,19 +282,16 @@ document.addEventListener('DOMContentLoaded', function(){
     var newRow = document.createElement('tr');
     newRow.innerHTML = `
       <td>
-        <input type="text" name="present_illness[${rowCount}][illness_name]" class="form-control" required>
+        <input type="text" name="present_illness[${rowCount}][illness_name]" class="form-control" >
       </td>
       <td>
         <div class="input-group">
-          <input type="text" name="present_illness[${rowCount}][start_date]" class="form-control flatpickr" required>
+          <input type="text" name="present_illness[${rowCount}][start_date]" class="form-control flatpickr" >
           <span class="input-group-text"><i class="ri-calendar-line"></i></span>
         </div>
       </td>
       <td>
         <textarea name="present_illness[${rowCount}][treatment]" class="form-control" placeholder="Treatment details" rows="1"></textarea>
-      </td>
-      <td>
-        <button type="button" class="btn btn-danger btn-sm delete-illness-row">Delete</button>
       </td>
     `;
     document.querySelector('#illnessTable tbody').appendChild(newRow);
@@ -314,12 +303,6 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   
   document.getElementById('addIllnessButton').addEventListener('click', addIllnessRow);
-  
-  document.querySelector('#illnessTable tbody').addEventListener('click', function(e) {
-    if(e.target && e.target.matches('button.delete-illness-row')) {
-      e.target.closest('tr').remove();
-    }
-  });
 });
 </script>
 {% endblock script %}

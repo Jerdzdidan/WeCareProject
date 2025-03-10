@@ -89,23 +89,22 @@
               <th>Gender</th>
               <th>Category</th>
               <th>Contact Number</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><input type="text" name="members[0][last_name]" class="form-control" required></td>
-              <td><input type="text" name="members[0][first_name]" class="form-control" required></td>
+              <td><input type="text" name="members[0][last_name]" class="form-control"></td>
+              <td><input type="text" name="members[0][first_name]" class="form-control"></td>
               <td><input type="text" name="members[0][middle_name]" class="form-control"></td>
-              <td><input type="text" name="members[0][relationship]" class="form-control" required></td>
+              <td><input type="text" name="members[0][relationship]" class="form-control"></td>
               <td>
                 <div class="input-group">
-                  <input type="text" name="members[0][birthdate]" class="form-control flatpickr" required>
+                  <input type="text" name="members[0][birthdate]" class="form-control flatpickr">
                   <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                 </div>
               </td>
-              <td><input type="number" name="members[0][age]" class="form-control" required min="0" max="999"></td>
-              <td><input type="text" name="members[0][civil_status]" class="form-control" required></td>
+              <td><input type="number" name="members[0][age]" class="form-control" min="0" max="999"></td>
+              <td><input type="text" name="members[0][civil_status]" class="form-control"></td>
               <td>
                 <select name="members[0][gender]" class="form-control">
                   <option value="Male">Male</option>
@@ -123,8 +122,7 @@
                   <option value="Pregnant">Pregnant</option>
                 </select>
               </td>
-              <td><input type="text" name="members[0][contact_number]" class="form-control" required></td>
-              <td><button type="button" class="btn btn-danger btn-sm delete-row my-auto">Delete</button></td>
+              <td><input type="text" name="members[0][contact_number]" class="form-control"></td>
             </tr>
           </tbody>          
       </table>
@@ -154,18 +152,18 @@ document.addEventListener('DOMContentLoaded', function(){
     var rowCount = $('#familyMembersTable tbody tr').length;
     var newRow = `
       <tr>
-        <td><input type="text" name="members[${rowCount}][last_name]" class="form-control" required></td>
-        <td><input type="text" name="members[${rowCount}][first_name]" class="form-control" required></td>
+        <td><input type="text" name="members[${rowCount}][last_name]" class="form-control"></td>
+        <td><input type="text" name="members[${rowCount}][first_name]" class="form-control"></td>
         <td><input type="text" name="members[${rowCount}][middle_name]" class="form-control"></td>
-        <td><input type="text" name="members[${rowCount}][relationship]" class="form-control" required></td>
+        <td><input type="text" name="members[${rowCount}][relationship]" class="form-control"></td>
         <td>
           <div class="input-group">
-            <input type="text" name="members[${rowCount}][birthdate]" class="form-control flatpickr" required>
+            <input type="text" name="members[${rowCount}][birthdate]" class="form-control flatpickr">
             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
           </div>
         </td>
-        <td><input type="number" name="members[${rowCount}][age]" class="form-control" required min="0" max="999"></td>
-        <td><input type="text" name="members[${rowCount}][civil_status]" class="form-control" required></td>
+        <td><input type="number" name="members[${rowCount}][age]" class="form-control" min="0" max="999"></td>
+        <td><input type="text" name="members[${rowCount}][civil_status]" class="form-control"></td>
         <td>
           <select name="members[${rowCount}][gender]" class="form-control">
             <option value="Male">Male</option>
@@ -183,8 +181,7 @@ document.addEventListener('DOMContentLoaded', function(){
             <option value="Pregnant">Pregnant</option>
           </select>
         </td>
-        <td><input type="text" name="members[${rowCount}][contact_number]" class="form-control" required></td>
-        <td><button type="button" class="btn btn-danger btn-sm delete-row">Delete</button></td>
+        <td><input type="text" name="members[${rowCount}][contact_number]" class="form-control"></td>
       </tr>
     `;
     $('#familyMembersTable tbody').append(newRow);
@@ -197,10 +194,6 @@ document.addEventListener('DOMContentLoaded', function(){
   
   $('#addMemberButton').click(function(){
     addFamilyMemberRow();
-  });
-  
-  $('#familyMembersTable tbody').on('click', '.delete-row', function(){
-    $(this).closest('tr').remove();
   });
 });
 </script>
