@@ -70,9 +70,7 @@
             <th class="text-start">Checkup Time</th>
             <th class="text-start">Patient ID</th>
             <th class="text-start">Patient Name</th>
-            {% if request.user.userprofile.userrole in "[BHW]" %}
               <th class="text-start">Contact Number</th>
-            {% endif %}
             <th class="text-start">Notes</th>
             {% if request.user.userprofile.userrole in "[BHW]" %}
               <th class="text-center">Action</th>
@@ -92,9 +90,7 @@
             </td>
             <td class="align-middle text-start">{{ checkup.patient.patientID }}</td>
             <td class="align-middle text-start">{{ checkup.patient.resident.last_name }}, {{ checkup.patient.resident.first_name }}</td>
-            {% if request.user.userprofile.userrole in "[BHW]" %}
               <td class="align-middle text-start">{{ checkup.patient.resident.contact_number }}</td>
-            {% endif %}
             <td class="align-middle text-start">
               {% if checkup.notes %}
                 {{ checkup.notes }}

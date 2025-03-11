@@ -271,7 +271,7 @@
                 <td class="align-middle text-center">
                   <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1 px-3"><i class="ri-edit-2-fill"></i></a>
                   {% comment %} <a href="{% url 'stock-delete' stock.pk %}" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
-                  <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ stock.pk }}" data-moduleName="Delete the stocks entry" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></button>
+                  <!-- <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ stock.pk }}" data-moduleName="Delete the stocks entry" class="btn btn-sm btn-outline-danger px-3"><i class="ri-delete-bin-5-fill"></i></button> -->
                 </td>
               {% endif %}
             </tr>
@@ -288,7 +288,7 @@
         {% if request.user.userprofile.userrole in "[ADMIN]" %}
         <div class="row mt-2">
           <div class="col-auto ms-auto">
-              <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ medicine.pk }}" data-moduleName="Delete all patient entry" class="btn btn-danger info border-dark fw-bold"><i class="fa-solid fa-minus"></i> Delete ALL</button>
+              <!-- <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ medicine.pk }}" data-moduleName="Delete all patient entry" class="btn btn-danger info border-dark fw-bold"><i class="fa-solid fa-minus"></i> Delete ALL</button> -->
            </div>
         </div>
         {% endif %}
@@ -336,7 +336,7 @@
               {% if request.user.userprofile.userrole in "[ADMIN]" %}
                 <td class="align-middle text-center">
                   {% comment %} <a href="{% url "medicine-tracking-delete" tracking.id %}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
-                  <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ tracking.patient.resident.last_name }}, {{ tracking.patient.resident.first_name }}" data-ID="{{ tracking.pk }}" data-moduleName="Delete the medicine tracking entry" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
+                  <!-- <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ tracking.patient.resident.last_name }}, {{ tracking.patient.resident.first_name }}" data-ID="{{ tracking.pk }}" data-moduleName="Delete the medicine tracking entry" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button> -->
                 </td>
               {% endif %}
             </tr>
@@ -353,7 +353,7 @@
         {% if request.user.userprofile.userrole in "[ADMIN]" %}
         <div class="row mt-2">
           <div class="col-auto ms-auto">
-            <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ medicine.pk }}" data-moduleName="Delete all expired stocks entry" class="btn btn-danger info border-dark fw-bold"><i class="fa-solid fa-minus"></i> Delete ALL</button>
+            <!-- <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ medicine.pk }}" data-moduleName="Delete all expired stocks entry" class="btn btn-danger info border-dark fw-bold"><i class="fa-solid fa-minus"></i> Delete ALL</button> -->
           </div>
         </div>
         {% endif %}
@@ -380,7 +380,7 @@
               <th class="text-center">Expiration Date</th>
               <th class="text-center">Total Price</th>
               <th class="text-center">Notes</th>
-              <th class="text-center">Action</th>
+              <!-- <th class="text-center">Action</th> -->
             </tr>
           </thead>
           <tbody>
@@ -390,10 +390,10 @@
               <td class="align-middle text-center">{{ stock.expiration_date|date:"M. d, Y" }}</td>
               <td class="align-middle text-center">{{ stock.total_price|floatformat:2 }}</td>
               <td class="align-middle">{{ stock.notes }}</td>
-              <td class="align-middle text-center">
+              <!-- <td class="align-middle text-center">
                 <a href="{% url 'stock-update' stock.pk %}" class="btn btn-sm btn-outline-success me-1"><i class="ri-edit-2-fill"></i></a>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ medicine.medicine_name }}" data-ID="{{ stock.pk }}" data-moduleName="Delete the expired stocks entry" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
-              </td>
+              </td> -->
             </tr>
             {% endfor %}
           </tbody>

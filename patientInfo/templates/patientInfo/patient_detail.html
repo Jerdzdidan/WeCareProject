@@ -375,8 +375,8 @@
               <td class="text-start align-middle">{{ record.last_visited|date:"M d, Y" }}</td>
               {% if request.user.userprofile.userrole in "[DOCTOR]" %}
               <td class="text-center align-middle">
-                <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success responsive_text fw-bold flex-fill" title="Edit"><i class="ri-edit-2-fill"></i></a>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ record.id }}" data-moduleName="Delete the medical record" class="btn btn-sm btn-outline-danger responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button>
+                <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success px-4 responsive_text fw-bold flex-fill" title="Edit"><i class="ri-edit-2-fill"></i></a>
+                <!-- <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ record.id }}" data-moduleName="Delete the medical record" class="btn btn-sm btn-outline-danger responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button> -->
               </td>
               {% endif %}
             </tr>
@@ -468,10 +468,10 @@
               <td class="align-middle text-center">₱{{ tracking.total_price }}</td>
               {% if request.user.userprofile.userrole in "[DOCTOR]" %}
                 <td class="text-center">
-                  <a href="{% url 'medicine-tracking-update' tracking.id %}" class="btn btn-sm btn-outline-success responsive_text mb-1" title="Edit">
+                  <a href="{% url 'medicine-tracking-update' tracking.id %}" class="btn btn-sm px-4 btn-outline-success responsive_text mb-1" title="Edit">
                     <i class="ri-edit-2-fill"></i>
                   </a>
-                  <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ tracking.id }}" data-moduleName="Delete the medicine record" class="btn btn-sm btn-outline-danger mb-1 responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button>
+                  <!-- <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ tracking.id }}" data-moduleName="Delete the medicine record" class="btn btn-sm btn-outline-danger mb-1 responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button> -->
                 </td>
               {% endif %}
             </tr>
