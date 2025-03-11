@@ -12,7 +12,7 @@ def dashboard(request):
 
     # Resident Count
     residentCount_total = residents.count()
-    residentCount_na = residents.filter(category='N/A').count()
+    residentCount_adult = residents.filter(category='Adult').count()
     residentCount_pwd = residents.filter(category='PWD').count()
     residentCount_solo_parent = residents.filter(category='Solo Parent').count()
     residentCount_children = residents.filter(category='Children').count()
@@ -27,22 +27,20 @@ def dashboard(request):
     patientCount_0_6 = patients.filter(resident__age__gte=0, resident__age__lt=6).count()
     patientCount_6_18 = patients.filter(resident__age__gte=6, resident__age__lt=18).count()
     patientCount_19_59 = patients.filter(resident__age__gte=19, resident__age__lt=59).count()
-    patientCount_59_above = patients.filter(resident__age__gte=59).count()
     # Patient Count by Category
-    patientCount_na = patients.filter(resident__category='N/A').count()
+    patientCount_adult = patients.filter(resident__category='Adult').count()
     patientCount_senior = patients.filter(resident__category='Senior').count()
     patientCount_pwd = patients.filter(resident__category='PWD').count()
     patientCount_solo_parent = patients.filter(resident__category='Solo Parent').count()
     patientCount_pregnant = patients.filter(resident__category='Pregnant').count()
     # Patient Count by Gender
-    patientCount_male = patients.filter(resident__category='Male').count()
-    patientCount_female = patients.filter(resident__category='Female').count()
-    patientCount_other = patients.filter(resident__category='Other').count()
+    patientCount_male = patients.filter(resident__gender='Male').count()
+    patientCount_female = patients.filter(resident__gender='Female').count()
 
     context = {
         # Resident Counts
         'residentCount_total': residentCount_total,
-        'residentCount_na': residentCount_na,
+        'residentCount_adult': residentCount_adult,
         'residentCount_pwd': residentCount_pwd,
         'residentCount_solo_parent': residentCount_solo_parent,
         'residentCount_children': residentCount_children,
@@ -56,9 +54,8 @@ def dashboard(request):
         'patientCount_0_6': patientCount_0_6,
         'patientCount_6_18': patientCount_6_18,
         'patientCount_19_59': patientCount_19_59,
-        'patientCount_59_above': patientCount_59_above,
         # Patient Counts by Category
-        'patientCount_na': patientCount_na,
+        'patientCount_adult': patientCount_adult,
         'patientCount_senior': patientCount_senior,
         'patientCount_pwd': patientCount_pwd,
         'patientCount_solo_parent': patientCount_solo_parent,
@@ -66,7 +63,6 @@ def dashboard(request):
         # Patient Count by Gender
         'patientCount_male': patientCount_male,
         'patientCount_female': patientCount_female,
-        'patientCount_other': patientCount_other,
     }
 
     return render(request, 'dashboard/dashboard.html', context)

@@ -163,6 +163,7 @@ def resident_export_pdf(request):
 
 # Patient Report
 @login_required
+@role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine Record')
 def patientInfoReport(request):
     category = request.GET.get('category', '')
     gender = request.GET.get('gender', '')
@@ -233,6 +234,7 @@ def get_filtered_patients(request):
     return patients.order_by('patientID')
 
 @login_required
+@role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine Record')
 def patient_export_xlsx(request):
     patients = get_filtered_patients(request)
     output = BytesIO()
@@ -298,6 +300,7 @@ def patient_export_xlsx(request):
 
 
 @login_required
+@role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine Record')
 def patient_export_pdf(request):
     patients = get_filtered_patients(request)
     context = {
@@ -338,6 +341,7 @@ def medicineReport(request):
     return render(request, "reports/medicineReport.html", context)
 
 @login_required
+@role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine Record')
 def medicine_export_xlsx(request):
     today = date.today()
     medicines = Medicine.objects.all().order_by("medicine_name").annotate(

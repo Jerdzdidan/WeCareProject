@@ -97,12 +97,14 @@
                 Residents Report
             </li>
           </a>
+          {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
           <a href="{% url "reports-patient-info" %}" class="nav-link rounded patient-nav-item {% if '/reports/patientInfo/' in request.path %}active{% endif %}">
             <li class="list-group-item d-flex align-items-center menu-item">
               <i class="ri-file-list-2-fill me-1 menu-icons"></i>
                 Patients Report
             </li>
           </a>
+          {% endif %}
           {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
           <a href="{% url "reports-medicine-record" %}" class="nav-link rounded patient-nav-item {% if '/reports/medicineRecord/' in request.path %}active{% endif %}">
             <li class="list-group-item d-flex align-items-center menu-item">
