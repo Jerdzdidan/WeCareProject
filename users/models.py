@@ -7,6 +7,7 @@ class UserProfile(models.Model):
         ('BRGY-STAFF', 'Barangay Staff'),
         ('DOCTOR', 'Doctor'),
         ('ADMIN', 'Admin'),
+        ('ROOT', 'Root'),
     ]
 
     STATUS_CHOICES = [
@@ -20,7 +21,7 @@ class UserProfile(models.Model):
     created_by = models.ForeignKey(User, related_name='created_user_profiles', on_delete=models.SET_NULL, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.userrole == 'ADMIN':
+        if self.userrole == 'ROOT':
             self.user.is_staff = True  
             self.user.is_superuser = True  
         else:
