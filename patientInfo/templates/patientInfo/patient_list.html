@@ -80,10 +80,14 @@
             {% for patient in patients %}
             <tr>
                 <td class="text-start"> 
+                  {% if request.user.userprofile.userrole in '[BRGY-STAFF]' %}
                   <a href="{% url 'family-update' patient.resident.family.family_no %}" 
-                     class="btn btn-sm btn-outline-success fw-bold px-4">
+                  class="btn btn-sm btn-outline-success fw-bold px-4">
                     <i class="ri-edit-2-line"></i>{{ patient.resident.family.family_no }}
                   </a>
+                  {% else %}
+                    <a href="{% url 'family-detail' patient.resident.family.family_no %}" class="btn btn-sm btn-outline-success fw-bold px-4 text-center"><i class="ri-team-fill"></i>{{ patient.resident.family.family_no }}</a>
+                  {% endif %}  
                 </td>
                 <td class="text-start">
                   <a href="{% url 'patient-detail' patient.patientID %}" class="btn btn-sm btn-outline-primary fw-bold px-4">

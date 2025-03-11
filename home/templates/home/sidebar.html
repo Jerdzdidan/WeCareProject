@@ -36,7 +36,7 @@
         </ul>
         {% endif %}
 
-        {% if request.user.userprofile.userrole in '[ADMIN, BRGY-STAFF]' %}
+        {% if request.user.userprofile.userrole in '[ADMIN,BRGY-STAFF,BHW]' %}
         <ul class="list-group my-1">
           <a href="{% url "resident-list" %}" class="nav-link {% if '/residents/' in request.path %}active{% endif %} rounded">
             <li class="list-group-item d-flex align-items-center menu-item">
@@ -103,12 +103,14 @@
                 Patients Report
             </li>
           </a>
+          {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
           <a href="{% url "reports-medicine-record" %}" class="nav-link rounded patient-nav-item {% if '/reports/medicineRecord/' in request.path %}active{% endif %}">
             <li class="list-group-item d-flex align-items-center menu-item">
               <i class="ri-file-list-2-fill me-1 menu-icons"></i>
                 Medicine Report
             </li>
           </a>
+          {% endif %}
           </div>
         </ul>
 
