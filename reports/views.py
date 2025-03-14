@@ -14,7 +14,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Q
 from datetime import date
 from medicineMonitoring.models import Medicine
-
+from logs.models import Logs
+import datetime
 
 # Create your views here.
 def residentInfoReport(request):
@@ -129,6 +130,22 @@ def resident_export_xlsx(request):
         ws.cell(row=current_row, column=14, value=resident.date_updated.strftime("%b. %d, %Y") if resident.date_updated else "")
         current_row += 1
 
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Resident REPORTS",
+        action="Export XLSX",
+        performed_to=(
+            f"Filters - Category: {request.GET.get('category', 'All')}, "
+            f"Gender: {request.GET.get('gender', 'All')}, "
+            f"Age-group: {request.GET.get('age', 'All')}"
+        ),
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     wb.save(output)
     output.seek(0)
     response = HttpResponse(
@@ -158,6 +175,23 @@ def resident_export_pdf(request):
     if pisa_status.err:
         return HttpResponse('Error generating PDF <pre>' + html + '</pre>')
     
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+    
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Resident",
+        action="Export PDF",
+        performed_to=(
+            f"Filters - Category: {request.GET.get('category', 'All')}, "
+            f"Gender: {request.GET.get('gender', 'All')}, "
+            f"Age-group: {request.GET.get('age', 'All')}"
+        ),
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     return response
 
 
@@ -291,6 +325,23 @@ def patient_export_xlsx(request):
 
     wb.save(output)
     output.seek(0)
+
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Patient",
+        action="Export XLSX",
+        performed_to=(
+            f"Filters - Category: {request.GET.get('category', 'All')}, "
+            f"Gender: {request.GET.get('gender', 'All')}, "
+            f"Age-group: {request.GET.get('age', 'All')}"
+        ),
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     response = HttpResponse(
         output, 
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -321,6 +372,24 @@ def patient_export_pdf(request):
     if pisa_status.err:
         return HttpResponse('Error generating PDF')
     
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+    
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Patient",
+        action="Export PDF",
+        performed_to=(
+            f"Filters - Category: {request.GET.get('category', 'All')}, "
+            f"Gender: {request.GET.get('gender', 'All')}, "
+            f"Street: {request.GET.get('street', 'All')}, "
+            f"Age-group: {request.GET.get('age', 'All')}"
+        ),
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     return response
 
 
@@ -394,6 +463,19 @@ def medicine_export_xlsx(request):
 
     wb.save(output)
     output.seek(0)
+
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Medicine",
+        action="Export XLSX",
+        performed_to="Medicines Report: All medicines",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     response = HttpResponse(
         output,
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -424,4 +506,17 @@ def medicine_export_pdf(request):
     pisa_status = pisa.CreatePDF(html, dest=response)
     if pisa_status.err:
         return HttpResponse("Error generating PDF")
+    
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Medicine",
+        action="Export PDF",
+        performed_to="Medicines Report: All medicines",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     return response

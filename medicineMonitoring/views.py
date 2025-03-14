@@ -290,8 +290,8 @@ def medicine_stock_delete_all_expired(request, medicine_pk):
         datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
         timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
         module="Medicine Record",
-        action="Delete All Expired Medicine Stock",
-        performed_to=f"All Expired stocks",
+        action="Delete Expired Medicine Stock",
+        performed_to=f"Expired stocks for Medicine ID - {medicine.id}: {medicine.medicine_name}",
         performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
     )
 
