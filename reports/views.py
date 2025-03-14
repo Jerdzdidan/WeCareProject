@@ -15,7 +15,7 @@ from django.db.models import Sum, Q
 from datetime import date
 from medicineMonitoring.models import Medicine
 from logs.models import Logs
-import datetime
+from datetime import datetime
 
 # Create your views here.
 def residentInfoReport(request):
