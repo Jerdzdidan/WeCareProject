@@ -30,6 +30,7 @@ urlpatterns = [
     path('checkup-calendar/', include('checkupcalendar.urls')),
     path('reports/', include('reports.urls')),
     path('users/', include('users.urls')),
+    path('logs/', include('logs.urls')),
     path('login/', user_views.custom_login, name='login'),
     path('logout/', user_views.custom_logout, name='logout'),
 ]

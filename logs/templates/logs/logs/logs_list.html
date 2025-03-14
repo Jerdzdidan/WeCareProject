@@ -1,0 +1,109 @@
+{% extends "home/layout.html" %}
+
+{% block style %}
+<style>
+  .record-table th, .record-table td {
+    vertical-align: middle;
+  }
+  .input-group-text {
+    background-color: #f8f9fa;
+  }
+  .flatpickr-input {
+    background-color: #fff;
+  }
+</style>
+{% endblock style %}
+
+{% block body %}
+<h3 class="mb-3">Logs - <span class="text-primary">List</span></h3>
+<article class="content-section border rounded p-0 shadow">
+  <div class="container">
+    <!-- Date Filter Form -->
+    <div class="row mt-2">
+      <div class="col-auto">
+        <small class="text-muted">Pick a date range to filter logs:</small>
+        <form method="get" id="dateFilterForm" class="my-auto">
+          <div class="input-group mt-2" style="font-size: calc(0.8rem + 0.2vw);">
+            <input type="text" id="filter_start_date" name="start_date" class="form-control flatpickr-range" placeholder="From Date" value="{{ request.GET.start_date }}" style="font-size: calc(0.8rem + 0.2vw);">
+            <span class="input-group-text">
+              <i class="ri-calendar-line"></i>
+            </span>
+            <i class="ri-arrow-right-long-fill my-auto mx-2"></i>
+            <input type="text" id="filter_end_date" name="end_date" class="form-control flatpickr-range" placeholder="To Date" value="{{ request.GET.end_date }}" style="font-size: calc(0.8rem + 0.2vw);">
+            <span class="input-group-text">
+              <i class="ri-calendar-line"></i>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Entries and Search Bar -->
+    <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+      <div>
+        <select id="Entries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        <span class="ms-2">Entries per page</span>
+      </div>
+      <div>
+        <input type="text" id="SearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
+      </div>
+    </div>
+  </div>
+
+  <!-- Logs Table -->
+  <div class="table-responsive mt-2">
+    <table class="table table-light table-striped text-center m-0 px-0 projectTables" id="dataTable">
+      <thead class="table-dark">
+        <tr>
+          <th class="text-start">Log Date</th>
+          <th class="text-start">Log Time</th>
+          <th class="text-start">Module</th>
+          <th class="text-start">Action</th>
+          <th class="text-start">Performed To</th>
+          <th class="text-start">Performed By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td class="align-middle text-start">{{ log.datelog|date:"M. d, Y" }}</td>
+          <td class="align-middle text-start">
+            {% if log.timelog %}
+              {{ log.timelog|time:"H:i" }}
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+          <td class="align-middle text-start">{{ log.module }}</td>
+          <td class="align-middle text-start">{{ log.action }}</td>
+          <td class="align-middle text-start">{{ log.performed_to }}</td>
+          <td class="align-middle text-start">{{ log.performed_by }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div id="customPagination"></div>
+  </div>
+</article>
+{% endblock body %}
+
+{% block script %}
+<script>
+$(document).ready(function(){
+    flatpickr(".flatpickr-range", {
+        dateFormat: "M j, Y",
+        allowInput: true,
+        autoClose: true,
+        onChange: function(selectedDates, dateStr, instance) {
+            if($('#filter_start_date').val() && $('#filter_end_date').val()){
+              $("#dateFilterForm").submit();
+            }
+        }
+    });
+});
+</script>
+{% endblock script %}

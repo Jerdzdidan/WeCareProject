@@ -5,6 +5,7 @@ from datetime import datetime, date
 from scheduledcheckup.models import ScheduledCheckup
 from patientInfo.models import Patient
 from users.decorators import role_required
+from logs.models import Logs
 
 # Create your views here.
 
@@ -127,6 +128,19 @@ def scheduled_checkup_update(request, checkup_id):
         checkup.notes = notes
         checkup.save()
 
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Checkup",
+            action="Update Checkup",
+            performed_to=f"Checkup ID - {checkup.id} for {checkup.patient.patientID}: {checkup.patient.resident.first_name} {checkup.patient.resident.last_name}",
+            performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+
         messages.success(request, "Scheduled checkup updated successfully!")
         return redirect("scheduled-checkup-list")
     
@@ -139,6 +153,19 @@ def scheduled_checkup_update(request, checkup_id):
 @role_required(['BHW'], 'Delete checkup on the Checkup')
 def scheduled_checkup_delete(request, checkup_id):
     checkup = get_object_or_404(ScheduledCheckup, id=checkup_id)
+
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Checkup",
+        action="Delete Checkup",
+        performed_to=f"Checkup ID - {checkup.id} for {checkup.patient.patientID}: {checkup.patient.resident.first_name} {checkup.patient.resident.last_name}",
+        performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
 
     checkup.delete()
     messages.success(request, "Scheduled checkup deleted successfully!")

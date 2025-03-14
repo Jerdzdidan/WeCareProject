@@ -18,6 +18,7 @@ from medicineMonitoring.views import update_medicine_date_last_stocked, update_m
 from residentInfo.models import Resident
 from scheduledcheckup.models import ScheduledCheckup
 from users.decorators import role_required
+from logs.models import Logs
 
 # === PATIENT RECORD FUNCTIONALITY ===
 @login_required
@@ -226,7 +227,6 @@ def patient_update(request, pk):
                     weight=weight or None,
                 )
         
-        # Delete all previous present illnesses before adding new ones.
         patient.present_illnesses.all().delete()
         index = 0
         while True:
@@ -236,7 +236,6 @@ def patient_update(request, pk):
                 start_date_str = request.POST.get(f"present_illness[{index}][start_date]", "").strip()
                 treatment = request.POST.get(f"present_illness[{index}][treatment]", "").strip()
                 
-                # If all illness-related fields are empty, ignore this row.
                 if not (illness_name or start_date_str or treatment):
                     index += 1
                     continue
@@ -246,7 +245,6 @@ def patient_update(request, pk):
                 except ValueError:
                     start_date = None
                
-                # Only create a record if both illness name and start date are provided.
                 if illness_name and start_date:
                     patient.present_illnesses.create(
                         illness_name=illness_name,
@@ -342,6 +340,19 @@ def patient_update(request, pk):
                     others=med_history_others
                 )
         
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Patient Information",
+            action="Update Patient",
+            performed_to=f"Patient ID - {patient.patientID}: {patient.resident.first_name} {patient.resident.last_name}",
+            performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+
         messages.success(request, "Patient record updated successfully!")
         return redirect('patient-list')
     
@@ -363,6 +374,19 @@ def patient_delete_confirm(request, pk):
         messages.warning(request, "No patient records found!")
         return redirect('patient-list')
     
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Patient Information",
+        action="Delete Patient",
+        performed_to=f"Patient ID - {patient.patientID}: {patient.resident.last_name}, {patient.resident.first_name}",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     patient.delete()
     messages.success(
         request,
@@ -446,6 +470,20 @@ def medical_record_update(request, record_id):
         record.description = description
         record.last_visited = last_visited
         record.save()
+
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Patient Information",
+            action="Update Medical Record",
+            performed_to=f"Medical Record ID - {record.id} for Patient ID - {record.patient.patientID}: {record.patient.resident.last_name}, {record.patient.resident.first_name}",
+            performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+
         messages.success(request, "Medical record updated successfully!")
         return redirect('patient-detail', pk=record.patient.patientID)
     return render(request, 'patientInfo/medical_record_update.html', {'record': record})
@@ -458,6 +496,19 @@ def medical_record_delete(request, patient_pk, record_id):
     except Patient.DoesNotExist:
         messages.warning(request, "No medical records found!")
         return redirect('patient-detail', pk=patient_pk)
+
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Patient Information",
+        action="Delete Medical Record",
+        performed_to=f"Medical Record ID - {record.id} for Patient ID - {record.patient.patientID}: {record.patient.resident.last_name}, {record.patient.resident.first_name}",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
 
     record.delete()
     messages.success(request, f"Medical record deleted for {record.patient.patientID}: {record.patient.resident.last_name}, {record.patient.resident.first_name} successfully!")
@@ -662,6 +713,19 @@ def medicine_tracking_update(request, tracking_id):
         update_medicine_totals(medicine)
         update_medicine_date_last_stocked(medicine)
 
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Patient Information",
+            action="Update Medicine Tracking",
+            performed_to=f"Medicine Tracking ID - {tracking.id} for {patient.patientID}: {patient.resident.last_name}, {patient.resident.first_name} (Medicine: {medicine.name})",
+            performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+
         messages.success(request, "Medicine tracking record updated successfully!")
         return redirect("patient-detail", pk=patient.patientID)
     
@@ -677,6 +741,19 @@ def medicine_tracking_update(request, tracking_id):
 @role_required(['DOCTOR'], 'Delete patient-medicine tracking on the Patient Information')
 def medicine_tracking_delete(request, tracking_id):
     tracking = get_object_or_404(MedicineTracking, id=tracking_id)
+
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="MedicineTracking",
+        action="Delete Medicine Tracking",
+        performed_to=f"Medicine Tracking ID - {tracking.id} for {tracking.patient.patientID}: {tracking.patient.resident.last_name}, {tracking.patient.resident.first_name} (Medicine: {tracking.medicine.name})",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
 
     tracking.delete()
     messages.success(request, "Medicine tracking record deleted successfully!")

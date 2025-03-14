@@ -7,6 +7,8 @@ from .forms import AccountForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
+import datetime
+from logs.models import Logs
 
 @login_required
 @role_required(['ADMIN'], 'User Management')
@@ -126,6 +128,19 @@ def accountUpdate(request, pk):
                 profile.status = status
                 profile.save()
 
+                now = datetime.now()
+                formatted_date = now.strftime("%b. %d, %Y")
+                formatted_time = now.strftime("%I:%M%p")
+
+                Logs.objects.create(
+                    datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+                    timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+                    module="UserManagement",
+                    action="Update User",
+                    performed_to=f"Account ID {user.id} - {user.first_name} {user.last_name}",
+                    performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+                )
+
                 messages.success(request, "Account updated successfully!")
                 return redirect('account-list')
             except Exception as e:
@@ -148,8 +163,25 @@ def accountDeleteConfirm(request, pk):
     
     try:
         username = account.user.username
+        deleted_username = account.user.username
+        deleted_user_id = account.user.id
+        deleted_user_fullname = f"{account.user.first_name} {account.user.last_name}"
+
         account.user.delete()
         account.delete()
+
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="UserManagement",
+            action="Delete User",
+            performed_to=f"Account ID {deleted_user_id} - {deleted_user_fullname}",
+            performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
         
         messages.success(request, f"Account '{username}' deleted successfully!")
     except Exception as e:

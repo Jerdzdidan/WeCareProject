@@ -124,6 +124,14 @@
             </li>
           </a>
         </ul>
+
+        <ul class="list-group my-1">
+          <a href="{% url "logs-list" %}" class="nav-link {% if '/logs/' in request.path %}active{% endif %} rounded">
+            <li class="list-group-item d-flex align-items-center menu-item">
+              <i class="ri-account-box-2-fill me-1 menu-icons"></i>System Logs
+            </li>
+          </a>
+        </ul>
         {% endif %}
       </div>
     </div>

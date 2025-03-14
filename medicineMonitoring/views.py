@@ -8,6 +8,7 @@ from patientInfo.models import MedicineTracking
 import re
 from django.db.models import Sum
 from users.decorators import role_required
+from logs.models import Logs
 
 # Helper function to update total value and total quantity
 def update_medicine_totals(medicine):
@@ -123,6 +124,19 @@ def medicine_update(request, pk):
                     unit = match.group(2)
                     tracking.total_dosage = f"{tracking.quantity_used * base_value} {unit}".strip()
             tracking.save(update_fields=["total_price", "total_dosage"])
+
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Medicine Record",
+            action="Update Medicine",
+            performed_to=f"Medicine ID - {medicine.id}: {medicine.medicine_name}",
+            performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
         
         messages.success(request, "Medicine updated successfully, and tracking records have been updated!")
         return redirect("medicine-list")
@@ -136,11 +150,23 @@ def medicine_delete(request, pk):
     except Medicine.DoesNotExist:
         messages.warning(request, "No medicine records found!")
         return redirect('medicine-list')
-    
+
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Medicine Record",
+        action="Delete Medicine",
+        performed_to=f"Medicine ID - {medicine.id}: {medicine.medicine_name}",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     medicine.delete()
     messages.success(request, "Medicine deleted successfully!")
     return redirect("medicine-list")
-
 
 
 # === MEDICINE STOCK CRUD OPERATIONS ===
@@ -202,6 +228,20 @@ def medicine_stock_update(request, stock_pk):
         stock.save()
         update_medicine_totals(stock.medicine)
         update_medicine_date_last_stocked(stock.medicine)
+
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Medicine Record",
+            action="Update Medicine Stock",
+            performed_to=f"Medicine Stock for Medicine ID - {stock.medicine.id}: {stock.medicine.medicine_name}",
+            performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+
         messages.success(request, "Stock updated successfully!")
         return redirect("medicine-detail", pk=stock.medicine.pk)
     return render(request, "medicineMonitoring/medicine_stock_update.html", {"stock": stock})
@@ -216,6 +256,19 @@ def medicine_stock_delete(request, medicine_pk, stock_pk):
         messages.warning(request, "No stock records found!")
         return redirect("medicine-detail", pk=medicine_pk)
     
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Medicine",
+        action="Delete Medicine Stock",
+        performed_to=f"Medicine Stock for Medicine ID - {stock.medicine.id}: {stock.medicine.medicine_name}",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     stock.delete()
     update_medicine_totals(stock.medicine)
     update_medicine_date_last_stocked(stock.medicine)
@@ -228,6 +281,19 @@ def medicine_stock_delete(request, medicine_pk, stock_pk):
 def medicine_stock_delete_all_expired(request, medicine_pk):
     medicine = get_object_or_404(Medicine, pk=medicine_pk)
     expired_stocks = medicine.stocks.filter(expiration_date__lte=date.today())
+
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Medicine Record",
+        action="Delete All Expired Medicine Stock",
+        performed_to=f"All Expired stocks",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
 
     if not expired_stocks.exists():
         messages.warning(request, f"No expired stocks found for {medicine.medicine_name}!")

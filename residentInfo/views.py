@@ -5,6 +5,7 @@ from .models import Family, Resident
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from users.decorators import role_required
+from logs.models import Logs
 
 @login_required
 def family_resident_list(request):
@@ -196,6 +197,19 @@ def family_resident_update(request, pk):
                 )
                 submitted_member_ids.append(new_resident.id)
 
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Residents Information",
+            action="Update Family",
+            performed_to=f"Family ID {family.id} - Head: {head.first_name} {head.last_name}",
+            performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+
         members_qs.exclude(id__in=submitted_member_ids).delete()
 
         messages.success(request, "Family updated successfully!")
@@ -216,6 +230,22 @@ def family_delete_confirm(request, pk):
 
     residents = family.residents.all()
     if request.method == 'POST':
+        head = family.residents.filter(relationship_to_head__iexact='head of the family').first()
+        head_name = f"{head.first_name} {head.last_name}" if head else "Unknown"
+
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Resident Information",
+            action="Delete Family",
+            performed_to=f"Family ID {family.id} - Head: {head_name}",
+            performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+
         family.delete()
         messages.success(request, "Family record deleted successfully!")
         return redirect('resident-list')
@@ -244,7 +274,20 @@ def resident_update(request, pk):
         resident.present_address = request.POST.get('present_address', '').strip()
         resident.contact_number = request.POST.get('contact_number', '').strip()
         resident.save()
-        
+
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Resident Information",
+            action="Update Resident",
+            performed_to=f"Resident ID {resident.id} - {resident.first_name} {resident.last_name}",
+            performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+                
         messages.success(request, "Resident updated successfully!")
         return redirect('resident-list')
     
@@ -259,6 +302,19 @@ def resident_delete_confirm(request, pk):
         messages.warning(request, "No resident records found!")
         return redirect('resident-list')
     
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Resident Information",
+        action="Delete Resident",
+        performed_to=f"Resident ID {resident.id} - {resident.first_name} {resident.last_name}",
+        performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
     resident.delete()
     messages.success(
         request,
