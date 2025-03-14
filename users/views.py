@@ -7,7 +7,7 @@ from .forms import AccountForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
-import datetime
+from datetime import datetime
 from logs.models import Logs
 
 @login_required
