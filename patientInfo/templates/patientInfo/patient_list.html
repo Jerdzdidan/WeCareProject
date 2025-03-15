@@ -30,7 +30,7 @@
             </div>
           </form>
         </div>
-        {% if request.user.userprofile.userrole in "[BHW]" %}
+        {% if request.user.userprofile.userrole in "[ADMIN,BHW]" %}
         <div class="col-auto ms-auto">
           <a href="{% url 'patient-select' %}" class="btn btn-success info border-dark fw-bold d-flex align-items-center" style="font-size: calc(0.8rem + 0.2vw);">
             <i class="ri-add-fill" style="font-size: calc(0.6rem + 0.4vw);"></i>
@@ -71,7 +71,7 @@
             <th class="text-start">Category</th>
             <th class="text-start">Contact Number</th>
             <th class="text-start">Last Visit</th>
-            {% if request.user.userprofile.userrole in "[BHW, DOCTOR]" %}
+            {% if request.user.userprofile.userrole in "[ADMIN,BHW, DOCTOR]" %}
               <th class="text-start">Action</th>
             {% endif %}
           </tr>
@@ -80,7 +80,7 @@
             {% for patient in patients %}
             <tr>
                 <td class="text-start"> 
-                  {% if request.user.userprofile.userrole in '[BRGY-STAFF]' %}
+                  {% if request.user.userprofile.userrole in '[ADMIN, BRGY-STAFF]' %}
                   <a href="{% url 'family-update' patient.resident.family.family_no %}" 
                   class="btn btn-sm btn-outline-success fw-bold px-4">
                     <i class="ri-edit-2-line"></i>{{ patient.resident.family.family_no }}
@@ -110,13 +110,14 @@
                     --
                   {% endif %}
                 </td>
-                {% if request.user.userprofile.userrole in "[BHW, DOCTOR]" %}
+                {% if request.user.userprofile.userrole in "[ADMIN, BHW, DOCTOR]" %}
                 <td>
                     <div class="d-flex">
                      
                         <a href="{% url "patient-update" patient.patientID %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
                           <i class="ri-edit-2-fill"></i>
                         </a>
+                        <button type="button" data-bs-toggle="modal" data-moduleName="Delete patient information" data-bs-target="#myModal" data-deleteData="{{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ patient.PatientID }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
                     
                     </div>
                 </td>

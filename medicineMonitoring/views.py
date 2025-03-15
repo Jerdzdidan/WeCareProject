@@ -15,12 +15,10 @@ def update_medicine_totals(medicine):
     today = date.today()
     valid_stocks = medicine.stocks.filter(expiration_date__gt=today)
     
-    total_value = sum(stock.quantity * medicine.unit_price for stock in valid_stocks)
     total_qty = sum(stock.quantity for stock in valid_stocks)
     
-    medicine.total_value = total_value
     medicine.total_quantity = total_qty
-    medicine.save(update_fields=["total_value", "total_quantity"])
+    medicine.save(update_fields=["total_quantity"])
 
 # Helper function to update the Date of Last Stocked
 def update_medicine_date_last_stocked(medicine):
@@ -42,7 +40,6 @@ def medicine_detail(request, pk):
     patient_medicine_tracking = MedicineTracking.objects.filter(medicine=medicine)
 
     releasedQty = patient_medicine_tracking.aggregate(total=Sum('quantity_used'))['total'] or 0
-    releasedValue = patient_medicine_tracking.aggregate(total=Sum('total_price'))['total'] or 0
 
     today = date.today()
     
@@ -57,7 +54,6 @@ def medicine_detail(request, pk):
 
         'patient_medicine_tracking': patient_medicine_tracking,
         'releasedQty': releasedQty,
-        'releasedValue': releasedValue
     }
     return render(request, 'medicineMonitoring/medicine_detail.html', context)
 
@@ -70,22 +66,15 @@ def medicine_add(request):
         generic_name = request.POST.get("generic_name", "").strip()
         brand_name = request.POST.get("brand_name", "").strip()
         dosage = request.POST.get("dosage", "").strip()  
-        unit_price = request.POST.get("unit_price", "").strip()
         supplier_name = request.POST.get("supplier_name", "").strip()
         notes = request.POST.get("notes", "").strip()
         date_last_stock = date.today()
-
-        try:
-            unit_price = Decimal(unit_price)
-        except (InvalidOperation, ValueError):
-            unit_price = Decimal("0.00")
 
         Medicine.objects.create(
             medicine_name=medicine_name,
             generic_name=generic_name,
             brand_name=brand_name,
             dosage=dosage,  
-            unit_price=unit_price,
             supplier_name=supplier_name,
             date_last_stock = date_last_stock,
             notes=notes,
@@ -102,11 +91,7 @@ def medicine_update(request, pk):
         medicine.medicine_name = request.POST.get("medicine_name", "").strip()
         medicine.generic_name = request.POST.get("generic_name", "").strip()
         medicine.brand_name = request.POST.get("brand_name", "").strip()
-        unit_price = request.POST.get("unit_price", "").strip()
-        try:
-            medicine.unit_price = Decimal(unit_price)
-        except (InvalidOperation, ValueError):
-            medicine.unit_price = Decimal("0.00")
+
         medicine.supplier_name = request.POST.get("supplier_name", "").strip()
         medicine.notes = request.POST.get("notes", "").strip()
         medicine.save()
@@ -116,14 +101,13 @@ def medicine_update(request, pk):
         
         trackings = MedicineTracking.objects.filter(medicine=medicine)
         for tracking in trackings:
-            tracking.total_price = tracking.quantity_used * medicine.unit_price
             if medicine.dosage:
                 match = re.match(r"^([\d\.]+)\s*(.*)$", medicine.dosage.strip())
                 if match:
                     base_value = float(match.group(1))
                     unit = match.group(2)
                     tracking.total_dosage = f"{tracking.quantity_used * base_value} {unit}".strip()
-            tracking.save(update_fields=["total_price", "total_dosage"])
+            tracking.save(update_fields=["total_dosage"])
 
         now = datetime.now()
         formatted_date = now.strftime("%b. %d, %Y")

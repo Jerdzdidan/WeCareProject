@@ -58,10 +58,6 @@
               <dd class="mb-0">{{ medicine.brand_name|default:"-" }}</dd>
             </div>
             <div class="col-4">
-              <dt class="text-secondary small">Unit Price</dt>
-              <dd class="mb-0">₱{{ medicine.unit_price|floatformat:2 }}</dd>
-            </div>
-            <div class="col-4">
               <dt class="text-secondary small">Last Stocked</dt>
               <dd class="mb-0">{{ medicine.date_last_stock|date:"M. d, Y"|default:"-" }}</dd>
             </div>
@@ -76,7 +72,7 @@
       <!-- Inventory Section -->
       <div class="col-md-6">
         <div class="info-box border border-secondary rounded p-3 mb-1">
-          <div class="d-flex align-items-center gap-2 mb-3">
+          <div class="d-flex align-items-center gap-2 mb-2">
             <i class="ri-archive-line text-secondary"></i>
             <h4 class="text-uppercase small text-secondary mb-0">Inventory</h4>
           </div>
@@ -86,16 +82,14 @@
               <dd class="mb-0">{{ medicine.total_quantity|default:"-" }}</dd>
             </div>
             <div class="col-6">
-              <dt class="text-secondary small">Total Value (not expired)</dt>
-              <dd class="mb-0">₱{{ medicine.total_value|default:"-" }}</dd>
-            </div>
-            <div class="col-6 mt-2">
               <dt class="text-secondary small">Expired Quantity</dt>
               <dd class="mb-0">{{ medicine.expired_quantity }}</dd>
             </div>
-            <div class="col-6 mt-2">
-              <dt class="text-secondary small">Expired Value</dt>
-              <dd class="mb-0">₱{{ medicine.expired_value|floatformat:2 }}</dd>
+          </dl>
+          <dl class="row g-2">
+            <div class="col-6">
+              <dt class="text-secondary small">Released Quantity</dt>
+              <dd class="mb-0">{{ releasedQty|default:"-" }}</dd>
             </div>
           </dl>
         </div>
@@ -136,21 +130,17 @@
     <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
                 
     <div class="row">
-      <div class="col-md-3 mb-3">
+      <div class="col-md-4 mb-3">
         <label for="quantity" class="form-label">Quantity: <small class="text-muted">(max: {{ medicine.total_quantity }})</small></label>
         <input type="number" name="quantity" id="quantity" class="form-control" min="1" max="{{ medicine.total_quantity }}" data-unit-price="{{ medicine.unit_price }}" data-base-dosage="{{ medicine.dosage }}" value="{{ tracking.quantity_used }}" required>
       </div>
-      <div class="col-md-3 mb-3">
+      <div class="col-md-4 mb-3">
         <label for="frequency" class="form-label">Frequency:</label>
         <input type="text" name="frequency" id="frequency" class="form-control" placeholder="e.g., Twice a day" value="{{ tracking.frequency }}" required>
       </div>
-      <div class="col-md-3 mb-3">
+      <div class="col-md-4 mb-3">
         <label for="total_dosage" class="form-label">Total Dosage: <small class="text-muted">(Automatically calculated)</small></label>
         <input type="text" id="total_dosage" name="total_dosage" class="form-control unselectable" readonly value="{{ tracking.total_dosage }}">
-      </div>
-      <div class="col-md-3 mb-3">
-        <label for="total_price" class="form-label">Total PRICE: <small class="text-muted">(Automatically calculated)</small></label>
-        <input type="text" id="total_price" name="total_price" class="form-control unselectable" readonly value="₱{{ tracking.total_price|floatformat:2 }}">
       </div>
     </div>
                 

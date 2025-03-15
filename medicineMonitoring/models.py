@@ -7,8 +7,6 @@ class Medicine(models.Model):
     generic_name = models.CharField(max_length=255, blank=True, null=True)
     brand_name = models.CharField(max_length=255, blank=True, null=True)
     dosage = models.CharField(max_length=100, blank=True, null=True) 
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
-    total_value = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
     total_quantity = models.PositiveIntegerField(default=0)
     supplier_name = models.CharField(max_length=255)
     date_last_stock = models.DateField(blank=True)
@@ -23,12 +21,6 @@ class Medicine(models.Model):
         today = date.today()
         expired_stocks = self.stocks.filter(expiration_date__lte=today)
         return sum(stock.quantity for stock in expired_stocks)
-
-    @property
-    def expired_value(self):
-        today = date.today()
-        expired_stocks = self.stocks.filter(expiration_date__lte=today)
-        return sum(stock.quantity * self.unit_price for stock in expired_stocks)
 
     def __str__(self):
         return self.medicine_name
@@ -51,6 +43,3 @@ class MedicineStock(models.Model):
     def __str__(self):
         return f"{self.medicine.medicine_name} ({self.quantity} units, expires {self.expiration_date:%b %d, %Y})"
     
-    @property
-    def total_price(self):
-        return self.quantity * self.medicine.unit_price

@@ -49,8 +49,6 @@
             <th class="text-center">Supplier</th>
             <th class="text-center">Dosage</th>
             <th class="text-center">Total Quantity</th>
-            <th class="text-center">Unit Price</th>
-            <th class="text-center">Total Value</th>
             <th class="text-center">Notes</th>
           </tr>
         </thead>
@@ -63,8 +61,6 @@
             <td class="text-center">{{ medicine.supplier_name|default:"--" }}</td>
             <td class="text-center">{{ medicine.dosage|default:"--" }}</td>
             <td class="text-center">{{ medicine.total_quantity|default:"--" }}</td>
-            <td class="text-center">₱{{ medicine.unit_price|default:"--" }}</td>
-            <td class="text-center">₱{{ medicine.total_value|default:"--" }}</td>
             <td class="text-center">{{ medicine.notes|default:"--" }}</td>
           </tr>
           {% endfor %}

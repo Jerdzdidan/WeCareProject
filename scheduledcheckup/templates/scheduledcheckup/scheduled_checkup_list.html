@@ -36,7 +36,7 @@
           </div>
         </form>
       </div>
-      {% if request.user.userprofile.userrole in "[BHW]" %}
+      {% if request.user.userprofile.userrole in "[ADMIN,BHW]" %}
       <div class="col-auto ms-auto">
         <a href="{% url 'scheduled-checkup-patient-select' %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
           <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Scheduled Checkup
@@ -72,7 +72,7 @@
             <th class="text-start">Patient Name</th>
               <th class="text-start">Contact Number</th>
             <th class="text-start">Notes</th>
-            {% if request.user.userprofile.userrole in "[BHW]" %}
+            {% if request.user.userprofile.userrole in "[ADMIN,BHW]" %}
               <th class="text-center">Action</th>
             {% endif %}
           </tr>
@@ -98,7 +98,7 @@
                 <span class="text-muted">No notes</span>
               {% endif %}
             </td>
-            {% if request.user.userprofile.userrole in "[BHW]" %}
+            {% if request.user.userprofile.userrole in "[ADMIN,BHW]" %}
               <td class="align-middle text-center">
                 <a href="{% url "scheduled-checkup-update" checkup.id %}" class="btn btn-sm btn-outline-success" title="Edit Checkup"><i class="ri-edit-2-fill"></i></a>
                 {% comment %} <a href="{% url "scheduled-checkup-delete" checkup.id %}" class="btn btn-sm btn-outline-danger" title="Delete Checkup"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}

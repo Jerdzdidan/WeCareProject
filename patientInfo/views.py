@@ -19,6 +19,7 @@ from residentInfo.models import Resident
 from scheduledcheckup.models import ScheduledCheckup
 from users.decorators import role_required
 from logs.models import Logs
+from django.db.models import Sum
 
 # === PATIENT RECORD FUNCTIONALITY ===
 @login_required
@@ -534,6 +535,9 @@ def medicine_tracking_select(request, pk):
 def medicine_tracking_create_details(request, pk, medicine_id):
     patient = get_object_or_404(Patient, patientID=pk)
     medicine = get_object_or_404(Medicine, id=medicine_id)
+
+    patient_medicine_tracking = MedicineTracking.objects.filter(medicine=medicine)
+    releasedQty = patient_medicine_tracking.aggregate(total=Sum('quantity_used'))['total'] or 0
     
     if request.method == "POST":
         quantity_str = request.POST.get("quantity", "").strip()
@@ -545,7 +549,6 @@ def medicine_tracking_create_details(request, pk, medicine_id):
         start_date_str = request.POST.get("start_date", "").strip()
         end_date_str = request.POST.get("end_date", "").strip()
         notes = request.POST.get("notes", "").strip()
-        total_priceStr = request.POST.get("total_price", "").strip()
 
         try:
             quantity = int(quantity_str)
@@ -555,11 +558,6 @@ def medicine_tracking_create_details(request, pk, medicine_id):
             messages.error(request, "Please enter a valid quantity.")
             return redirect("medicine-tracking-create-details", pk=patient.patientID, medicine_id=medicine.id)
         
-        try:
-            total_price = float(total_priceStr[1:])
-        except ValueError:
-            messages.error(request, "Error on parsing total price.")
-            return redirect("medicine-tracking-create-details", pk=patient.patientID, medicine_id=medicine.id)
 
         try:
             date_given = datetime.strptime(date_given_str, "%Y-%m-%d").date() if date_given_str else date.today()
@@ -588,7 +586,7 @@ def medicine_tracking_create_details(request, pk, medicine_id):
 
         if not available_stock:
             messages.error(request, "Insufficient stock available for the selected medicine.")
-            return redirect("medicine-tracking-create-details", pk=patient.patientID, medicine_id=medicine.id)
+            return redirect("medicine-tracking-create-details", pk=patient.patientID, medicine_id=medicine.id,)
 
         available_stock.quantity -= quantity
         available_stock.save(update_fields=["quantity"])
@@ -606,7 +604,6 @@ def medicine_tracking_create_details(request, pk, medicine_id):
             start_date=start_date,
             end_date=end_date,
             notes=notes,
-            total_price=total_price,
         )
 
         if follow_up_date:
@@ -625,6 +622,7 @@ def medicine_tracking_create_details(request, pk, medicine_id):
     context = {
         "patient": patient,
         "medicine": medicine,
+        "releasedQty": releasedQty,
     }
     return render(request, "patientInfo/medicinetracking_create_details.html", context)
 
@@ -635,6 +633,9 @@ def medicine_tracking_update(request, tracking_id):
     patient = tracking.patient
     medicine = tracking.medicine
     old_quantity = tracking.quantity_used
+
+    patient_medicine_tracking = MedicineTracking.objects.filter(medicine=medicine)
+    releasedQty = patient_medicine_tracking.aggregate(total=Sum('quantity_used'))['total'] or 0
 
     if request.method == "POST":
         quantity_str = request.POST.get("quantity", "").strip()
@@ -688,8 +689,6 @@ def medicine_tracking_update(request, tracking_id):
             tracking.medicine_stock.quantity += abs(quantity_diff)
             tracking.medicine_stock.save(update_fields=["quantity"])
 
-        new_total_price = medicine.unit_price * new_quantity
-
         new_total_dosage = ""
         if medicine.dosage:
             match = re.match(r"^([\d\.]+)\s*(.*)$", medicine.dosage.strip())
@@ -706,7 +705,6 @@ def medicine_tracking_update(request, tracking_id):
         tracking.start_date = new_start_date
         tracking.end_date = new_end_date
         tracking.notes = notes
-        tracking.total_price = new_total_price
         tracking.total_dosage = new_total_dosage
         tracking.save()
 
@@ -733,6 +731,7 @@ def medicine_tracking_update(request, tracking_id):
         "tracking": tracking,
         "patient": patient,
         "medicine": medicine,
+        "releasedQty": releasedQty,
     }
     return render(request, "patientInfo/medicinetracking_update.html", context)
 

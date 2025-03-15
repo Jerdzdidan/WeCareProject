@@ -53,8 +53,6 @@
             <th>Dosage</th>
             <th>Generic Name</th>
             <th>Brand Name</th>
-            <th>Unit Price</th>
-            <th>Total Value</th>
             <th>Total Quantity</th>
             <th>Supplier</th>
             <th>Date Last Stocked</th>
@@ -69,8 +67,6 @@
             <td class="align-middle">{{ med.dosage }}</td>
             <td class="align-middle">{{ med.generic_name }}</td>
             <td class="align-middle">{{ med.brand_name }}</td>
-            <td class="align-middle">₱{{ med.unit_price|floatformat:2 }}</td>
-            <td class="align-middle">₱{{ med.total_value|floatformat:2 }}</td>
             <td class="align-middle">{{ med.total_quantity }}</td>
             <td class="align-middle">{{ med.supplier_name }}</td>
             <td class="align-middle">{{ med.date_last_stock|date:"M. d, Y" }}</td>
@@ -87,7 +83,7 @@
                   {% comment %} <a href="{% url 'medicine-delete' med.pk %}" class="btn btn-sm btn-outline-danger fw-bold flex-fill" title="Delete">
                     <i class="ri-delete-bin-5-fill"></i>
                   </a> {% endcomment %}
-                  <!-- <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ med.medicine_name }}" data-ID="{{ med.pk }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button> -->
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ med.medicine_name }}" data-ID="{{ med.pk }}" class="btn btn-sm fw-bold flex-fill btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
                 {% endif %}
               </div>  
             </td>

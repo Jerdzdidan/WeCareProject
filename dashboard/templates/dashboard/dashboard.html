@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block body %}
-<h3 class="mb-4">Dashboard</h3>
+<h3 class="mb-2">Dashboard</h3>
 <div class="row">
     <!-- Resident Summary -->
     {% if request.user.userprofile.userrole in "[ADMIN,BRGY-STAFF,BHW,DOCTOR]" %}
@@ -40,7 +40,7 @@
             <!-- Total Residents Card -->
             <div class="row">
                 <div class="col">
-                    <div class="card mb-4 shadow">
+                    <div class="card mb-2 shadow">
                         <div class="card-header card-title bg-secondary-subtle">
                             <i class="fa-solid fa-users me-2"></i>Total Residents
                         </div>
@@ -53,7 +53,7 @@
 
             <!-- Population Overview -->
             <div class="chart-container">
-                <div class="card-header bg-secondary-subtle mb-3">
+                <div class="card-header bg-secondary-subtle mb-1">
                     <h5 class="card-title mb-0"><i class="fa-solid fa-chart-pie me-2"></i>Population Overview</h5>
                 </div>
                 <div class="row chart-row">
@@ -67,9 +67,9 @@
             </div>
 
             <!-- Demographic Details -->
-            <div class="chart-container mt-4">
+            <div class="chart-container mt-2">
                 <div class="card-header bg-secondary-subtle mb-3">
-                    <h5 class="card-title mb-0"><i class="fa-solid fa-venus-mars me-2"></i>Demographic Details</h5>
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-venus-mars me-2"></i>Gender Distribution <small class="text-muted">(Resident information)</small></h5>
                 </div>
                 <div class="row chart-row">
                     <div class="col-md-6">
@@ -93,7 +93,7 @@
             <!-- Total Patients Card -->
             <div class="row">
                 <div class="col">
-                    <div class="card mb-4 shadow">
+                    <div class="card mb-2 shadow">
                         <div class="card-header card-title bg-secondary-subtle">
                             <i class="fa-solid fa-users me-2"></i>Total Patients
                         </div>
@@ -106,7 +106,7 @@
 
             <!-- Patient Distribution -->
             <div class="chart-container">
-                <div class="card-header bg-secondary-subtle mb-3">
+                <div class="card-header bg-secondary-subtle mb-1">
                     <h5 class="card-title mb-0"><i class="fa-solid fa-chart-line me-2"></i>Patient Distribution</h5>
                 </div>
                 <div class="row chart-row">
@@ -120,9 +120,9 @@
             </div>
 
             <!-- Gender Distribution -->
-            <div class="chart-container mt-4">
+            <div class="chart-container mt-2">
                 <div class="card-header bg-secondary-subtle mb-3">
-                    <h5 class="card-title mb-0"><i class="fa-solid fa-venus-mars me-2"></i>Gender Distribution</h5>
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-venus-mars me-2"></i>Gender Distribution <small class="text-muted">(Patient information)</small></h5>
                 </div>
                 <div class="row chart-row">
                     <div class="col-md-6">
@@ -146,10 +146,17 @@
     new Chart(document.getElementById('residentCategoryPie'), {
         type: 'pie',
         data: {
-            labels: ['PWD', 'Solo Parent', 'Senior', 'Pregnant'],
+            labels: ['Adult', 'Children', 'PWD', 'Solo Parent', 'Senior', 'Pregnant'],
             datasets: [{
-                data: [{{ residentCount_pwd }}, {{ residentCount_solo_parent }}, {{ residentCount_senior }}, {{ residentCount_pregnant }}],
-                backgroundColor: ['#2ecc71', '#f1c40f', '#9b59b6', '#e67e22']
+                data: [{{ residentCount_adult }}, {{ residentCount_children }}, {{ residentCount_pwd }}, {{ residentCount_solo_parent }}, {{ residentCount_senior }}, {{ residentCount_pregnant }}],
+                backgroundColor: [
+                '#3498db', // Blue for Adult
+                '#e74c3c', // Red for Children
+                '#2ecc71', // Green for PWD
+                '#f1c40f', // Yellow for Solo Parent
+                '#9b59b6', // Purple for Senior
+                '#e67e22'  // Orange for Pregnant
+                ]
             }]
         },
         options: {
@@ -164,11 +171,18 @@
     new Chart(document.getElementById('residentCategoryBar'), {
         type: 'bar',
         data: {
-            labels: ['PWD', 'Solo Parent', 'Senior', 'Pregnant'],
+            labels: ['Adult', 'Children', 'PWD', 'Solo Parent', 'Senior', 'Pregnant'],
             datasets: [{
                 label: 'Count',
-                data: [{{ residentCount_pwd }}, {{ residentCount_solo_parent }}, {{ residentCount_senior }}, {{ residentCount_pregnant }}],
-                backgroundColor: ['#2ecc71', '#f1c40f', '#9b59b6', '#e67e22']
+                data: [{{ residentCount_adult }}, {{ residentCount_children }}, {{ residentCount_pwd }}, {{ residentCount_solo_parent }}, {{ residentCount_senior }}, {{ residentCount_pregnant }}],
+                backgroundColor: [
+                    '#3498db', // Blue for Adult
+                    '#e74c3c', // Red for Children
+                    '#2ecc71', // Green for PWD
+                    '#f1c40f', // Yellow for Solo Parent
+                    '#9b59b6', // Purple for Senior
+                    '#e67e22'  // Orange for Pregnant
+                ]
             }]
         },
         options: {

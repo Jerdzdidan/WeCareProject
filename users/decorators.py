@@ -7,7 +7,7 @@ def role_required(allowed_roles, module_name):
         def wrapper(request, *args, **kwargs):
             try:
                 profile = request.user.userprofile
-                if profile.userrole in allowed_roles:
+                if profile.userrole == 'ADMIN' or profile.userrole in allowed_roles:
                     return view_func(request, *args, **kwargs)
                 else:
                     messages.warning(
