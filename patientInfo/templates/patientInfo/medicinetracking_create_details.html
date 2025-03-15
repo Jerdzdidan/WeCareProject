@@ -110,8 +110,6 @@
           </div>
         </div>
 
-        <hr class="divider">
-
         <div class="col-12 mt-3">
             <form method="POST" action="{% url 'medicine-tracking-create-details' patient.patientID medicine.id %}">
                 {% csrf_token %}
@@ -189,6 +187,8 @@
 {% endblock body %}
 
 {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function(){
       flatpickr(".flatpickr", {
@@ -226,6 +226,11 @@
         
         $("#total_dosage").val(totalDosage);
         $("#total_price").val(totalPriceStr);
+      });
+      
+      // Automatically convert Frequency input to uppercase
+      $("#frequency").on("input", function(){
+         $(this).val($(this).val().toUpperCase());
       });
       
     });

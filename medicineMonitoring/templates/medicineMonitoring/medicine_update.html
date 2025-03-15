@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block style %}
+<!-- You can add additional custom styles here if needed -->
 {% endblock style %}
 
 {% block body %}
@@ -11,23 +12,31 @@
   <form method="post">
     {% csrf_token %}
     <div class="row">
-      <div class="col-4 mb-3">
+      <div class="col-6 mb-3">
         <label for="medicine_name" class="form-label fw-semibold">Medicine Name:</label>
-        <input type="text" class="form-control border-secondary-subtle shadow" id="medicine_name" name="medicine_name" value="{{ medicine.medicine_name }}" required>
+        <input type="text" class="form-control border-secondary-subtle shadow" id="medicine_name" name="medicine_name" value="{{ medicine.medicine_name }}" required
+               pattern="^[A-Za-z0-9\s\-,\.]+$"
+               title="Only letters, numbers, spaces, hyphens, commas, and periods are allowed.">
       </div>
-      <div class="col-4 mb-3">
+      <div class="col-6 mb-3">
         <label for="dosage" class="form-label fw-semibold">Dosage:</label>
-        <input type="text" class="form-control border-secondary-subtle shadow" id="dosage" name="dosage" value="{{ medicine.dosage }}">
+        <input type="text" class="form-control border-secondary-subtle shadow" id="dosage" name="dosage" value="{{ medicine.dosage }}" required
+               pattern="^[0-9]+[mM][gG]$"
+               title="Enter dosage as a number followed by mg (e.g., 50mg).">
       </div>
     </div>
     <div class="row">
       <div class="col-6 mb-3">
         <label for="brand_name" class="form-label fw-semibold">Brand Name:</label>
-        <input type="text" class="form-control border-secondary-subtle shadow" id="brand_name" name="brand_name" value="{{ medicine.brand_name }}">
+        <input type="text" class="form-control border-secondary-subtle shadow" id="brand_name" name="brand_name" value="{{ medicine.brand_name }}"
+               pattern="^[A-Za-z0-9\s\-,\.]*$"
+               title="Only letters, numbers, spaces, hyphens, commas, and periods are allowed.">
       </div>
       <div class="col-6 mb-3">
         <label for="supplier_name" class="form-label fw-semibold">Supplier Name:</label>
-        <input type="text" class="form-control border-secondary-subtle shadow" id="supplier_name" name="supplier_name" value="{{ medicine.supplier_name }}" required>
+        <input type="text" class="form-control border-secondary-subtle shadow" id="supplier_name" name="supplier_name" value="{{ medicine.supplier_name }}" required
+               pattern="^[A-Za-z0-9\s\-,\.]+$"
+               title="Only letters, numbers, spaces, hyphens, commas, and periods are allowed.">
       </div>
     </div>
     <div class="mb-3">

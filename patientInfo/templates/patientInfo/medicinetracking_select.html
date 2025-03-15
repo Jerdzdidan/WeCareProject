@@ -44,7 +44,6 @@
         <thead class="table-dark">
           <tr>
             <th class="text-center">Medicine Name</th>
-            <th class="text-center">Generic Name</th>
             <th class="text-center">Brand Name</th>
             <th class="text-center">Supplier</th>
             <th class="text-center">Dosage</th>
@@ -56,7 +55,6 @@
           {% for medicine in available_medicines %}
           <tr class="clickable-row" data-href="{% url 'medicine-tracking-create-details' patient.patientID medicine.id %}">
             <td class="text-center">{{ medicine.medicine_name }}</td>
-            <td class="text-center">{{ medicine.generic_name|default:"--" }}</td>
             <td class="text-center">{{ medicine.brand_name|default:"--" }}</td>
             <td class="text-center">{{ medicine.supplier_name|default:"--" }}</td>
             <td class="text-center">{{ medicine.dosage|default:"--" }}</td>
