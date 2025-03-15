@@ -14,27 +14,30 @@
     
     <div class="d-flex justify-content-between align-items-center">
       <h4>Family Head Information</h4>
-      <a href="{% url "family-delete-confirm" family.family_no %}" class="btn btn-danger">Delete Record</a>
+      {% comment %} <a href="{% url 'family-delete-confirm' family.family_no %}" class="btn btn-danger">Delete Record</a> {% endcomment %}
     </div>
     <div class="row">
       <div class="col-md-6 form-group">
         <label for="head_last_name">Last Name:</label>
-        <input type="text" id="head_last_name" name="head_last_name" class="form-control" value="{{ head.last_name }}" required>
+        <input type="text" id="head_last_name" name="head_last_name" class="form-control" value="{{ head.last_name }}" required
+               pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
       </div>
       <div class="col-md-6 form-group">
         <label for="head_first_name">First Name:</label>
-        <input type="text" id="head_first_name" name="head_first_name" class="form-control" value="{{ head.first_name }}" required>
+        <input type="text" id="head_first_name" name="head_first_name" class="form-control" value="{{ head.first_name }}" required
+               pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
       </div>
     </div>
     <div class="row">
       <div class="col-md-6 form-group">
         <label for="head_middle_name">Middle Name:</label>
-        <input type="text" id="head_middle_name" name="head_middle_name" class="form-control" value="{{ head.middle_name }}">
+        <input type="text" id="head_middle_name" name="head_middle_name" class="form-control" value="{{ head.middle_name }}"
+               pattern="[A-Za-z\s]*" title="Only letters and spaces allowed.">
       </div>
       <div class="col-md-6 form-group">
         <label for="head_birthdate">Birthdate:</label>
         <div class="input-group">
-          <input type="text" id="head_birthdate" name="head_birthdate" class="form-control flatpickr" value="{{ head.birthdate|date:"M j, Y" }}" required>
+          <input type="text" id="head_birthdate" name="head_birthdate" class="form-control flatpickr" value="{{ head.birthdate|date:'M j, Y' }}" required>
           <span class="input-group-text"><i class="ri-calendar-line"></i></span>
         </div>
       </div>
@@ -42,7 +45,9 @@
     <div class="row">
       <div class="col-md-4 form-group">
         <label for="head_age">Age:</label>
-        <input type="number" id="head_age" name="head_age" class="form-control" value="{{ head.age }}" required min="0" max="999">
+        <input type="number" id="head_age" name="head_age" class="form-control" value="{{ head.age }}" required min="0" max="999"
+               oninput="if(this.value.length > 3) this.value = this.value.slice(0,3)"
+               onkeydown="if(['e', 'E', '+', '-'].includes(event.key)) event.preventDefault();">
       </div>
       <div class="col-md-4 form-group">
         <label for="head_gender">Gender:</label>
@@ -54,7 +59,8 @@
       </div>
       <div class="col-md-4 form-group">
         <label for="head_civil_status">Civil Status:</label>
-        <input type="text" id="head_civil_status" name="head_civil_status" class="form-control" value="{{ head.civil_status }}" required>
+        <input type="text" id="head_civil_status" name="head_civil_status" class="form-control" value="{{ head.civil_status }}" required
+               pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
       </div>
     </div>
     <div class="row">
@@ -75,7 +81,8 @@
       </div>
       <div class="col-md-4 form-group">
         <label for="head_contact_number">Contact Number:</label>
-        <input type="text" id="head_contact_number" name="head_contact_number" class="form-control" value="{{ head.contact_number }}" required>
+        <input type="text" id="head_contact_number" name="head_contact_number" class="form-control" value="{{ head.contact_number }}" required
+               pattern="[0-9]+" minlength="9" maxlength="11" title="Only numeric values allowed and up to 11 digits.">
       </div>
     </div>
     
@@ -101,48 +108,56 @@
           <tr>
             <td>
               <input type="hidden" name="members[{{ forloop.counter0 }}][member_id]" value="{{ member.id }}">
-              <input type="text" name="members[{{ forloop.counter0 }}][last_name]" class="form-control" value="{{ member.last_name }}">
+              <input type="text" name="members[{{ forloop.counter0 }}][last_name]" class="form-control" value="{{ member.last_name }}"
+                     required pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
             </td>
             <td>
-              <input type="text" name="members[{{ forloop.counter0 }}][first_name]" class="form-control" value="{{ member.first_name }}">
+              <input type="text" name="members[{{ forloop.counter0 }}][first_name]" class="form-control" value="{{ member.first_name }}"
+                     required pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
             </td>
             <td>
-              <input type="text" name="members[{{ forloop.counter0 }}][middle_name]" class="form-control" value="{{ member.middle_name }}">
+              <input type="text" name="members[{{ forloop.counter0 }}][middle_name]" class="form-control" value="{{ member.middle_name }}"
+                     pattern="[A-Za-z\s]*" title="Only letters and spaces allowed.">
             </td>
             <td>
-              <input type="text" name="members[{{ forloop.counter0 }}][relationship]" class="form-control" value="{{ member.relationship_to_head }}">
+              <input type="text" name="members[{{ forloop.counter0 }}][relationship]" class="form-control" value="{{ member.relationship_to_head }}"
+                     required pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
             </td>
             <td>
               <div class="input-group">
-                <input type="text" name="members[{{ forloop.counter0 }}][birthdate]" class="form-control flatpickr" value="{{ member.birthdate|date:"M j, Y" }}">
+                <input type="text" name="members[{{ forloop.counter0 }}][birthdate]" class="form-control flatpickr" value="{{ member.birthdate|date:'M j, Y' }}">
                 <span class="input-group-text"><i class="ri-calendar-line"></i></span>
               </div>
             </td>
             <td>
-              <input type="number" name="members[{{ forloop.counter0 }}][age]" class="form-control" value="{{ member.age }}" min="0" max="999">
+              <input type="number" name="members[{{ forloop.counter0 }}][age]" class="form-control" value="{{ member.age }}" min="0" max="999"
+                     oninput="if(this.value.length > 3) this.value = this.value.slice(0,3)"
+                     onkeydown="if(['e', 'E', '+', '-'].includes(event.key)) event.preventDefault();">
             </td>
             <td>
-              <input type="text" name="members[{{ forloop.counter0 }}][civil_status]" class="form-control" value="{{ member.civil_status }}">
+              <input type="text" name="members[{{ forloop.counter0 }}][civil_status]" class="form-control" value="{{ member.civil_status }}"
+                     required pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
             </td>
             <td>
-              <select name="members[{{ forloop.counter0 }}][gender]" class="form-control">
+              <select name="members[{{ forloop.counter0 }}][gender]" class="form-control" required>
                 <option value="Male" {% if member.gender == "Male" %}selected{% endif %}>Male</option>
                 <option value="Female" {% if member.gender == "Female" %}selected{% endif %}>Female</option>
                 <option value="Other" {% if member.gender == "Other" %}selected{% endif %}>Other</option>
               </select>
             </td>
             <td>
-              <select name="members[{{ forloop.counter0 }}][category]" class="form-control">
+              <select name="members[{{ forloop.counter0 }}][category]" class="form-control" required>
                 <option value="Adult" {% if member.category == "Adult" %}selected{% endif %}>Adult</option>
                 <option value="Senior" {% if member.category == "Senior" %}selected{% endif %}>Senior</option>
                 <option value="Children" {% if member.category == "Children" %}selected{% endif %}>Children (17 and below)</option>
-                <option value="PWD" {% if resident.category == "PWD" %}selected{% endif %}>PWD</option>
                 <option value="Solo Parent" {% if member.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
+                <option value="PWD" {% if member.category == "PWD" %}selected{% endif %}>PWD</option>
                 <option value="Pregnant" {% if member.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
               </select>
             </td>
             <td>
-              <input type="text" name="members[{{ forloop.counter0 }}][contact_number]" class="form-control" value="{{ member.contact_number }}">
+              <input type="text" name="members[{{ forloop.counter0 }}][contact_number]" class="form-control" value="{{ member.contact_number }}" 
+                     required pattern="[0-9]+" minlength="9" maxlength="11" title="Only numeric values allowed and up to 11 digits.">
             </td>
           </tr>
           {% empty %}
@@ -180,28 +195,45 @@ document.addEventListener('DOMContentLoaded', function(){
       <tr>
         <td>
           <input type="hidden" name="members[${rowCount}][member_id]" value="">
-          <input type="text" name="members[${rowCount}][last_name]" class="form-control">
+          <input type="text" name="members[${rowCount}][last_name]" class="form-control" required 
+                 pattern="[A-Za-z\\s]+" title="Only letters and spaces allowed.">
         </td>
-        <td><input type="text" name="members[${rowCount}][first_name]" class="form-control"></td>
-        <td><input type="text" name="members[${rowCount}][middle_name]" class="form-control"></td>
-        <td><input type="text" name="members[${rowCount}][relationship]" class="form-control"></td>
+        <td>
+          <input type="text" name="members[${rowCount}][first_name]" class="form-control" required 
+                 pattern="[A-Za-z\\s]+" title="Only letters and spaces allowed.">
+        </td>
+        <td>
+          <input type="text" name="members[${rowCount}][middle_name]" class="form-control" 
+                 pattern="[A-Za-z\\s]*" title="Only letters and spaces allowed.">
+        </td>
+        <td>
+          <input type="text" name="members[${rowCount}][relationship]" class="form-control" required 
+                 pattern="[A-Za-z\\s]+" title="Only letters and spaces allowed.">
+        </td>
         <td>
           <div class="input-group">
-            <input type="text" name="members[${rowCount}][birthdate]" class="form-control flatpickr">
+            <input type="text" name="members[${rowCount}][birthdate]" class="form-control flatpickr" required>
             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
           </div>
         </td>
-        <td><input type="number" name="members[${rowCount}][age]" class="form-control" min="0" max="999"></td>
-        <td><input type="text" name="members[${rowCount}][civil_status]" class="form-control"></td>
         <td>
-          <select name="members[${rowCount}][gender]" class="form-control">
+          <input type="number" name="members[${rowCount}][age]" class="form-control" min="0" max="999" 
+                 oninput="if(this.value.length > 3) this.value = this.value.slice(0,3)"
+                 onkeydown="if(['e', 'E', '+', '-'].includes(event.key)) event.preventDefault();">
+        </td>
+        <td>
+          <input type="text" name="members[${rowCount}][civil_status]" class="form-control" required 
+                 pattern="[A-Za-z\\s]+" title="Only letters and spaces allowed.">
+        </td>
+        <td>
+          <select name="members[${rowCount}][gender]" class="form-control" required>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
         </td>
         <td>
-          <select name="members[${rowCount}][category]" class="form-control">
+          <select name="members[${rowCount}][category]" class="form-control" required>
             <option value="Adult">Adult</option>
             <option value="Senior">Senior</option>
             <option value="Children">Children (17 and below)</option>
@@ -210,7 +242,10 @@ document.addEventListener('DOMContentLoaded', function(){
             <option value="Pregnant">Pregnant</option>
           </select>
         </td>
-        <td><input type="text" name="members[${rowCount}][contact_number]" class="form-control"></td>
+        <td>
+          <input type="text" name="members[${rowCount}][contact_number]" class="form-control" required 
+                 pattern="[0-9]+" minlength="9" maxlength="11" title="Only numeric values allowed and up to 11 digits.">
+        </td>
       </tr>
     `;
     $('#familyMembersTable tbody').append(newRow);

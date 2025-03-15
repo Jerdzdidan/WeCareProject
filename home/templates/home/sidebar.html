@@ -71,7 +71,7 @@
             {% endif %}
             </div>
         </ul>
-        {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
+        {% if request.user.userprofile.userrole in "[ADMIN]" %}
         <ul class="list-group my-1">
           <a href="{% url "medicine-list" %}" class="nav-link rounded {% if '/medicines/' in request.path %}active{% endif %}">
             <li class="list-group-item d-flex align-items-center menu-item">

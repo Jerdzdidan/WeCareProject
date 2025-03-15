@@ -27,14 +27,14 @@ def update_medicine_date_last_stocked(medicine):
 
 # === Medicine List ===
 @login_required
-@role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine Record')
+@role_required(['ADMIN'], 'Medicine Record')
 def medicine_list(request):
     medicines = Medicine.objects.all().order_by("medicine_name")
     return render(request, "medicineMonitoring/medicine_list.html", {"medicines": medicines})
 
 # === Medicine Detail (Stock) ===
 @login_required
-@role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine details on the Medicine Record')
+@role_required(['ADMIN'], 'Medicine details on the Medicine Record')
 def medicine_detail(request, pk):
     medicine = get_object_or_404(Medicine, pk=pk)
     patient_medicine_tracking = MedicineTracking.objects.filter(medicine=medicine)

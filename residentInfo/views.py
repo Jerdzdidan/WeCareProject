@@ -206,8 +206,8 @@ def family_resident_update(request, pk):
             timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
             module="Residents Information",
             action="Update Family",
-            performed_to=f"Family ID {family.id} - Head: {head.first_name} {head.last_name}",
-            performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+            performed_to=f"Family ID {family.family_no} - Head: {head.first_name} {head.last_name}",
+            performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
         )
 
         members_qs.exclude(id__in=submitted_member_ids).delete()
@@ -242,7 +242,7 @@ def family_delete_confirm(request, pk):
             timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
             module="Resident Information",
             action="Delete Family",
-            performed_to=f"Family ID {family.id} - Head: {head_name}",
+            performed_to=f"Family ID {family.no} - Head: {head_name}",
             performed_by= f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
         )
 

@@ -14,22 +14,24 @@
     <div class="row">
       <div class="col-md-6 form-group">
         <label for="head_last_name">Last Name:</label>
-        <input type="text" id="head_last_name" name="head_last_name" class="form-control" required>
+        <input type="text" id="head_last_name" name="head_last_name" class="form-control" required 
+               pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
       </div>
       <div class="col-md-6 form-group">
         <label for="head_first_name">First Name:</label>
-        <input type="text" id="head_first_name" name="head_first_name" class="form-control" required>
+        <input type="text" id="head_first_name" name="head_first_name" class="form-control" required 
+               pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
       </div>
     </div>
     <div class="row">
       <div class="col-md-6 form-group">
         <label for="head_middle_name">Middle Name:</label>
-        <input type="text" id="head_middle_name" name="head_middle_name" class="form-control">
+        <input type="text" id="head_middle_name" name="head_middle_name" class="form-control" 
+               pattern="[A-Za-z\s]*" title="Only letters and spaces allowed.">
       </div>
       <div class="col-md-6 form-group">
         <label for="head_birthdate">Birthdate:</label>
         <div class="input-group">
-          <!-- Use type="text" and assign class "flatpickr" for Flatpickr -->
           <input type="text" id="head_birthdate" name="head_birthdate" class="form-control flatpickr" required>
           <span class="input-group-text"><i class="ri-calendar-line"></i></span>
         </div>
@@ -38,7 +40,8 @@
     <div class="row">
       <div class="col-md-4 form-group">
         <label for="head_age">Age:</label>
-        <input type="number" id="head_age" name="head_age" class="form-control" required min="0" max="999">
+        <input type="number" id="head_age" name="head_age" class="form-control" required min="0" max="999" 
+               oninput="if(this.value.length > 3) this.value = this.value.slice(0,3)">
       </div>
       <div class="col-md-4 form-group">
         <label for="head_gender">Gender:</label>
@@ -49,7 +52,8 @@
       </div>
       <div class="col-md-4 form-group">
         <label for="head_civil_status">Civil Status:</label>
-        <input type="text" id="head_civil_status" name="head_civil_status" class="form-control" required>
+        <input type="text" id="head_civil_status" name="head_civil_status" class="form-control" required 
+               pattern="[A-Za-z\s]+" title="Only letters and spaces allowed.">
       </div>
     </div>
     <div class="row">
@@ -70,7 +74,8 @@
       </div>
       <div class="col-md-4 form-group">
         <label for="head_contact_number">Contact Number:</label>
-        <input type="text" id="head_contact_number" name="head_contact_number" class="form-control" required>
+        <input type="text" id="head_contact_number" name="head_contact_number" class="form-control" required 
+               pattern="[0-9]+" minlength="9" maxlength="11" title="Only numbers allowed. And up to 11 digits only">
       </div>
     </div>
     
@@ -93,27 +98,33 @@
           </thead>
           <tbody>
             <tr>
-              <td><input type="text" name="members[0][last_name]" class="form-control"></td>
-              <td><input type="text" name="members[0][first_name]" class="form-control"></td>
-              <td><input type="text" name="members[0][middle_name]" class="form-control"></td>
-              <td><input type="text" name="members[0][relationship]" class="form-control"></td>
+              <td><input type="text" name="members[0][last_name]" class="form-control" 
+                         pattern="[A-Za-z\s]+" title="Only letters and spaces allowed."></td>
+              <td><input type="text" name="members[0][first_name]" class="form-control" 
+                         pattern="[A-Za-z\s]+" title="Only letters and spaces allowed."></td>
+              <td><input type="text" name="members[0][middle_name]" class="form-control" 
+                         pattern="[A-Za-z\s]*" title="Only letters and spaces allowed."></td>
+              <td><input type="text" name="members[0][relationship]" class="form-control" 
+                         pattern="[A-Za-z\s]+" title="Only letters and spaces allowed."></td>
               <td>
                 <div class="input-group">
-                  <input type="text" name="members[0][birthdate]" class="form-control flatpickr">
+                  <input type="text" name="members[0][birthdate]" class="form-control flatpickr" >
                   <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                 </div>
               </td>
-              <td><input type="number" name="members[0][age]" class="form-control" min="0" max="999"></td>
-              <td><input type="text" name="members[0][civil_status]" class="form-control"></td>
+              <td><input type="number" name="members[0][age]" class="form-control" min="0" max="999" 
+                         oninput="if(this.value.length > 3) this.value = this.value.slice(0,3)"></td>
+              <td><input type="text" name="members[0][civil_status]" class="form-control"
+                         pattern="[A-Za-z\s]+" title="Only letters and spaces allowed."></td>
               <td>
-                <select name="members[0][gender]" class="form-control">
+                <select name="members[0][gender]" class="form-control" required>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </select>
               </td>
               <td>
-                <select name="members[0][category]" class="form-control">
+                <select name="members[0][category]" class="form-control"d>
                   <option value="Adult">Adult</option>
                   <option value="Senior">Senior</option>
                   <option value="Children">Children (17 and below)</option>
@@ -122,7 +133,8 @@
                   <option value="Pregnant">Pregnant</option>
                 </select>
               </td>
-              <td><input type="text" name="members[0][contact_number]" class="form-control"></td>
+              <td><input type="text" name="members[0][contact_number]" class="form-control"
+                         pattern="[0-9]+" minlength="9" maxlength="11" title="Only numbers allowed. And up to 11 digits only"></td>
             </tr>
           </tbody>          
       </table>
@@ -152,27 +164,33 @@ document.addEventListener('DOMContentLoaded', function(){
     var rowCount = $('#familyMembersTable tbody tr').length;
     var newRow = `
       <tr>
-        <td><input type="text" name="members[${rowCount}][last_name]" class="form-control"></td>
-        <td><input type="text" name="members[${rowCount}][first_name]" class="form-control"></td>
-        <td><input type="text" name="members[${rowCount}][middle_name]" class="form-control"></td>
-        <td><input type="text" name="members[${rowCount}][relationship]" class="form-control"></td>
+        <td><input type="text" name="members[${rowCount}][last_name]" class="form-control" required 
+                   pattern="[A-Za-z\\s]+" title="Only letters and spaces allowed."></td>
+        <td><input type="text" name="members[${rowCount}][first_name]" class="form-control" required 
+                   pattern="[A-Za-z\\s]+" title="Only letters and spaces allowed."></td>
+        <td><input type="text" name="members[${rowCount}][middle_name]" class="form-control" 
+                   pattern="[A-Za-z\\s]*" title="Only letters and spaces allowed."></td>
+        <td><input type="text" name="members[${rowCount}][relationship]" class="form-control" required 
+                   pattern="[A-Za-z\\s]+" title="Only letters and spaces allowed."></td>
         <td>
           <div class="input-group">
-            <input type="text" name="members[${rowCount}][birthdate]" class="form-control flatpickr">
+            <input type="text" name="members[${rowCount}][birthdate]" class="form-control flatpickr" required>
             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
           </div>
         </td>
-        <td><input type="number" name="members[${rowCount}][age]" class="form-control" min="0" max="999"></td>
-        <td><input type="text" name="members[${rowCount}][civil_status]" class="form-control"></td>
+        <td><input type="number" name="members[${rowCount}][age]" class="form-control" required min="0" max="999" 
+                   oninput="if(this.value.length > 3) this.value = this.value.slice(0,3)"></td>
+        <td><input type="text" name="members[${rowCount}][civil_status]" class="form-control" required 
+                   pattern="[A-Za-z\\s]+" title="Only letters and spaces allowed."></td>
         <td>
-          <select name="members[${rowCount}][gender]" class="form-control">
+          <select name="members[${rowCount}][gender]" class="form-control" required>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
         </td>
         <td>
-          <select name="members[${rowCount}][category]" class="form-control">
+          <select name="members[${rowCount}][category]" class="form-control" required>
             <option value="Adult">Adult</option>
             <option value="Senior">Senior</option>
             <option value="Children">Children (17 and below)</option>
@@ -181,7 +199,8 @@ document.addEventListener('DOMContentLoaded', function(){
             <option value="Pregnant">Pregnant</option>
           </select>
         </td>
-        <td><input type="text" name="members[${rowCount}][contact_number]" class="form-control"></td>
+        <td><input type="text" name="members[${rowCount}][contact_number]" class="form-control" required 
+                   pattern="[0-9]+" minlength="9" maxlength="11" title="Only numbers allowed. And up to 11 digits only"></td>
       </tr>
     `;
     $('#familyMembersTable tbody').append(newRow);
