@@ -117,7 +117,9 @@
                         <a href="{% url "patient-update" patient.patientID %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1" title="Edit">
                           <i class="ri-edit-2-fill"></i>
                         </a>
-                        <button type="button" data-bs-toggle="modal" data-moduleName="Delete patient information" data-bs-target="#myModal" data-deleteData="{{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ patient.patientID }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
+                        {% if request.user.userprofile.userrole in "[ADMIN]" %}
+                          <button type="button" data-bs-toggle="modal" data-moduleName="Delete patient information" data-bs-target="#myModal" data-deleteData="{{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ patient.patientID }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
+                        {% endif %}
                     
                     </div>
                 </td>
