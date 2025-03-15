@@ -50,10 +50,6 @@
           </div>
           <dl class="row g-2">
             <div class="col-4">
-              <dt class="text-secondary small">Generic Name</dt>
-              <dd class="mb-0">{{ medicine.generic_name|default:"-" }}</dd>
-            </div>
-            <div class="col-4">
               <dt class="text-secondary small">Brand Name</dt>
               <dd class="mb-0">{{ medicine.brand_name|default:"-" }}</dd>
             </div>
@@ -72,22 +68,20 @@
       <!-- Inventory Section -->
       <div class="col-md-6">
         <div class="info-box border border-secondary rounded p-3">
-          <div class="d-flex align-items-center gap-2 mb-2">
+          <div class="d-flex align-items-center gap-2 mb-3">
             <i class="ri-archive-line text-secondary"></i>
             <h4 class="text-uppercase small text-dark fw-bold mb-0">Inventory</h4>
           </div>
           <dl class="row g-2">
-            <div class="col-6">
+            <div class="col-4">
               <dt class="text-secondary small">Total Quantity (not expired)</dt>
               <dd class="mb-0">{{ medicine.total_quantity|default:"-" }}</dd>
             </div>
-            <div class="col-6">
+            <div class="col-4">
               <dt class="text-secondary small">Expired Quantity</dt>
               <dd class="mb-0">{{ medicine.expired_quantity }}</dd>
             </div>
-          </dl>
-          <dl class="row g-2">
-            <div class="col-6">
+            <div class="col-4">
               <dt class="text-secondary small">Released Quantity</dt>
               <dd class="mb-0">{{ releasedQty|default:"-" }}</dd>
             </div>
