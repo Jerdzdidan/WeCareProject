@@ -610,7 +610,7 @@ def medicine_tracking_create_details(request, pk, medicine_id):
             ScheduledCheckup.objects.create(
                 patient=patient,
                 checkup_date=follow_up_date,
-                notes=f"Follow-up checkup for medication: {medicine.generic_name} ({tracking.date_given.strftime('%Y-%m-%d')})"
+                notes=f"Follow-up checkup for medication: {medicine.medicine_name} ({tracking.date_given.strftime('%Y-%m-%d')})"
             )
 
         update_medicine_totals(medicine)
