@@ -4,20 +4,43 @@
 {% block style %}
 <link rel="stylesheet" href="{% static 'dashboard/main.css' %}">
 <style>
-    article
+    .chart-container {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .chart-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #2c3e50;
+    }
+    .total-badge {
+        font-size: 1.5rem;
+        padding: 10px 20px;
+        border-radius: 20px;
+    }
+    .chart-row {
+        margin-top: 20px;
+    }
 </style>
-{% endblock style %}
+{% endblock %}
 
 {% block body %}
 <h3 class="mb-4">Dashboard</h3>
 <div class="row">
+    <!-- Resident Summary -->
     {% if request.user.userprofile.userrole in "[ADMIN,BRGY-STAFF,BHW,DOCTOR]" %}
-    <div class="col-6 {% if request.user.userprofile.userrole not in "[ADMIN,BHW,DOCTOR]" %} col-12 {% endif %}">
+    <div class="col-12 col-lg-6">
         <article class="content-section border-secondary-subtle rounded p-3 shadow-lg responsive_text">
             <h4 class="text-start mb-3 fw-bold responsive_header"><i class="fa-solid fa-address-book me-2"></i>RESIDENT SUMMARY</h4>
+            
+            <!-- Total Residents Card -->
             <div class="row">
                 <div class="col">
-                    <div class="card mb-4 shadow" style="">
+                    <div class="card mb-4 shadow">
                         <div class="card-header card-title bg-secondary-subtle">
                             <i class="fa-solid fa-users me-2"></i>Total Residents
                         </div>
@@ -27,107 +50,52 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <i class="fa-solid fa-question-circle"></i><span class="fw-medium"> Adult</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_adult }}</span>
-                        </div>
-                    </div>
+
+            <!-- Population Overview -->
+            <div class="chart-container">
+                <div class="card-header bg-secondary-subtle mb-3">
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-chart-pie me-2"></i>Population Overview</h5>
                 </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-wheelchair responsive_text"></i> PWD</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_pwd }}</span>
-                        </div>
+                <div class="row chart-row">
+                    <div class="col-md-6">
+                        <canvas id="residentCategoryPie"></canvas>
                     </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-user-plus responsive_text"></i> Solo Parent</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_solo_parent }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-child responsive_text"></i> Children</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_children }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-person responsive_text"></i> Senior</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_senior }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-heart responsive_text"></i> Pregnant</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ residentCount_pregnant }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-mars responsive_text"></i> Male</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-success rounded-pill fs-6">{{ residentCount_male }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-venus responsive_text"></i> Female</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-success rounded-pill fs-6">{{ residentCount_female }}</span>
-                        </div>
+                    <div class="col-md-6">
+                        <canvas id="residentCategoryBar"></canvas>
                     </div>
                 </div>
             </div>
 
+            <!-- Demographic Details -->
+            <div class="chart-container mt-4">
+                <div class="card-header bg-secondary-subtle mb-3">
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-venus-mars me-2"></i>Demographic Details</h5>
+                </div>
+                <div class="row chart-row">
+                    <div class="col-md-6">
+                        <canvas id="residentGenderPie"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="residentGenderBar"></canvas>
+                    </div>
+                </div>
+            </div>
         </article>
-
     </div>
     {% endif %}
 
+    <!-- Patient Summary -->
     {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
-    <div class="col-6">
+    <div class="col-12 col-lg-6">
         <article class="content-section border-secondary-subtle rounded p-3 shadow-lg responsive_text">
             <h4 class="text-start mb-3 fw-bold responsive_header"><i class="fa-solid fa-hospital-user me-2"></i>PATIENT SUMMARY</h4>
-            <!-- Total Patients -->
+            
+            <!-- Total Patients Card -->
             <div class="row">
                 <div class="col">
                     <div class="card mb-4 shadow">
                         <div class="card-header card-title bg-secondary-subtle">
-                            <i class="fa-solid fa-users me-2 responsive_text"></i>Total Patients
-                            <span><small class="text-muted responsive_text">(Registered)</small></span>
+                            <i class="fa-solid fa-users me-2"></i>Total Patients
                         </div>
                         <div class="card-body text-center">
                             <h5 class="badge card-title fs-4 bg-warning rounded-pill text-dark">{{ patientCount_total }}</h5>
@@ -135,108 +103,203 @@
                     </div>
                 </div>
             </div>
-            <!-- Age Groups -->
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="card mb-4 shadow">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-child responsive_text"></i> Ages 0-6</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_0_6 }}</span>
-                        </div>
-                    </div>
+
+            <!-- Patient Distribution -->
+            <div class="chart-container">
+                <div class="card-header bg-secondary-subtle mb-3">
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-chart-line me-2"></i>Patient Distribution</h5>
                 </div>
-                <div class="col-sm-4">
-                    <div class="card mb-4 shadow">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-child responsive_text"></i> Ages 6-18</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_6_18 }}</span>
-                        </div>
+                <div class="row chart-row">
+                    <div class="col-md-6">
+                        <canvas id="patientDistributionPie"></canvas>
                     </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card mb-4 shadow">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-user responsive_text"></i> Ages 19-59</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_19_59 }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-person responsive_text"></i> Senior</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_senior }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-wheelchair responsive_text"></i> PWD</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_pwd }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-user-plus responsive_text"></i> Solo Parent</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_solo_parent }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-heart responsive_text"></i> Pregnant</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-primary rounded-pill fs-6">{{ patientCount_pregnant }}</span>
-                        </div>
+                    <div class="col-md-6">
+                        <canvas id="patientDistributionBar"></canvas>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-mars responsive_text"></i> Male</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-success rounded-pill fs-6">{{ patientCount_male }}</span>
-                        </div>
-                    </div>
+            <!-- Gender Distribution -->
+            <div class="chart-container mt-4">
+                <div class="card-header bg-secondary-subtle mb-3">
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-venus-mars me-2"></i>Gender Distribution</h5>
                 </div>
-                <div class="col-sm-6">
-                    <div class="card mb-4 shadow" style="">
-                        <div class="card-header bg-secondary-subtle">
-                            <span class="fw-medium"><i class="fa-solid fa-venus responsive_text"></i> Female</span>
-                        </div>
-                        <div class="card-body text-center">
-                            <span class="badge bg-success rounded-pill fs-6">{{ patientCount_female }}</span>
-                        </div>
+                <div class="row chart-row">
+                    <div class="col-md-6">
+                        <canvas id="patientGenderPie"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="patientGenderBar"></canvas>
                     </div>
                 </div>
             </div>
-
         </article>
-        {% endif %}
-        
-
     </div>
+    {% endif %}
 </div>
+{% endblock %}
 
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Resident Charts
+    new Chart(document.getElementById('residentCategoryPie'), {
+        type: 'pie',
+        data: {
+            labels: ['PWD', 'Solo Parent', 'Senior', 'Pregnant'],
+            datasets: [{
+                data: [{{ residentCount_pwd }}, {{ residentCount_solo_parent }}, {{ residentCount_senior }}, {{ residentCount_pregnant }}],
+                backgroundColor: ['#2ecc71', '#f1c40f', '#9b59b6', '#e67e22']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { 
+                legend: { position: 'bottom' }, 
+                title: { display: true, text: 'Special Categories' } 
+            }
+        }
+    });
+
+    new Chart(document.getElementById('residentCategoryBar'), {
+        type: 'bar',
+        data: {
+            labels: ['PWD', 'Solo Parent', 'Senior', 'Pregnant'],
+            datasets: [{
+                label: 'Count',
+                data: [{{ residentCount_pwd }}, {{ residentCount_solo_parent }}, {{ residentCount_senior }}, {{ residentCount_pregnant }}],
+                backgroundColor: ['#2ecc71', '#f1c40f', '#9b59b6', '#e67e22']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { 
+                legend: { display: false }, 
+                title: { display: true, text: 'Category Breakdown' } 
+            },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // Patient Distribution Charts
+    new Chart(document.getElementById('patientDistributionPie'), {
+        type: 'pie',
+        data: {
+            labels: ['0-6', '6-18', '19-59', 'Senior', 'PWD', 'Solo Parent', 'Pregnant'],
+            datasets: [{
+                data: [
+                    {{ patientCount_0_6 }},
+                    {{ patientCount_6_18 }},
+                    {{ patientCount_19_59 }},
+                    {{ patientCount_senior }},
+                    {{ patientCount_pwd }},
+                    {{ patientCount_solo_parent }},
+                    {{ patientCount_pregnant }}
+                ],
+                backgroundColor: ['#2ecc71', '#f1c40f', '#3498db', '#9b59b6', '#e67e22', '#1abc9c', '#e74c3c']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { 
+                legend: { position: 'bottom' }, 
+                title: { display: true, text: 'Patient Distribution' } 
+            }
+        }
+    });
+
+    new Chart(document.getElementById('residentGenderPie'), {
+        type: 'pie',
+        data: {
+            labels: ['Male', 'Female'],
+            datasets: [{
+                data: [{{ residentCount_male }}, {{ residentCount_female }}],
+                backgroundColor: ['#3498db', '#e74c3c']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Gender Ratio' } }
+        }
+    });
+
+    new Chart(document.getElementById('residentGenderBar'), {
+        type: 'bar',
+        data: {
+            labels: ['Male', 'Female'],
+            datasets: [{
+                label: 'Count',
+                data: [{{ residentCount_male }}, {{ residentCount_female }}],
+                backgroundColor: ['#3498db', '#e74c3c']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false }, title: { display: true, text: 'Gender Distribution' } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    new Chart(document.getElementById('patientDistributionBar'), {
+        type: 'bar',
+        data: {
+            labels: ['0-6', '6-18', '19-59', 'Senior', 'PWD', 'Solo Parent', 'Pregnant'],
+            datasets: [{
+                label: 'Count',
+                data: [
+                    {{ patientCount_0_6 }},
+                    {{ patientCount_6_18 }},
+                    {{ patientCount_19_59 }},
+                    {{ patientCount_senior }},
+                    {{ patientCount_pwd }},
+                    {{ patientCount_solo_parent }},
+                    {{ patientCount_pregnant }}
+                ],
+                backgroundColor: ['#2ecc71', '#f1c40f', '#3498db', '#9b59b6', '#e67e22', '#1abc9c', '#e74c3c']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { 
+                legend: { display: false }, 
+                title: { display: true, text: 'Detailed Breakdown' } 
+            },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    new Chart(document.getElementById('patientGenderPie'), {
+        type: 'pie',
+        data: {
+            labels: ['Male', 'Female'],
+            datasets: [{
+                data: [{{ patientCount_male }}, {{ patientCount_female }}],
+                backgroundColor: ['#3498db', '#e74c3c']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Gender Ratio' } }
+        }
+    });
+
+    new Chart(document.getElementById('patientGenderBar'), {
+        type: 'bar',
+        data: {
+            labels: ['Male', 'Female'],
+            datasets: [{
+                label: 'Count',
+                data: [{{ patientCount_male }}, {{ patientCount_female }}],
+                backgroundColor: ['#3498db', '#e74c3c']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false }, title: { display: true, text: 'Gender Distribution' } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+    
+    // Gender Charts (same as previous)
+</script>
 {% endblock %}
