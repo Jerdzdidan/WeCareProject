@@ -720,7 +720,7 @@ def medicine_tracking_update(request, tracking_id):
             timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
             module="Patient Information",
             action="Update Medicine Tracking",
-            performed_to=f"Medicine Tracking ID - {tracking.id} for {patient.patientID}: {patient.resident.last_name}, {patient.resident.first_name} (Medicine: {medicine.name})",
+            performed_to=f"Medicine Tracking ID - {tracking.id} for {patient.patientID}: {patient.resident.last_name}, {patient.resident.first_name} (Medicine: {medicine.medicine_name})",
             performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
         )
 
