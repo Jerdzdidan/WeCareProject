@@ -708,6 +708,13 @@ def medicine_tracking_update(request, tracking_id):
         tracking.total_dosage = new_total_dosage
         tracking.save()
 
+        if new_follow_up_date:
+            ScheduledCheckup.objects.create(
+                patient=patient,
+                checkup_date=new_follow_up_date,
+                notes=f"Follow-up checkup for medication: {medicine.medicine_name} ({tracking.date_given.strftime('%Y-%m-%d')})"
+            )
+
         update_medicine_totals(medicine)
         update_medicine_date_last_stocked(medicine)
 
@@ -750,7 +757,7 @@ def medicine_tracking_delete(request, tracking_id):
         timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
         module="MedicineTracking",
         action="Delete Medicine Tracking",
-        performed_to=f"Medicine Tracking ID - {tracking.id} for {tracking.patient.patientID}: {tracking.patient.resident.last_name}, {tracking.patient.resident.first_name} (Medicine: {tracking.medicine.name})",
+        performed_to=f"Medicine Tracking ID - {tracking.id} for {tracking.patient.patientID}: {tracking.patient.resident.last_name}, {tracking.patient.resident.first_name} (Medicine: {tracking.medicine.medicine_name})",
         performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
     )
 
