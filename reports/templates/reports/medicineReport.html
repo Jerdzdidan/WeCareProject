@@ -20,9 +20,12 @@
             <div class="row mt-2">
               <div class="col-md-auto ms-sm-auto"> 
                   <div class="d-flex gap-2 mt-3 mt-sm-0"> 
-                    <a class="btn btn btn-outline-primary btn-block px-4" href="{% url 'medicine-export-pdf' %}?{{ request.GET.urlencode }}">
-                      <i class="ri-printer-line"></i> 
+                    <a class="btn btn-outline-primary btn-block px-4" href="{% url 'medicine-export-pdf' %}?{{ request.GET.urlencode }}">
+                      <i class="ri-printer-line"></i>
                     </a>
+                    <button class="btn btn-outline-secondary btn-block px-4" onclick="printTable()">
+                      <i class="ri-printer-line"></i> Print Table
+                    </button>
                   </div> 
               </div>
             </div>
@@ -52,8 +55,6 @@
                     <th>Dosage</th>
                     <th>Generic Name</th>
                     <th>Brand Name</th>
-                    <th>Unit Price</th>
-                    <th>Total Value</th>
                     <th>Total Quantity</th>
                     <th>Released Quantity</th>
                     <th>Expired Quantity</th>
@@ -69,8 +70,6 @@
                     <td class="align-middle">{{ med.dosage }}</td>
                     <td class="align-middle">{{ med.generic_name }}</td>
                     <td class="align-middle">{{ med.brand_name }}</td>
-                    <td class="align-middle">₱{{ med.unit_price|floatformat:2 }}</td>
-                    <td class="align-middle">₱{{ med.total_value|floatformat:2 }}</td>
                     <td class="align-middle">{{ med.total_quantity }}</td>
                     <td class="align-middle">{{ med.releasedQty|default:"0" }}</td>
                     <td class="align-middle">{{ med.expiredQty|default:"0" }}</td>
@@ -88,14 +87,108 @@
 
 {% block script %}
 <script>
+// Print Table Functionality for Medicine Inventory
+function printTable() {
+  const printWindow = window.open('', '', 'height=600,width=1000');
+  const tableElement = document.getElementById('dataTable');
+  
+  // Clone entire table structure
+  const clonedTable = tableElement.cloneNode(true);
+  
+  // Remove DataTables classes and add print-specific classes
+  clonedTable.classList.remove('projectTables');
+  clonedTable.classList.add('table-sm', 'w-100', 'print-table');
+  
+  // Ensure all rows are visible
+  clonedTable.querySelectorAll('tr').forEach(tr => tr.style.display = '');
+  
+  printWindow.document.write('<html><head><title>Print Medicine Inventory</title>');
+  printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">');
+  printWindow.document.write('<style>');
+  printWindow.document.write(`
+    @media print {
+      .print-table thead th {
+        color: white !important;
+        background-color: #212529 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+      }
+      .print-table .text-end {
+        text-align: right !important;
+      }
+    }
+    .print-table {
+      width: 100% !important;
+      font-size: 10px !important;
+    }
+    .print-table th,
+    .print-table td {
+      padding: 4px !important;
+    }
+    .print-table thead th {
+      background-color: #212529 !important;
+    }
+    @page {
+      size: auto;
+      margin: 10mm;
+    }
+  `);
+  printWindow.document.write('</style></head><body>');
+  
+  const customContent = `
+    <div class="container">
+      <div class="mb-3">
+        <div class="text-left" style="font-size: 20px; font-weight: bold;">
+          <img src="{% static 'home/images/WeCareLogo.svg' %}" style="height: 50px;" alt="Logo">
+          WECARE HEALTH CENTER
+        </div>
+        <div class="text-left" style="font-size: 10px;">
+          Tampi, San Jose, Negros Oriental<br>
+          Contact No. +63-917-710-7080<br>
+          LTO Accreditation No. 123-456-789
+        </div>
+        <hr class="my-2" style="border-top: 1px solid #000;">
+        <div class="text-center" style="font-size: 30px; margin: 13px 0;">
+          <h5>MEDICINE INVENTORY REPORT</h5>
+        </div>
+        <div class="text-left" style="font-size: 12px;">
+          <p class="my-0"><strong>Generated Date:</strong> ${new Date().toLocaleDateString()}</p>
+        </div>
+      </div>
+      <div class="table-responsive">
+        ${clonedTable.outerHTML}
+      </div>
+      <div class="text-left mt-4"><small>Prepared by: _____________________________</small></div>
+      <div class="text-left mb-5" style="padding-left: 135px;"><small>Name</small></div>
+    </div>
+  `;
+  
+  printWindow.document.write(customContent);
+  printWindow.document.write(`
+    <div style="position: fixed; bottom: -12px; left: 0; width: 100%; text-align: center; font-size: 12px; padding: 10px;">
+      <div style="background-color: white; height: auto;">
+        <hr class="my-0" style="border-top: 1px solid #000;">
+        Printed By: {{ request.user.username }}, ${new Date().toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}
+      </div>
+    </div>
+  `);
+  printWindow.document.write('</body></html>');
+  printWindow.document.close();
+  
+  setTimeout(() => {
+    printWindow.print();
+  }, 500);
+}
+
+// Delete Modal Functionality (unchanged)
 $('#myModal').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var deleteData = button.attr('data-deleteData');
-    var dataID = button.attr('data-ID')
-    var txtDeleteData = deleteData;
-    $(this).find('#deleteMessage').text('Are you sure you want to delete the Medicine Record for: ');
-    $(this).find('#txtDeleteData').text(txtDeleteData);
-    $(this).find('#btnDelete').attr('href', '{% url "medicine-delete" 0 %}'.replace('0', dataID));
+  var button = $(event.relatedTarget);
+  var deleteData = button.attr('data-deleteData');
+  var dataID = button.attr('data-ID');
+  var txtDeleteData = deleteData;
+  $(this).find('#deleteMessage').text('Are you sure you want to delete the Medicine Record for: ');
+  $(this).find('#txtDeleteData').text(txtDeleteData);
+  $(this).find('#btnDelete').attr('href', '{% url "medicine-delete" 0 %}'.replace('0', dataID));
 });
 </script>
 {% endblock script %}

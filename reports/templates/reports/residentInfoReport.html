@@ -42,7 +42,7 @@
         <div class="col-md-auto ms-sm-auto"> 
             <div class="d-flex gap-2 mt-3 mt-sm-0"> 
                 <button class="btn btn-outline-primary btn-block px-4" onclick="printTable()">
-                  <i class="ri-printer-line"></i> Print Report
+                  <i class="ri-printer-line"></i>
                 </button>
             </div> 
         </div>
@@ -116,21 +116,33 @@
 <script src="{% static 'residentInfo/main.js' %}"></script>
 
 <script>
-  function printTable() {
-    const printWindow = window.open('', '', 'height=600,width=1000');
-    const tableElement = document.getElementById('dataTable');
-    
-    // Clone table and add compact styling classes
-    const clonedTable = tableElement.cloneNode(true);
-    clonedTable.classList.add('table-sm', 'w-100', 'print-table');
-
-    printWindow.document.write('<html><head><title>Print Table</title>');
-    printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">');
-    printWindow.document.write('<style>');
-    printWindow.document.write(`
+    function printTable() {
+        const printWindow = window.open('', '', 'height=600,width=1000');
+        const tableElement = document.getElementById('dataTable');
+        
+        // Get current filter values
+        const category = document.querySelector('[name="category"]').value;
+        const gender = document.querySelector('[name="gender"]').value;
+        const age = document.querySelector('[name="age"]').value;
+        
+        // Clone entire table structure
+        const clonedTable = tableElement.cloneNode(true);
+        
+        // Remove DataTables classes and styles
+        clonedTable.classList.remove('projectTables');
+        clonedTable.classList.add('table-sm', 'w-100', 'print-table');
+        
+        // Show all rows in print
+        clonedTable.querySelectorAll('tr').forEach(tr => tr.style.display = '');
+        
+        printWindow.document.write('<html><head><title>Print Table</title>');
+        printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">');
+        printWindow.document.write('<style>');
+        printWindow.document.write(`
         @media print {
             .print-table thead th {
-                background-color: rgb(219, 219, 219) !important;
+                color: white !important; 
+                background-color: #212529 !important;
                 -webkit-print-color-adjust: exact; 
                 color-adjust: exact;
             }
@@ -149,14 +161,14 @@
         }
         .print-table {
             width: 100% !important;
-            font-size: 12px !important;
+            font-size: 10px !important;
         }
         .print-table th, 
         .print-table td {
             padding: 4px !important;
         }
         .print-table thead th {
-            background-color: rgb(92, 92, 92) !important;
+            background-color: #212529 !important;
         }
         .summary-tbody td {
             color: white !important; 
@@ -176,56 +188,66 @@
             size: auto;
             margin: 10mm;
         }
-    `);
-    printWindow.document.write('</style>');
-    printWindow.document.write('</head><body>');
-
-    const customContent = `
-        <div class="container">
-            <div class="mb-3">
-                <div class="text-left" style="font-size: 20px; font-weight: bold;">
-                    <img src="{% static 'home/images/WeCareLogo.svg' %}" style="height: 50px;" alt="Logo">
-                    WECARE HEALTH CENTER
-                </div>
-                <div class="text-left" style="font-size: 10px;">
-                    Tampi, San Jose, Negros Oriental<br>
-                    Contact No. +63-917-710-7080<br>
-                    LTO Accreditation No. 123-456-789
-                </div>
-                <hr class="my-2" style="border-top: 1px solid #000;">
-                <div class="text-center" style="font-size: 30px; margin: 13px 0px 13px;">
-                    <h5>MEDICINE INVENTORY REPORT</h5>
-                </div>
-                <div class="text-left" style="font-size: 12px;">
-                    <p class="my-0"><strong>Generated Date:</strong> ${new Date().toLocaleDateString()}</p>
-                    <p class="my-0"><strong>Entries Shown:</strong> ${$('#customEntries').val()}</p>
-                    <p class="my-0"><strong>Search Filter:</strong> "${$('#searchBar').val() || 'None'}"</p>
-                </div>
-            </div>
-            <div class="table-responsive">
-                ${clonedTable.outerHTML}
-            </div>
-            <div class="text-left mt-4"><small>Prepared by: _____________________________</small></div>
-            <div class="text-left mb-5" style="padding-left: 135px;"><small>Name</small></div>
-        </div>
-    `;
-
-    printWindow.document.write(customContent);
-
-    printWindow.document.write(`
-            <div style="position: fixed; bottom: -12px; left: 0; width: 100%; text-align: center; font-size: 12px; padding: 10px; overflow: hidden;">
-                <div style="background-color: white; height: auto;">
-                    <hr class="my-0" style="border-top: 1px solid #000;">
-                    Printed By: {{ request.user.username }}, ${new Date().toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}
-                </div>
-            </div>
         `);
-    printWindow.document.close();
-
-    setTimeout(() => {
-        printWindow.print();
-    }, 500);
-}
+        printWindow.document.write('</style></head><body>');
+    
+        const customContent = `
+            <div class="container">
+                <div class="mb-3">
+                    <div class="text-left" style="font-size: 20px; font-weight: bold;">
+                        <img src="{% static 'home/images/WeCareLogo.svg' %}" style="height: 50px;" alt="Logo">
+                        WECARE HEALTH CENTER
+                    </div>
+                    <div class="text-left" style="font-size: 10px;">
+                        Tampi, San Jose, Negros Oriental<br>
+                        Contact No. +63-917-710-7080<br>
+                        LTO Accreditation No. 123-456-789
+                    </div>
+                    <hr class="my-2" style="border-top: 1px solid #000;">
+                    <div class="text-center" style="font-size: 30px; margin: 13px 0px 13px;">
+                        <h5>RESIDENT INFORMATION REPORT</h5>
+                    </div>
+                    <div class="text-left" style="font-size: 12px;">
+                        <p class="my-0"><strong>Generated Date:</strong> ${new Date().toLocaleDateString()}</p>
+                        <p class="my-0"><strong>Category:</strong> ${category || 'All Categories'}</p>
+                        <p class="my-0"><strong>Gender:</strong> ${gender || 'All Genders'}</p>
+                        <p class="my-0"><strong>Age Group:</strong> ${getAgeGroupLabel(age)}</p>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    ${clonedTable.outerHTML}
+                </div>
+                <div class="text-left mt-4"><small>Prepared by: _____________________________</small></div>
+                <div class="text-left mb-5" style="padding-left: 135px;"><small>Name</small></div>
+            </div>
+        `;
+    
+        printWindow.document.write(customContent);
+    
+        printWindow.document.write(`
+                <div style="position: fixed; bottom: -12px; left: 0; width: 100%; text-align: center; font-size: 12px; padding: 10px;">
+                    <div style="background-color: white; height: auto;">
+                        <hr class="my-0" style="border-top: 1px solid #000;">
+                        Printed By: {{ request.user.username }}, ${new Date().toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}
+                    </div>
+                </div>
+            `);
+        printWindow.document.close();
+    
+        setTimeout(() => {
+            printWindow.print();
+        }, 500);
+    }
+    
+    // Helper function to get age group label
+    function getAgeGroupLabel(ageValue) {
+        const ageGroups = {
+            '6': '0-6 years',
+            '18': '7-18 years', 
+            '59': '19-59 years'
+        };
+        return ageValue ? ageGroups[ageValue] : 'All Ages';
+    }
 </script>
 
 {% endblock %}

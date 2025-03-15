@@ -38,12 +38,12 @@
         </div>
         <div class="col-md-auto ms-sm-auto"> 
             <div class="d-flex gap-2 mt-3 mt-sm-0"> 
-                <a class="btn btn btn-outline-primary btn-block px-4" href="{% url 'patient-export-pdf' %}?{{ request.GET.urlencode }}">
-                  <i class="ri-printer-line"></i> 
-                </a>
+                <button class="btn btn-outline-primary btn-block px-4" onclick="printTable()">
+                  <i class="ri-printer-line"></i>
+                </button>
             </div>           
         </div>
-    </div>
+      </div>
       <div class="row mt-2">
         <div class="col-auto">
           <select id="customEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer; vertical-align: middle;">
@@ -64,7 +64,7 @@
     </div>
     
     <div class="table-responsive mt-2">
-        <table id="dataTable" class="table table-light table-striped text-center m-0 projectTables">
+        <table id="dataTable" class="table table-light table-hover table-striped text-center m-0 projectTables">
         <thead class="table-dark">
           <tr>
             <th class="text-start">Family No.</th>
@@ -84,8 +84,8 @@
         <tbody>
             {% for patient in patients %}
             <tr>
-                <td class="text-start"> {{ patient.resident.family.family_no }} </td>
-                <td class="text-start"> {{ patient.patientID }} </td>
+                <td class="text-start">{{ patient.resident.family.family_no }}</td>
+                <td class="text-start">{{ patient.patientID }}</td>
                 <td class="text-start">{{ patient.resident.last_name }}</td>
                 <td class="text-start">{{ patient.resident.first_name }}</td>
                 <td class="text-start">{{ patient.resident.middle_name }}</td>
@@ -109,24 +109,173 @@
         <div id="customPagination"></div>
     </div>
 </article>
+
+<!-- Delete Confirmation Modal (Unchanged) -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="deleteMessage"></p>
+        <p><strong id="txtDeleteData"></strong></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a id="btnDelete" href="#" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock body %}
 
 {% block script %}
 <script>
-
+  // Full Print Table Functionality with renamed variables
+  function printTable() {
+    const pw = window.open('', '', 'height=600,width=1000');
+    const tbl = document.getElementById('dataTable');
+    
+    // Get current filter values
+    const cat = document.querySelector('[name="category"]').value;
+    const gen = document.querySelector('[name="gender"]').value;
+    const ag = document.querySelector('[name="age"]').value;
+    
+    // Clone the table structure
+    const clonedTbl = tbl.cloneNode(true);
+    
+    // Remove DataTables classes and add print-specific classes
+    clonedTbl.classList.remove('projectTables');
+    clonedTbl.classList.add('table-sm', 'w-100', 'print-table');
+    
+    // Ensure all rows are visible
+    clonedTbl.querySelectorAll('tr').forEach(row => row.style.display = '');
+    
+    pw.document.write('<html><head><title>Print Table</title>');
+    pw.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">');
+    pw.document.write('<style>');
+    pw.document.write(`
+      @media print {
+          .print-table thead th {
+              color: white !important;
+              background-color: #212529 !important;
+              -webkit-print-color-adjust: exact;
+              color-adjust: exact;
+          }
+          .summary-tbody td {
+              background-color: #e9ecef !important;
+              -webkit-print-color-adjust: exact;
+              color-adjust: exact;
+              font-weight: bold;
+          }
+          .print-table .text-end {
+              text-align: right !important;
+          }
+      }
+      .print-table .text-end {
+          text-align: right !important;
+      }
+      .print-table {
+          width: 100% !important;
+          font-size: 10px !important;
+      }
+      .print-table th,
+      .print-table td {
+          padding: 4px !important;
+      }
+      .print-table thead th {
+          background-color: #212529 !important;
+      }
+      .summary-tbody td {
+          color: white !important;
+          font-weight: bold;
+          background-color: #e9ecef !important;
+          border-top: 2px solid #000 !important;
+      }
+      .print-table tfoot th,
+      .print-table tfoot td {
+          color: white !important;
+          font-weight: bold;
+          background-color: #e9ecef !important;
+          border-top: 2px solid #000 !important;
+      }
+      @page {
+          size: auto;
+          margin: 10mm;
+      }
+    `);
+    pw.document.write('</style></head><body>');
+    
+    const customContent = `
+      <div class="container">
+          <div class="mb-3">
+              <div class="text-left" style="font-size: 20px; font-weight: bold;">
+                  <img src="{% static 'home/images/WeCareLogo.svg' %}" style="height: 50px;" alt="Logo">
+                  WECARE HEALTH CENTER
+              </div>
+              <div class="text-left" style="font-size: 10px;">
+                  Tampi, San Jose, Negros Oriental<br>
+                  Contact No. +63-917-710-7080<br>
+                  LTO Accreditation No. 123-456-789
+              </div>
+              <hr class="my-2" style="border-top: 1px solid #000;">
+              <div class="text-center" style="font-size: 30px; margin: 13px 0;">
+                  <h5>PATIENT INFORMATION REPORT</h5>
+              </div>
+              <div class="text-left" style="font-size: 12px;">
+                  <p class="my-0"><strong>Generated Date:</strong> ${new Date().toLocaleDateString()}</p>
+                  <p class="my-0"><strong>Category:</strong> ${cat || 'All Categories'}</p>
+                  <p class="my-0"><strong>Gender:</strong> ${gen || 'All Genders'}</p>
+                  <p class="my-0"><strong>Age Group:</strong> ${getAgeGrpLabel(ag)}</p>
+              </div>
+          </div>
+          <div class="table-responsive">
+              ${clonedTbl.outerHTML}
+          </div>
+          <div class="text-left mt-4"><small>Prepared by: _____________________________</small></div>
+          <div class="text-left mb-5" style="padding-left: 135px;"><small>Name</small></div>
+      </div>
+    `;
+    
+    pw.document.write(customContent);
+    pw.document.write(`
+      <div style="position: fixed; bottom: -12px; left: 0; width: 100%; text-align: center; font-size: 12px; padding: 10px;">
+          <div style="background-color: white; height: auto;">
+              <hr class="my-0" style="border-top: 1px solid #000;">
+              Printed By: {{ request.user.username }}, ${new Date().toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}
+          </div>
+      </div>
+    `);
+    pw.document.write('</body></html>');
+    pw.document.close();
+    
+    setTimeout(() => {
+      pw.print();
+    }, 500);
+  }
+  
+  // Helper function for age group label
+  function getAgeGrpLabel(ageVal) {
+    const ageLabels = {
+      '6': '0-6 years',
+      '18': '7-18 years',
+      '59': '19-59 years'
+    };
+    return ageVal ? ageLabels[ageVal] : 'All Ages';
+  }
+  
+  // Delete Modal functionality (unchanged)
   $('#myModal').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget);
     var deleteData = button.attr('data-deleteData');
-    var dataID = button.attr('data-ID')
-    var dataUrl = button.attr('data-Url')
-    var moduleName = button.attr('data-moduleName')
+    var dataID = button.attr('data-ID');
+    var moduleName = button.attr('data-moduleName');
     
-
-    var txtDeleteData = deleteData
-    $(this).find('#deleteMessage').text('Are you sure you want to 0 for: '.replace('0', moduleName));
-    $(this).find('#txtDeleteData').text(txtDeleteData);
+    $(this).find('#deleteMessage').text('Are you sure you want to delete ' + moduleName + '?');
+    $(this).find('#txtDeleteData').text(deleteData);
     $(this).find('#btnDelete').attr('href', '{% url "patient-delete-confirm" 0 %}'.replace('0', dataID));
   });
-
 </script>
 {% endblock script %}
