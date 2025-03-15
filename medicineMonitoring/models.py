@@ -4,7 +4,6 @@ from datetime import date
 
 class Medicine(models.Model):
     medicine_name = models.CharField(max_length=255)
-    generic_name = models.CharField(max_length=255, blank=True, null=True)
     brand_name = models.CharField(max_length=255, blank=True, null=True)
     dosage = models.CharField(max_length=100, blank=True, null=True) 
     total_quantity = models.PositiveIntegerField(default=0)

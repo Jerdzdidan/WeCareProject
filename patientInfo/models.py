@@ -36,6 +36,18 @@ class VitalSigns(models.Model):
 
     def __str__(self):
         return f"Vital Signs for {self.patient.resident.first_name}"
+    
+class VitalSignsRecord(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="vital_signs_records")
+    blood_pressure = models.CharField(max_length=10, null=True, blank=True)
+    pulse_rate = models.IntegerField(null=True, blank=True)
+    temperature = models.FloatField(null=True, blank=True)
+    height = models.FloatField(null=True, blank=True)
+    weight = models.FloatField(null=True, blank=True)
+    recorded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Vital Signs Record for {self.patient.patientID} on {self.recorded_at:%b %d, %Y %H:%M}"
 
 class PresentIllness(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="present_illnesses")

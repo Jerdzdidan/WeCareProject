@@ -19,7 +19,6 @@
         <tr>
           <th>Medicine Name</th>
           <th>Dosage</th>
-          <th>Generic Name</th>
           <th>Brand Name</th>
           <th>Unit Price</th>
           <th>Total Value</th>
@@ -33,7 +32,6 @@
         <tr>
           <td class="align-middle">{{ medicine.medicine_name }}</td>
           <td class="align-middle">{{ medicine.dosage }}</td>
-          <td class="align-middle">{{ medicine.generic_name }}</td>
           <td class="align-middle">{{ medicine.brand_name }}</td>
           <td class="align-middle">₱{{ medicine.unit_price|floatformat:2 }}</td>
           <td class="align-middle">₱{{ medicine.total_value|floatformat:2 }}</td>

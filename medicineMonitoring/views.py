@@ -63,7 +63,6 @@ def medicine_detail(request, pk):
 def medicine_add(request):
     if request.method == "POST":
         medicine_name = request.POST.get("medicine_name", "").strip()
-        generic_name = request.POST.get("generic_name", "").strip()
         brand_name = request.POST.get("brand_name", "").strip()
         dosage = request.POST.get("dosage", "").strip()  
         supplier_name = request.POST.get("supplier_name", "").strip()
@@ -72,7 +71,6 @@ def medicine_add(request):
 
         Medicine.objects.create(
             medicine_name=medicine_name,
-            generic_name=generic_name,
             brand_name=brand_name,
             dosage=dosage,  
             supplier_name=supplier_name,
@@ -89,7 +87,6 @@ def medicine_update(request, pk):
     medicine = get_object_or_404(Medicine, pk=pk)
     if request.method == "POST":
         medicine.medicine_name = request.POST.get("medicine_name", "").strip()
-        medicine.generic_name = request.POST.get("generic_name", "").strip()
         medicine.brand_name = request.POST.get("brand_name", "").strip()
 
         medicine.supplier_name = request.POST.get("supplier_name", "").strip()
