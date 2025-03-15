@@ -114,7 +114,7 @@
                     <div class="d-flex">
                       <a href="{% url 'resident-update' resident.id %}" class="btn btn-sm btn-outline-success fw-bold flex-fill me-1 " title="Edit"><i class="ri-edit-2-fill"></i></a>
                       {% if request.user.userprofile.userrole in '[ADMIN]' %}
-                      <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ resident.last_name }}, {{ resident.first_name }}" data-ID="{{ resident.id }}" data-moduleName="Delete resident record" class="btn btn-sm btn-outline-danger responsive_text fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ resident.last_name }}, {{ resident.first_name }}" data-ID="{{ resident.id }}" data-moduleName="Delete resident record" class="btn btn-sm btn-outline-danger responsive_text fw-bold flex-fill"><i class="ri-delete-bin-5-fill"></i></button>
                       {% endif %}
                     </div>
                 </td>

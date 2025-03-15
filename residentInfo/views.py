@@ -294,7 +294,7 @@ def resident_update(request, pk):
     return render(request, 'residentInfo/resident_update.html', {'resident': resident})
 
 @login_required
-@role_required(['BRGY-STAFF'], 'Delete resident on the Resident Information')
+@role_required(['ADMIN'], 'Delete resident on the Resident Information')
 def resident_delete_confirm(request, pk):
     try:
         resident = Resident.objects.get(pk=pk)
