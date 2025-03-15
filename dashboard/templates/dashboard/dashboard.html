@@ -33,9 +33,11 @@
 <div class="row">
     <!-- Resident Summary -->
     {% if request.user.userprofile.userrole in "[ADMIN,BRGY-STAFF,BHW,DOCTOR]" %}
-    <div class="col-12 col-lg-6">
+    <div class="{% if request.user.userprofile.userrole == 'BRGY-STAFF' %}col-12{% else %}col-12 col-lg-6{% endif %}">
         <article class="content-section border-secondary-subtle rounded p-3 shadow-lg responsive_text">
-            <h4 class="text-start mb-3 fw-bold responsive_header"><i class="fa-solid fa-address-book me-2"></i>RESIDENT SUMMARY</h4>
+            <h4 class="text-start mb-3 fw-bold responsive_header">
+                <i class="fa-solid fa-address-book me-2"></i>RESIDENT SUMMARY
+            </h4>
             
             <!-- Total Residents Card -->
             <div class="row">
@@ -50,11 +52,54 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Population Overview -->
+            
+            {% if request.user.userprofile.userrole == "BRGY-STAFF" %}
+            <div class="row">
+                <!-- Population Overview in left column -->
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <div class="card-header bg-secondary-subtle mb-1">
+                            <h5 class="card-title mb-0">
+                                <i class="fa-solid fa-chart-pie me-2"></i>Population Overview
+                            </h5>
+                        </div>
+                        <div class="row chart-row">
+                            <div class="col">
+                                <canvas id="residentCategoryPie"></canvas>
+                            </div>
+                            <div class="col">
+                                <canvas id="residentCategoryBar"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gender Distribution in right column -->
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <div class="card-header bg-secondary-subtle mb-3">
+                            <h5 class="card-title mb-0">
+                                <i class="fa-solid fa-venus-mars me-2"></i>Gender Distribution 
+                                <small class="text-muted">(Resident information)</small>
+                            </h5>
+                        </div>
+                        <div class="row chart-row">
+                            <div class="col">
+                                <canvas id="residentGenderPie"></canvas>
+                            </div>
+                            <div class="col">
+                                <canvas id="residentGenderBar"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- For other roles, show the two sections in separate rows -->
             <div class="chart-container">
                 <div class="card-header bg-secondary-subtle mb-1">
-                    <h5 class="card-title mb-0"><i class="fa-solid fa-chart-pie me-2"></i>Population Overview</h5>
+                    <h5 class="card-title mb-0">
+                        <i class="fa-solid fa-chart-pie me-2"></i>Population Overview
+                    </h5>
                 </div>
                 <div class="row chart-row">
                     <div class="col-md-6">
@@ -65,11 +110,12 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Demographic Details -->
             <div class="chart-container mt-2">
                 <div class="card-header bg-secondary-subtle mb-3">
-                    <h5 class="card-title mb-0"><i class="fa-solid fa-venus-mars me-2"></i>Gender Distribution <small class="text-muted">(Resident information)</small></h5>
+                    <h5 class="card-title mb-0">
+                        <i class="fa-solid fa-venus-mars me-2"></i>Gender Distribution 
+                        <small class="text-muted">(Resident information)</small>
+                    </h5>
                 </div>
                 <div class="row chart-row">
                     <div class="col-md-6">
@@ -80,10 +126,11 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         </article>
     </div>
     {% endif %}
-
+    
     <!-- Patient Summary -->
     {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
     <div class="col-12 col-lg-6">

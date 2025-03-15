@@ -41,14 +41,16 @@
                 <div class="form-group">
                     <label for="id_first_name">First Name</label>
                     <input type="text" name="first_name" class="form-control" 
-                           id="id_first_name" required value="{{ first_name|default:'' }}">
+                           id="id_first_name" required value="{{ first_name|default:'' }}"
+                           pattern="^[A-Za-z\s\-,]+$" title="Only letters and certain characters allowed.">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="id_last_name">Last Name</label>
                     <input type="text" name="last_name" class="form-control" 
-                           id="id_last_name" required value="{{ last_name|default:'' }}">
+                           id="id_last_name" required value="{{ last_name|default:'' }}"
+                           pattern="^[A-Za-z\s\-,]+$" title="Only letters and certain characters allowed.">
                 </div>
             </div>
         </div>
@@ -111,9 +113,9 @@
                 <strong>Role permissions:</strong>
                 <ul class="mb-0">
                     <li>Admin: Full system access</li>
-                    <li>Doctor: Medical records access</li>
-                    <li>Staff: Barangay management</li>
-                    <li>BHW: Basic health worker access</li>
+                    <li>Doctor: Medical and Medicine Record Access</li>
+                    <li>Staff: Resident Information Access</li>
+                    <li>BHW: Patient Information Access</li>
                 </ul>
             </div>
         </div>

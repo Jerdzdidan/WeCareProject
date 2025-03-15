@@ -13,7 +13,7 @@
             <div class="input-group">
                 <select name="category" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
                   <option value="" {% if not request.GET.category %}selected{% endif %}>All Categories (Default)</option>
-                  <option value="N/A" {% if request.GET.category == "N/A" %}selected{% endif %}>N/A</option>
+                  <option value="Adult" {% if request.GET.category == "Adult" %}selected{% endif %}>Adult</option>
                   <option value="Senior" {% if request.GET.category == "Senior" %}selected{% endif %}>Senior</option>
                   <option value="PWD" {% if request.GET.category == "PWD" %}selected{% endif %}>PWD</option>
                   <option value="Children" {% if request.GET.category == "Children" %}selected{% endif %}>Children (17 and below)</option>

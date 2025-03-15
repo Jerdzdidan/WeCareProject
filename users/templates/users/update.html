@@ -51,22 +51,25 @@
                 <div class="form-group">
                     <label for="id_first_name">First Name</label>
                     <input type="text" class="form-control readonly-field" 
-                           id="id_first_name" readonly value="{{ user.first_name }}">
+                           id="id_first_name" readonly value="{{ user.first_name }}"
+                           pattern="^[A-Za-z\s\-,]+$" title="Only letters and certain characters allowed.">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="id_last_name">Last Name</label>
                     <input type="text" class="form-control readonly-field" 
-                           id="id_last_name" readonly value="{{ user.last_name }}">
+                           id="id_last_name" readonly value="{{ user.last_name }}"
+                           pattern="^[A-Za-z\s\-,]+$" title="Only letters and certain characters allowed.">
                 </div>
             </div>
-            
-            <div class="form-group">
-                <label for="id_username">Username</label>
-                <input type="text" class="form-control readonly-field" 
-                       id="id_username" readonly value="{{ user.username }}">
-            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            <input type="text" class="form-control readonly-field" 
+                   id="id_username" readonly value="{{ user.username }}">
+        </div>
 
         <div class="form-group">
             <label for="id_email">Email</label>
@@ -80,11 +83,21 @@
         <div class="form-group">
             <label for="id_userrole">User Role</label>
             <select name="userrole" class="form-select" id="id_userrole" required>
-                <option value="ADMIN" {% if profile.userrole == "Admin" %}selected{% endif %}>Admin</option>
-                <option value="DOCTOR" {% if profile.userrole == "DOCTOR" %}selected{% endif %}>Doctor</option>
-                <option value="BRGY-STAFF" {% if profile.userrole == "BRGY-STAFF" %}selected{% endif %}>Barangay Staff</option>
-                <option value="BHW" {% if profile.userrole == "BHW" %}selected{% endif %}>Barangay Health Worker</option>
+                <option value="">Select a role...</option>
+                <option value="ADMIN" {% if userrole == "Admin" %}selected{% endif %}>Admin</option>
+                <option value="DOCTOR" {% if userrole == "DOCTOR" %}selected{% endif %}>Doctor</option>
+                <option value="BRGY-STAFF" {% if userrole == "BRGY-STAFF" %}selected{% endif %}>Barangay Staff</option>
+                <option value="BHW" {% if userrole == "BHW" %}selected{% endif %}>Barangay Health Worker</option>
             </select>
+            <div class="role-description mt-2">
+                <strong>Role permissions:</strong>
+                <ul class="mb-0">
+                    <li>Admin: Full system access</li>
+                    <li>Doctor: Medical records access</li>
+                    <li>Staff: Barangay management</li>
+                    <li>BHW: Basic health worker access</li>
+                </ul>
+            </div>
         </div>
 
         <div class="form-group">
@@ -119,7 +132,7 @@
         </div>
 
         <div class="form-group mt-4 text-end">
-            <button type="submit" class="btn btn-success px-4">Update Account</button>
+            <button type="submit" class="btn btn-success px-4">Create Account</button>
             <a href="{% url 'account-list' %}" class="btn btn-outline-secondary">Cancel</a>
         </div>
     </form>
