@@ -17,12 +17,16 @@
   <form method="post">
     {% csrf_token %}
     <div class="form-section mb-3">
-      <label for="concern" class="form-label">Concern:</label>
+      <label for="concern" class="form-label">Chief Complain:</label>
       <input type="text" id="concern" name="concern" class="form-control shadow" placeholder="Enter Concern" required>
     </div>
     <div class="form-section mb-3">
       <label for="description" class="form-label">Description:</label>
       <textarea id="description" name="description" class="form-control shadow" placeholder="Enter Description" rows="9"></textarea>
+    </div>
+    <div class="form-section mb-3">
+      <label for="recommendation" class="form-label">Recommendation:</label>
+      <textarea id="recommendation" name="recommendation" class="form-control shadow" placeholder="Enter Description" rows="6"></textarea>
     </div>
 
     <div class="d-flex justify-content-end">

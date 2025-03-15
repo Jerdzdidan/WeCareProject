@@ -99,6 +99,7 @@ class MedicalRecord(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="medical_records")
     concern = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+    recommendation = models.TextField(null=True, blank=True)
     last_visited = models.DateField() 
 
     def __str__(self):

@@ -178,13 +178,6 @@ def patient_create_details(request, resident_id):
             others=med_history_others
         )
         
-        MedicalRecord.objects.create(
-            patient=patient,
-            concern="Initial Check-Up",
-            description="Auto-generated record on patient creation.",
-            last_visited=datetime.today().date()
-        )
-        
         messages.success(request, "Patient record created successfully!")
         return redirect('patient-list')
     
@@ -442,12 +435,14 @@ def medical_record_create(request, pk):
     if request.method == "POST":
         concern = request.POST.get('concern', '').strip()
         description = request.POST.get('description', '').strip()
+        recommendation = request.POST.get('recommendation', '').strip()
         
         last_visited = datetime.today().date()
         MedicalRecord.objects.create(
             patient=patient,
             concern=concern,
             description=description,
+            recommendation=recommendation,
             last_visited=last_visited
         )
         messages.success(request, "Medical record created successfully!")
@@ -462,6 +457,7 @@ def medical_record_update(request, record_id):
     if request.method == "POST":
         concern = request.POST.get('concern', '').strip()
         description = request.POST.get('description', '').strip()
+        recommendation = request.POST.get('recommendation', '').strip()
         last_visited_str = request.POST.get('last_visited', '').strip()
         try:
             last_visited = datetime.strptime(last_visited_str, "%Y-%m-%d").date()
@@ -469,6 +465,7 @@ def medical_record_update(request, record_id):
             last_visited = record.last_visited
         record.concern = concern
         record.description = description
+        record.recommendation = recommendation
         record.last_visited = last_visited
         record.save()
 

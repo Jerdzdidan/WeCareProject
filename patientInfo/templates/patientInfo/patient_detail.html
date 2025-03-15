@@ -359,10 +359,10 @@
       </div>
       <!-- Medical Records Table -->
       <div class="table-responsive">
-        <table class="table table-striped responsive_text" id="patientMedicalRecordDataTable">
+        <table class="table table-striped projectTables" id="patientMedicalRecordDataTable">
           <thead class="table-dark">
             <tr>
-              <th class="text-start">Concern</th>
+              <th class="text-start">Chief Complain</th>
               <th class="text-start">Description</th>
               <th class="text-start">Date Visited</th>
               {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
@@ -428,7 +428,7 @@
       </div>
       <!-- Medicine Tracking Table -->
       <div class="table-responsive">
-        <table class="table table-striped responsive_text projectTables" id="patientMedicineTrackingDataTable">
+        <table class="table table-striped projectTables" id="patientMedicineTrackingDataTable">
           <thead class="table-dark">
             <tr>
               <th class="text-start">Chief Complain</th>
