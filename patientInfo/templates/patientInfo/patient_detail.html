@@ -364,6 +364,7 @@
             <tr>
               <th class="text-start">Chief Complain</th>
               <th class="text-start">Description</th>
+              <th class="text-start">Recommendation</th>
               <th class="text-start">Date Visited</th>
               {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
                 <th class="text-center ms-auto me-auto">Action</th>
@@ -375,6 +376,7 @@
             <tr>
               <td class="text-start align-middle">{{ record.concern }}</td>
               <td class="text-start align-middle">{{ record.description }}</td>
+              <td class="text-start align-middle">{{ record.recommendation }}</td>
               <td class="text-start align-middle">{{ record.last_visited|date:"M d, Y" }}</td>
               {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
               <td class="text-center align-middle">
