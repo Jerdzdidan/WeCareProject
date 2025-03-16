@@ -366,7 +366,7 @@
               <th class="text-start">Description</th>
               <th class="text-start">Recommendation</th>
               <th class="text-start">Date Visited</th>
-              {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+              {% if request.user.userprofile.userrole in "[ADMIN]" %}
                 <th class="text-center ms-auto me-auto">Action</th>
               {% endif %}
             </tr>
@@ -378,7 +378,7 @@
               <td class="text-start align-middle">{{ record.description }}</td>
               <td class="text-start align-middle">{{ record.recommendation }}</td>
               <td class="text-start align-middle">{{ record.last_visited|date:"M d, Y" }}</td>
-              {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+              {% if request.user.userprofile.userrole in "[ADMIN]" %}
               <td class="text-center align-middle">
                 <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success px-4 responsive_text fw-bold flex-fill" title="Edit"><i class="ri-edit-2-fill"></i></a>
                 {% if request.user.userprofile.userrole in "[ADMIN]" %}
