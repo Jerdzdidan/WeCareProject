@@ -46,14 +46,18 @@ def medicine_detail(request, pk):
     valid_stocks = medicine.stocks.filter(expiration_date__gt=today)
     expired_stocks = medicine.stocks.filter(expiration_date__lte=today)
     
+    available_stocks = valid_stocks.filter(quantity__gt=10)
+    availableQty = available_stocks.aggregate(total=Sum('quantity'))['total'] or 0
+    
     context = {
         'medicine': medicine,
         'valid_stocks': valid_stocks,
         'expired_stocks': expired_stocks,
         'expired_count': expired_stocks.count(),  
-
         'patient_medicine_tracking': patient_medicine_tracking,
         'releasedQty': releasedQty,
+        'available_stocks': available_stocks,  
+        'availableQty': availableQty,          
     }
     return render(request, 'medicineMonitoring/medicine_detail.html', context)
 

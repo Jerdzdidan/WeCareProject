@@ -535,7 +535,14 @@ def medicine_tracking_create_details(request, pk, medicine_id):
 
     patient_medicine_tracking = MedicineTracking.objects.filter(medicine=medicine)
     releasedQty = patient_medicine_tracking.aggregate(total=Sum('quantity_used'))['total'] or 0
-    
+
+    today = date.today()
+
+    valid_stocks = medicine.stocks.filter(expiration_date__gt=today)
+
+    available_stocks = valid_stocks.filter(quantity__gt=10)
+    availableQty = available_stocks.aggregate(total=Sum('quantity'))['total'] or 0
+
     if request.method == "POST":
         quantity_str = request.POST.get("quantity", "").strip()
         total_dosage = request.POST.get("total_dosage", "").strip()
@@ -620,6 +627,7 @@ def medicine_tracking_create_details(request, pk, medicine_id):
         "patient": patient,
         "medicine": medicine,
         "releasedQty": releasedQty,
+        "availableQty": availableQty
     }
     return render(request, "patientInfo/medicinetracking_create_details.html", context)
 
@@ -633,6 +641,13 @@ def medicine_tracking_update(request, tracking_id):
 
     patient_medicine_tracking = MedicineTracking.objects.filter(medicine=medicine)
     releasedQty = patient_medicine_tracking.aggregate(total=Sum('quantity_used'))['total'] or 0
+
+    today = date.today()
+
+    valid_stocks = medicine.stocks.filter(expiration_date__gt=today)
+
+    available_stocks = valid_stocks.filter(quantity__gt=10)
+    availableQty = available_stocks.aggregate(total=Sum('quantity'))['total'] or 0
 
     if request.method == "POST":
         quantity_str = request.POST.get("quantity", "").strip()
@@ -736,6 +751,7 @@ def medicine_tracking_update(request, tracking_id):
         "patient": patient,
         "medicine": medicine,
         "releasedQty": releasedQty,
+        "availableQty": availableQty
     }
     return render(request, "patientInfo/medicinetracking_update.html", context)
 

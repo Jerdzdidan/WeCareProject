@@ -54,6 +54,7 @@
             <th>Brand Name</th>
             <th>Total Quantity</th>
             <th>Supplier</th>
+            <th>Status</th>
             <th>Date Last Stocked</th>
             <th>Notes</th>
             <th>Action</th>
@@ -67,6 +68,15 @@
             <td class="align-middle">{{ med.brand_name }}</td>
             <td class="align-middle">{{ med.total_quantity }}</td>
             <td class="align-middle">{{ med.supplier_name }}</td>
+            <td class="align-middle">
+              {% if med.total_quantity <= 0 %}
+                <span class="badge p-2 fw-bold bg-danger">OUT OF STOCK</span>
+              {% elif med.total_quantity <= 10 %}
+                <span class="badge p-2 fw-bold bg-warning text-dark">LOW STOCK</span>
+              {% else %}
+                <span class="badge p-2 fw-bold bg-success">AVAILABLE</span>
+              {% endif %}
+            </td>
             <td class="align-middle">{{ med.date_last_stock|date:"M. d, Y" }}</td>
             <td class="align-middle">{{ med.notes }}</td>
             <td class="align-middle">

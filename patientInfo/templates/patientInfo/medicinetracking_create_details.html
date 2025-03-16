@@ -57,6 +57,8 @@
               <dt class="text-secondary small">Last Stocked</dt>
               <dd class="mb-0">{{ medicine.date_last_stock|date:"M. d, Y"|default:"-" }}</dd>
             </div>
+          </dl>
+          <dl class="row g-2">
             <div class="col-4">
               <dt class="text-secondary small">Dosage</dt>
               <dd class="mb-0">{{ medicine.dosage|default:"-" }}</dd>
@@ -74,16 +76,22 @@
           </div>
           <dl class="row g-2">
             <div class="col-4">
-              <dt class="text-secondary small">Total Quantity (not expired)</dt>
+              <dt class="text-secondary small">Total Inventory Quantity</dt>
               <dd class="mb-0">{{ medicine.total_quantity|default:"-" }}</dd>
             </div>
-            <div class="col-4">
-              <dt class="text-secondary small">Expired Quantity</dt>
+            <div class="col-4 mt-2">
+              <dt class="text-secondary small">Total Released Quantity</dt>
+              <dd class="mb-0">{{ releasedQty }}</dd>
+            </div>
+            <div class="col-4 mt-2">
+              <dt class="text-secondary small">Total Expired Quantity</dt>
               <dd class="mb-0">{{ medicine.expired_quantity }}</dd>
             </div>
+          </dl>
+          <dl class="row g-2">
             <div class="col-4">
-              <dt class="text-secondary small">Released Quantity</dt>
-              <dd class="mb-0">{{ releasedQty|default:"-" }}</dd>
+              <dt class="text-secondary small">Total Available Quantity</dt>
+              <dd class="mb-0">{{ availableQty|default:"-" }}</dd>
             </div>
           </dl>
         </div>
