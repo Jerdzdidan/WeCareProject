@@ -24,7 +24,6 @@
                   <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders (Default)</option>
                   <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
                   <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
-                  <option value="Other" {% if request.GET.gender == "Other" %}selected{% endif %}>Other</option>
                 </select>
                 <button type="submit" class="btn btn-outline-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw);">Filter</button>
             </div>

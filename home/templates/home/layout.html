@@ -59,7 +59,7 @@
               <h5 class="d-flex align-items-end gap-1 mb-1">
                   <span class="text-light nav-font">
                       {% if user.is_authenticated %}Welcome, <span class="text-info">{{ request.user }} ({{ request.user.userprofile.userrole }})</span> <br>{% endif %}
-                      <small id="clock" class="my-auto text-muted text-light"></small>
+                      <small id="clock" class="my-auto text-white text-light"></small>
                   </span>
                   <span><img src="{% static 'home/images/hand.gif' %}" alt="" style="height: 2em; width: auto; vertical-align: middle;"></span>
               </h5>

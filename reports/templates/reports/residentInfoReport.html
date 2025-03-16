@@ -13,31 +13,31 @@
     <div class="container">
       <div class="row mt-2">
         <div class="col-auto">
-          <form method="get" action="">
-            <div class="input-group">
-                <select name="category" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
-                  <option value="" {% if not request.GET.category %}selected{% endif %}>All Categories (Default)</option>
-                  <option value="Adult" {% if request.GET.category == "Adult" %}selected{% endif %}>Adult</option>
-                  <option value="Senior" {% if request.GET.category == "Senior" %}selected{% endif %}>Senior</option>
-                  <option value="PWD" {% if request.GET.category == "PWD" %}selected{% endif %}>PWD</option>
-                  <option value="Children" {% if request.GET.category == "Children" %}selected{% endif %}>Children (17 and below)</option>
-                  <option value="Solo Parent" {% if request.GET.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
-                  <option value="Pregnant" {% if request.GET.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
-                </select>
-                <select name="gender" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
-                  <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders (Default)</option>
-                  <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
-                  <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
-                </select>
-                <select name="age" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);">
-                    <option value="" {% if not request.GET.age %}selected{% endif %}>All Ages (Default)</option>
-                    <option value="6" {% if request.GET.age == "6" %}selected{% endif %}>0-6</option>
-                    <option value="18" {% if request.GET.age == "18" %}selected{% endif %}>7-18</option>
-                    <option value="59" {% if request.GET.age == "59" %}selected{% endif %}>19-59</option>
-                </select>                
-              <button type="submit" class="btn btn-outline-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw);">Filter</button>
-            </div>
-          </form>
+            <form method="get" action="" id="filter-form">
+                <div class="input-group">
+                    <select name="category" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);" onchange="document.getElementById('filter-form').submit();">
+                        <option value="" {% if not request.GET.category %}selected{% endif %}>All Categories (Default)</option>
+                        <option value="Adult" {% if request.GET.category == "Adult" %}selected{% endif %}>Adult</option>
+                        <option value="Senior" {% if request.GET.category == "Senior" %}selected{% endif %}>Senior</option>
+                        <option value="PWD" {% if request.GET.category == "PWD" %}selected{% endif %}>PWD</option>
+                        <option value="Children" {% if request.GET.category == "Children" %}selected{% endif %}>Children (17 and below)</option>
+                        <option value="Solo Parent" {% if request.GET.category == "Solo Parent" %}selected{% endif %}>Solo Parent</option>
+                        <option value="Pregnant" {% if request.GET.category == "Pregnant" %}selected{% endif %}>Pregnant</option>
+                    </select>
+                    <select name="gender" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);" onchange="document.getElementById('filter-form').submit();">
+                        <option value="" {% if not request.GET.gender %}selected{% endif %}>All Genders (Default)</option>
+                        <option value="Male" {% if request.GET.gender == "Male" %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if request.GET.gender == "Female" %}selected{% endif %}>Female</option>
+                    </select>
+                    <select name="age" class="form-select border-secondary" style="cursor: pointer; vertical-align: middle; font-size: calc(0.7rem + 0.2vw);" onchange="document.getElementById('filter-form').submit();">
+                        <option value="" {% if not request.GET.age %}selected{% endif %}>All Ages (Default)</option>
+                        <option value="6" {% if request.GET.age == "6" %}selected{% endif %}>0-6</option>
+                        <option value="18" {% if request.GET.age == "18" %}selected{% endif %}>7-18</option>
+                        <option value="59" {% if request.GET.age == "59" %}selected{% endif %}>19-59</option>
+                    </select>
+                </div>
+            </form>
+            
         </div>
         <div class="col-md-auto ms-sm-auto"> 
             <div class="d-flex gap-2 mt-3 mt-sm-0"> 
@@ -194,14 +194,15 @@
         const customContent = `
             <div class="container">
                 <div class="mb-3">
-                    <div class="text-left" style="font-size: 20px; font-weight: bold;">
-                        <img src="{% static 'home/images/WeCareLogo.svg' %}" style="height: 50px;" alt="Logo">
-                        WECARE HEALTH CENTER
+                    <div class="text-left mt-2" style="font-size: 20px; font-weight: bold;">
+                        <img src="{% static 'reports/cityOfMandaluyongLogo.svg' %}" style="height: 80px;" alt="Logo">
+                        <img src="{% static 'reports/barangaySanJoseLogo.svg' %}" style="height: 80px;" alt="Logo"><br>
+                        Pamahalaang Barangay ng SAN JOSE
                     </div>
                     <div class="text-left" style="font-size: 10px;">
-                        Tampi, San Jose, Negros Oriental<br>
-                        Contact No. +63-917-710-7080<br>
-                        LTO Accreditation No. 123-456-789
+                        #548 Senator Neptali Gonzales St., Cor. Boni Ave., Brgy. San Jose, Mandaluyong City<br>
+                        Telephone No.; 8-962- 4251<br>
+                        Email Address: brgysanjose.office@gmail.com<br>
                     </div>
                     <hr class="my-2" style="border-top: 1px solid #000;">
                     <div class="text-center" style="font-size: 30px; margin: 13px 0px 13px;">
