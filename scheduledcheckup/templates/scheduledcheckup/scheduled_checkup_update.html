@@ -44,15 +44,15 @@
 {% endblock style %}
 
 {% block body %}
-<h3 class="mb-3">Update Patient Checkup for <span class="text-primary">{{ patient.patientID }}</span></h3>
+<h3 class="mb-3">Update Patient Checkup for <span class="text-primary">{{ checkup.patient.patientID }}</span></h3>
 
 <!-- Patient Info Card -->
 <div class="patient-info-card">
   <h3>Patient Information</h3>
-  <p><strong>Patient ID:</strong> {{ patient.patientID }}</p>
-  <p><strong>Name:</strong> {{ patient.resident.last_name }}, {{ patient.resident.first_name }}</p>
-  <p><strong>Age:</strong> {{ patient.resident.age }}</p>
-  <p><strong>Address:</strong> {{ patient.resident.present_address }}</p>
+  <p><strong>Patient ID:</strong> {{ checkup.patient.patientID }}</p>
+  <p><strong>Name:</strong> {{ checkup.patient.resident.last_name }}, {{ patient.resident.first_name }}</p>
+  <p><strong>Age:</strong> {{ checkup.patient.resident.age }}</p>
+  <p><strong>Address:</strong> {{ checkup.patient.resident.present_address }}</p>
 </div>
 
 <hr class="divider">
@@ -76,7 +76,7 @@
           <label for="checkup_time" class="form-label">Checkup Time (Optional)</label>
           <div class="input-group">
             <input type="text" name="checkup_time" id="checkup_time" class="form-control flatpickr-time" placeholder="Select checkup time" value="{% if checkup.checkup_time %}{{ checkup.checkup_time|time:'h:i A' }}{% endif %}">
-            <span class="input-group-text"><i class="ri-clock-line"></i></span>
+            <span class="input-group-text"><i class="ri-time-line"></i></span>
           </div>
         </div>
       </div>
