@@ -393,14 +393,14 @@ def patient_export_pdf(request):
     return response
 
 
-
 @login_required
 @role_required(['ADMIN', 'BHW', 'DOCTOR'], 'Medicine Record')
 def medicineReport(request):
     today = date.today()
     medicines = Medicine.objects.all().order_by("medicine_name").annotate(
         releasedQty=Sum('medicine_trackings__quantity_used'),
-        expiredQty=Sum('stocks__quantity', filter=Q(stocks__expiration_date__lte=today))
+        expiredQty=Sum('stocks__quantity', filter=Q(stocks__expiration_date__lte=today)),
+        availableQty = Sum('stocks__quantity', filter=Q(stocks__expiration_date__gt=today) & Q(stocks__quantity__gt=10))
     )
     
     context = {

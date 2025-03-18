@@ -102,7 +102,9 @@
               <td class="align-middle text-center">
                 <a href="{% url "scheduled-checkup-update" checkup.id %}" class="btn btn-sm btn-outline-success" title="Edit Checkup"><i class="ri-edit-2-fill"></i></a>
                 {% comment %} <a href="{% url "scheduled-checkup-delete" checkup.id %}" class="btn btn-sm btn-outline-danger" title="Delete Checkup"><i class="ri-delete-bin-5-fill"></i></a> {% endcomment %}
-                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ checkup.patient.patientID }}" data-ID="{{ checkup.id }}" data-patientName="{{ checkup.patient.resident.last_name }}, {{ checkup.patient.resident.first_name }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
+                {% if request.user.userprofile.userrole in "[ADMIN]" %}
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ checkup.patient.patientID }}" data-ID="{{ checkup.id }}" data-patientName="{{ checkup.patient.resident.last_name }}, {{ checkup.patient.resident.first_name }}" class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-5-fill"></i></button>
+                {% endif %}
               </td>
             {% endif %}
           </tr>

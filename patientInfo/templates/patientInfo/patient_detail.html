@@ -476,7 +476,7 @@
                   <a href="{% url 'medicine-tracking-update' tracking.id %}" class="btn btn-sm px-4 btn-outline-success responsive_text mb-1" title="Edit">
                     <i class="ri-edit-2-fill"></i>
                   </a>
-                  {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+                  {% if request.user.userprofile.userrole in "[ADMIN]" %}
                     <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ tracking.id }}" data-moduleName="Delete the medicine record" class="btn px-4 btn-sm btn-outline-danger mb-1 responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button> 
                   {% endif %}
                 </td>

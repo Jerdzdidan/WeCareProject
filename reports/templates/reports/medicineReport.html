@@ -54,6 +54,7 @@
                     <th>Supplier Name</th>
                     <th>Total Quantity</th>
                     <th>Released Quantity</th>
+                    <th>Available Quantity</th>
                     <th>Expired Quantity</th>
                     <th>Supplier</th>
                     <th>Date Last Stocked</th>
@@ -69,6 +70,7 @@
                     <td class="align-middle">{{ med.supplier_name }}</td>
                     <td class="align-middle">{{ med.total_quantity }}</td>
                     <td class="align-middle">{{ med.releasedQty|default:"0" }}</td>
+                    <td class="align-middle">{{ med.availableQty|default:"0" }}</td>
                     <td class="align-middle">{{ med.expiredQty|default:"0" }}</td>
                     <td class="align-middle">{{ med.supplier_name }}</td>
                     <td class="align-middle">{{ med.date_last_stock|date:"M. d, Y" }}</td>
