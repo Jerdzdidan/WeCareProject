@@ -1,6 +1,5 @@
 {% extends "home/layout.html" %}
 {% load static %}
-{% load crispy_forms_tags %}
 
 {% block style %}
   <link rel="stylesheet" href="{% static 'residentInfo/main.css' %}">
@@ -13,6 +12,47 @@
 
 {% block body %}
 <h3>Create Medical Record for Patient: <span class="text-primary">{{ patient.patientID }}</span></h3>
+
+<!-- Display Current Vital Signs using Bootstrap Card -->
+{% if patient.vital_signs %}
+<div class="card mb-4 shadow-sm">
+  <div class="card-header bg-secondary text-white d-flex align-items-center ">
+    <h5 class="card-title mb-0 mt-1">Current Vital Signs</h5>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4">
+        <p class="mb-1"><strong>Blood Pressure:</strong></p>
+        <p class="mb-0">{{ patient.vital_signs.blood_pressure|default:"N/A" }}</p>
+      </div>
+      <div class="col-md-4">
+        <p class="mb-1"><strong>Pulse Rate:</strong></p>
+        <p class="mb-0">{{ patient.vital_signs.pulse_rate|default:"N/A" }} bpm</p>
+      </div>
+      <div class="col-md-4">
+        <p class="mb-1"><strong>Temperature:</strong></p>
+        <p class="mb-0">{{ patient.vital_signs.temperature|default:"N/A" }} °C</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <p class="mb-1"><strong>Height:</strong></p>
+        <p class="mb-0">{{ patient.vital_signs.height|default:"N/A" }} cm</p>
+      </div>
+      <div class="col-md-6">
+        <p class="mb-1"><strong>Weight:</strong></p>
+        <p class="mb-0">{{ patient.vital_signs.weight|default:"N/A" }} kg</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-warning">
+  No vital signs recorded for this patient.
+</div>
+{% endif %}
+
 <article class="content-section border-secondary-subtle rounded p-3 shadow-lg">
   <form method="post">
     {% csrf_token %}

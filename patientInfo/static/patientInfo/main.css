@@ -1,0 +1,56 @@
+    .nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 0;
+  }
+  .nav-tabs .nav-link {
+    border: none;
+    background-color: #f8f9fa;
+    color: #495057;
+    padding: 0.75rem 1.25rem;
+    margin-right: 0.25rem;
+  }
+  .nav-tabs .nav-link.active {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-bottom-color: transparent;
+    color: #212529;
+  }
+  .tab-content {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    padding: 1rem;
+    margin-top: -1px;
+  }
+  .content-section {
+    border-radius: 0.25rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  }
+  .info-section h4 {
+    border-bottom: 1px solid rgb(95, 95, 95);
+    padding-bottom: 0.5rem;
+  }
+  .info-section p, .info-section li {
+    margin-bottom: 0.5rem;
+  }   
+  .info-label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .info-value {
+    padding: 0.375rem 0.75rem;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .section-header {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    padding-bottom: 0.5rem;
+    font-size: 1.25rem;
+  }
+  .table-readonly th, .table-readonly td {
+    vertical-align: middle;
+    padding: 0.75rem;
+  }

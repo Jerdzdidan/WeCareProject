@@ -53,7 +53,7 @@
         </thead>
         <tbody>
           {% for medicine in available_medicines %}
-          <tr class="clickable-row" data-href="{% url 'medicine-tracking-create-details' patient.patientID medicine.id %}">
+          <tr class="clickable-row" data-href="{% url 'medicine-tracking-select-chief' patient.patientID medicine.id %}">
             <td class="text-center">{{ medicine.medicine_name }}</td>
             <td class="text-center">{{ medicine.brand_name|default:"--" }}</td>
             <td class="text-center">{{ medicine.supplier_name|default:"--" }}</td>

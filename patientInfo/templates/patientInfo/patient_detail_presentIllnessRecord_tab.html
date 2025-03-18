@@ -1,0 +1,73 @@
+<!-- Present Illness Tab -->
+<div class="tab-pane fade" id="presentIllness" role="tabpanel" aria-labelledby="presentIllness-tab">
+    <div class="container px-3 pt-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Present Illness</h4>
+      </div>
+      <div class="row">
+        <div class="col-auto ms-auto my-auto">
+          {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+            <a href="{% url 'present-illness-create' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
+              <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Present Illness
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      <!-- Entries and Search Bar for Present Illness -->
+      <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+        <div>
+          <select id="patientPresentIllnessEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span class="ms-2">Entries per page</span>
+        </div>
+        <div>
+          <input type="text" id="patientPresentIllnessSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
+        </div>
+      </div>
+    </div>
+    <!-- Present Illness Table -->
+    <div class="table-responsive">
+      <table class="table table-striped projectTables" id="patientPresentIllnessDataTable">
+        <thead class="table-dark">
+          <tr>
+            <th class="text-start">Illness Name</th>
+            <th class="text-start">Start Date</th>
+            <th class="text-start">Treatment</th>
+            {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+              <th class="text-center">Action</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for illness in patient.present_illnesses.all %}
+          <tr>
+            <td class="text-start">{{ illness.illness_name }}</td>
+            <td class="text-start">{{ illness.start_date|date:"M d, Y" }}</td>
+            <td class="text-start">{{ illness.treatment|default:"N/A" }}</td>
+            {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+            <td class="text-center">
+              <a href="{% url 'present-illness-update' illness.id %}" class="btn btn-sm px-4 btn-outline-success" title="Edit">
+                <i class="ri-edit-2-fill"></i>
+              </a>
+              {% if request.user.userprofile.userrole in "[ADMIN]" %}
+              <button type="button" data-bs-toggle="modal" data-bs-target="#myModal"
+                      data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}"
+                      data-ID="{{ illness.id }}" data-moduleName="Delete the present illness record"
+                      class="btn btn-sm px-4 btn-outline-danger" title="Delete">
+                <i class="ri-delete-bin-5-fill"></i>
+              </button>
+              {% endif %}
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div id="patientPresentIllnessCustomPagination"></div>
+    </div>
+  </div>
+  

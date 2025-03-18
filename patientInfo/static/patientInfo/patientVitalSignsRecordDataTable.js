@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    // ==================== patientMedicalRecord DataTable ====================
-    const $patientMedicalRecordDataTable = $('#patientMedicalRecordDataTable').DataTable({
-        order: [3, 'desc'],
+    // ==================== patientVitalSigns DataTable ====================
+    const $patientVitalSignsDataTable = $('#patientVitalSignsDataTable').DataTable({
+        order: [0, 'desc'],
         layout: {
             topStart: null,
             topEnd: null,
@@ -15,22 +15,22 @@ $(document).ready(function() {
     });
 
     // Stock Table Elements (correct IDs)
-    const $patientMedicalRecordEntries = $('#patientMedicalRecordCustomEntries');
-    const $patientMedicalRecordSearch = $('#patientMedicalRecordSearchBar');
-    const $patientMedicalRecordPagination = $('#patientMedicalRecordCustomPagination');
+    const $patientVitalSignsEntries = $('#patientVitalSignsCustomEntries');
+    const $patientVitalSignsSearch = $('#patientVitalSignsSearchBar');
+    const $patientVitalSignsPagination = $('#patientVitalSignsCustomPagination');
 
     // Stock Controls Event Handlers
-    $patientMedicalRecordEntries.on('change', function() {
-        $patientMedicalRecordDataTable.page.len(parseInt(this.value, 10)).draw();
+    $patientVitalSignsEntries.on('change', function() {
+        $patientVitalSignsDataTable.page.len(parseInt(this.value, 10)).draw();
     });
 
-    $patientMedicalRecordSearch.on('keyup', function() {
-        $patientMedicalRecordDataTable.search(this.value).draw();
+    $patientVitalSignsSearch.on('keyup', function() {
+        $patientVitalSignsDataTable.search(this.value).draw();
     });
 
     // Stock Pagination Function
-    function updatepatientMedicalRecordPagination() {
-        const info = $patientMedicalRecordDataTable.page.info();
+    function updatepatientVitalSignsPagination() {
+        const info = $patientVitalSignsDataTable.page.info();
         let paginationHtml = '<ul class="pagination justify-content-start ms-2">';
         
         // Previous Button
@@ -55,16 +55,16 @@ $(document).ready(function() {
             </li>`;
         }
         
-        $patientMedicalRecordPagination.html(paginationHtml + '</ul>');
+        $patientVitalSignsPagination.html(paginationHtml + '</ul>');
     }
 
     // Stock Pagination Events
-    $patientMedicalRecordDataTable.on('draw', updatepatientMedicalRecordPagination);
-    $patientMedicalRecordPagination.on('click', 'a.page-link', function(e) {
+    $patientVitalSignsDataTable.on('draw', updatepatientVitalSignsPagination);
+    $patientVitalSignsPagination.on('click', 'a.page-link', function(e) {
         e.preventDefault();
-        $patientMedicalRecordDataTable.page(parseInt($(this).data('page'), 10).draw('page'));
+        $patientVitalSignsDataTable.page(parseInt($(this).data('page'), 10).draw('page'));
     });
-    updatepatientMedicalRecordPagination();
+    updatepatientVitalSignsPagination();
 
 
 });

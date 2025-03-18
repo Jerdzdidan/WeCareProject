@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    // ==================== patientMedicalRecord DataTable ====================
-    const $patientMedicalRecordDataTable = $('#patientMedicalRecordDataTable').DataTable({
-        order: [3, 'desc'],
+    // ==================== patientPresentIllness DataTable ====================
+    const $patientPresentIllnessDataTable = $('#patientPresentIllnessDataTable').DataTable({
+        order: [1, 'desc'],
         layout: {
             topStart: null,
             topEnd: null,
@@ -15,22 +15,22 @@ $(document).ready(function() {
     });
 
     // Stock Table Elements (correct IDs)
-    const $patientMedicalRecordEntries = $('#patientMedicalRecordCustomEntries');
-    const $patientMedicalRecordSearch = $('#patientMedicalRecordSearchBar');
-    const $patientMedicalRecordPagination = $('#patientMedicalRecordCustomPagination');
+    const $patientPresentIllnessEntries = $('#patientPresentIllnessCustomEntries');
+    const $patientPresentIllnessSearch = $('#patientPresentIllnessSearchBar');
+    const $patientPresentIllnessPagination = $('#patientPresentIllnessCustomPagination');
 
     // Stock Controls Event Handlers
-    $patientMedicalRecordEntries.on('change', function() {
-        $patientMedicalRecordDataTable.page.len(parseInt(this.value, 10)).draw();
+    $patientPresentIllnessEntries.on('change', function() {
+        $patientPresentIllnessDataTable.page.len(parseInt(this.value, 10)).draw();
     });
 
-    $patientMedicalRecordSearch.on('keyup', function() {
-        $patientMedicalRecordDataTable.search(this.value).draw();
+    $patientPresentIllnessSearch.on('keyup', function() {
+        $patientPresentIllnessDataTable.search(this.value).draw();
     });
 
     // Stock Pagination Function
-    function updatepatientMedicalRecordPagination() {
-        const info = $patientMedicalRecordDataTable.page.info();
+    function updatepatientPresentIllnessPagination() {
+        const info = $patientPresentIllnessDataTable.page.info();
         let paginationHtml = '<ul class="pagination justify-content-start ms-2">';
         
         // Previous Button
@@ -55,16 +55,16 @@ $(document).ready(function() {
             </li>`;
         }
         
-        $patientMedicalRecordPagination.html(paginationHtml + '</ul>');
+        $patientPresentIllnessPagination.html(paginationHtml + '</ul>');
     }
 
     // Stock Pagination Events
-    $patientMedicalRecordDataTable.on('draw', updatepatientMedicalRecordPagination);
-    $patientMedicalRecordPagination.on('click', 'a.page-link', function(e) {
+    $patientPresentIllnessDataTable.on('draw', updatepatientPresentIllnessPagination);
+    $patientPresentIllnessPagination.on('click', 'a.page-link', function(e) {
         e.preventDefault();
-        $patientMedicalRecordDataTable.page(parseInt($(this).data('page'), 10).draw('page'));
+        $patientPresentIllnessDataTable.page(parseInt($(this).data('page'), 10).draw('page'));
     });
-    updatepatientMedicalRecordPagination();
+    updatepatientPresentIllnessPagination();
 
 
 });

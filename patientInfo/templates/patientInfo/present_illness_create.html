@@ -1,0 +1,51 @@
+{% extends "home/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'residentInfo/main.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    .form-section {
+      margin-bottom: 1rem;
+    }
+  </style>
+{% endblock style %}
+
+{% block body %}
+<h3>Add Present Illness for Patient: <span class="text-primary">{{ patient.patientID }}</span></h3>
+<article class="content-section shadow-sm rounded p-3">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-section">
+      <label for="illness_name" class="form-label">Illness Name</label>
+      <input type="text" id="illness_name" name="illness_name" class="form-control" required>
+    </div>
+    <div class="form-section">
+      <label for="start_date" class="form-label">Start Date</label>
+      <input type="text" id="start_date" name="start_date" class="form-control" required>
+    </div>
+    <div class="form-section">
+      <label for="treatment" class="form-label">Treatment</label>
+      <textarea id="treatment" name="treatment" class="form-control" rows="4"></textarea>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-success">Create</button>
+      <a href="{% url 'patient-detail' patient.patientID %}" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+  </form>
+</article>
+{% endblock body %}
+
+{% block script %}
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#start_date", {
+      dateFormat: "Y-m-d",       
+      altInput: true,
+      altFormat: "M j, Y",         
+      allowInput: true,
+      autoClose: true
+    });
+  </script>
+{% endblock script %}

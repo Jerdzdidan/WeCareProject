@@ -123,3 +123,7 @@ class MedicineTracking(models.Model):
 
     def __str__(self):
         return f"{self.medicine.medicine_name} for {self.patient.patientID} ({self.quantity_used} units)"
+    
+
+
+    

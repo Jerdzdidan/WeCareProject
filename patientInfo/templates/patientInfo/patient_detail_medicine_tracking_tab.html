@@ -1,0 +1,91 @@
+    <!-- Medicine Tracking Tab -->
+    <div class="tab-pane fade" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">
+        <div class="container px-3 pt-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Medicine Tracking</h4>
+          </div>
+          <div class="row">
+            <div class="col-auto ms-auto my-auto">
+              {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+                <a href="{% url 'medicine-tracking-select' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
+                  <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Medicine Record
+                </a>
+              {% endif %}
+            </div>
+          </div>
+          <!-- Entries and Search Bar -->
+          <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+            <div>
+              <select id="patientMedicalRecordEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              <span class="ms-2">Entries per page</span>
+            </div>
+            <div>
+              <input type="text" id="patientMedicalRecordSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
+            </div>
+          </div>
+        </div>
+        <!-- Medicine Tracking Table -->
+        <div class="table-responsive">
+          <table class="table table-striped projectTables" id="patientMedicineTrackingDataTable">
+            <thead class="table-dark">
+              <tr>
+                <th class="text-start">Chief Complain</th>
+                <th class="text-start">Medicine Name</th>
+                <th class="text-start">Quantity Used</th>
+                <th class="text-start">Dosage</th>
+                <th class="text-start">Frequency</th>
+                <th class="text-start">Date Given</th>
+                <th class="text-start">Follow Up Date</th>
+                <th class="text-start">Start Date</th>
+                <th class="text-start">End Date</th>
+                {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+                  <th class="text-center">Action</th>
+                {% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for tracking in medicine_trackings %}
+              <tr>
+                <td class="align-middle text-start">{{ tracking.chief_complain|default:"-" }}</td>
+                <td class="align-middle text-start">{{ tracking.medicine.medicine_name }}</td>
+                <td class="align-middle text-center">{{ tracking.quantity_used }}</td>
+                <td class="align-middle text-start">{{ tracking.total_dosage }}</td>
+                <td class="align-middle text-start">{{ tracking.frequency }}</td>
+                <td class="align-middle text-start">{{ tracking.date_given|date:"M d, Y" }}</td>
+                <td class="align-middle text-start">
+                  {% if tracking.follow_up_date %}
+                    {{ tracking.follow_up_date|date:"M d, Y" }}
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </td>
+                <td class="align-middle text-start">{{ tracking.start_date|date:"M d, Y" }}</td>
+                <td class="align-middle text-start">
+                  {% if tracking.end_date %}
+                    {{ tracking.end_date|date:"M d, Y" }}
+                  {% else %}
+                    Ongoing
+                  {% endif %}
+                </td>
+                {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+                  <td class="text-center">
+                    <a href="{% url 'medicine-tracking-update' tracking.id %}" class="btn btn-sm px-4 btn-outline-success responsive_text mb-1" title="Edit">
+                      <i class="ri-edit-2-fill"></i>
+                    </a>
+                    {% if request.user.userprofile.userrole in "[ADMIN]" %}
+                      <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ tracking.id }}" data-moduleName="Delete the medicine record" class="btn px-4 btn-sm btn-outline-danger mb-1 responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button> 
+                    {% endif %}
+                  </td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <div id="patientMedicineTrackingCustomPagination"></div>
+        </div>
+      </div>

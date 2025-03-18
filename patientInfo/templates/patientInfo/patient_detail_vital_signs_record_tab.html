@@ -1,0 +1,101 @@
+<!-- Vital Signs Records Tab -->
+<div class="tab-pane fade" id="vitalsigns" role="tabpanel" aria-labelledby="vitalsigns-tab">
+    <div class="container px-3 pt-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Vital Signs Records</h4>
+      </div>
+      <div class="row">
+        <div class="col-auto my-auto mb-2">
+          <!-- Date Filter Form for Vital Signs Records -->
+          <form method="get" id="vitalsignsdateFilterForm" class="my-auto">
+            <div class="input-group mt-2" style="font-size: calc(0.8rem + 0.2vw);">
+              <input type="text" id="vitalsignsfilter_start_date" name="vitalsignsfilter_start_date"
+                     class="form-control flatpickr-range" placeholder="From Date"
+                     value="{{ request.GET.vitalsignsfilter_start_date }}"
+                     style="font-size: calc(0.8rem + 0.2vw);">
+              <span class="input-group-text">
+                <i class="ri-calendar-line"></i>
+              </span>
+              <i class="ri-arrow-right-long-fill my-auto mx-2"></i>
+              <input type="text" id="vitalsignsfilter_end_date" name="vitalsignsfilter_end_date"
+                     class="form-control flatpickr-range" placeholder="To Date"
+                     value="{{ request.GET.vitalsignsfilter_end_date }}"
+                     style="font-size: calc(0.8rem + 0.2vw);">
+              <span class="input-group-text">
+                <i class="ri-calendar-line"></i>
+              </span>
+            </div>
+          </form>
+        </div>
+        <div class="col-auto ms-auto my-auto">
+          {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+            <a href="{% url 'vitalsigns-record-create' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
+              <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Vital Signs Record
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      <!-- Entries and Search Bar for Vital Signs Records -->
+      <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+        <div>
+          <select id="patientVitalSignsEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span class="ms-2">Entries per page</span>
+        </div>
+        <div>
+          <input type="text" id="patientVitalSignsSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
+        </div>
+      </div>
+    </div>
+    <!-- Vital Signs Records Table -->
+    <div class="table-responsive">
+      <table class="table table-striped projectTables" id="patientVitalSignsDataTable">
+        <thead class="table-dark">
+          <tr>
+            <th class="text-start">Recorded At</th>
+            <th class="text-start">Blood Pressure</th>
+            <th class="text-start">Pulse Rate</th>
+            <th class="text-start">Temperature</th>
+            <th class="text-start">Height</th>
+            <th class="text-start">Weight</th>
+            {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+              <th class="text-center">Action</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in vitalsigns_records %}
+          <tr>
+            <td class="align-middle text-start">{{ record.recorded_at|date:"M d, Y H:i" }}</td>
+            <td class="align-middle text-start">{{ record.blood_pressure|default:"-" }}</td>
+            <td class="align-middle text-center">{{ record.pulse_rate|default:"-" }}</td>
+            <td class="align-middle text-start">{{ record.temperature|default:"-" }}</td>
+            <td class="align-middle text-start">{{ record.height|default:"-" }}</td>
+            <td class="align-middle text-start">{{ record.weight|default:"-" }}</td>
+            {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+              <td class="text-center">
+                <a href="{% url 'vital-signs-update' record.patient.patientID record.id %}" class="btn btn-sm px-4 btn-outline-success" title="Edit">
+                  <i class="ri-edit-2-fill"></i>
+                </a>
+                {% if request.user.userprofile.userrole in "[ADMIN]" %}
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#myModal"
+                          data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}"
+                          data-ID="{{ record.id }}" data-moduleName="Delete the vital signs record"
+                          class="btn btn-sm px-4 btn-outline-danger" title="Delete">
+                    <i class="ri-delete-bin-5-fill"></i>
+                  </button>
+                {% endif %}
+              </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div id="patientVitalSignsCustomPagination"></div>
+    </div>
+  </div>
+  

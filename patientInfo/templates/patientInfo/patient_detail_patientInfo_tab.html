@@ -1,0 +1,185 @@
+<!-- Patient Info Tab -->
+<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+    <div class="container p-3">
+      <div class="info-section">
+        <!-- Resident Information -->
+        <div class="section-header fw-bold">Resident Information</div>
+        <div class="row">
+            <div class="col-md-4">
+                <p class="info-label">ID:</p>
+                <p class="info-value">{{ patient.resident.id }}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Name:</p>
+                <p class="info-value">{{ patient.resident.last_name }}, {{ patient.resident.first_name }}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Birthdate:</p>
+                <p class="info-value">{{ patient.resident.birthdate }}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Age:</p>
+                <p class="info-value">{{ patient.resident.age }}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Gender:</p>
+                <p class="info-value">{{ patient.resident.gender }}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Category:</p>
+                <p class="info-value">{{ patient.resident.category }}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Address:</p>
+                <p class="info-value">{{ patient.resident.present_address }}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Civil Status:</p>
+                <p class="info-value">{{ patient.resident.civil_status }}</p>
+            </div>
+        </div>
+      
+        <!-- Vital Signs -->
+        <div class="section-header fw-bold mt-5">Vital Signs</div>
+        {% if patient.vital_signs %}
+        <div class="row">
+            <div class="col-md-4">
+            <p class="info-label">Blood Pressure (BP):</p>
+            <p class="info-value">{{ patient.vital_signs.blood_pressure|default:"N/A" }}</p>
+            </div>
+            <div class="col-md-4">
+            <p class="info-label">Pulse Rate (PR):</p>
+            <p class="info-value">{{ patient.vital_signs.pulse_rate|default:"N/A" }}</p>
+            </div>
+            <div class="col-md-4">
+            <p class="info-label">Temperature (TEMP):</p>
+            <p class="info-value">{{ patient.vital_signs.temperature|default:"N/A" }}°C</p>
+            </div>
+            <div class="col-md-4">
+            <p class="info-label">Height (cm):</p>
+            <p class="info-value">{{ patient.vital_signs.height|default:"N/A" }}</p>
+            </div>
+            <div class="col-md-4">
+            <p class="info-label">Weight (kg):</p>
+            <p class="info-value">{{ patient.vital_signs.weight|default:"N/A" }}</p>
+            </div>
+        </div>
+        {% else %}
+            <p>No vital signs recorded.</p>
+        {% endif %}
+      
+      
+        <!-- Vaccinations -->
+        <div class="section-header fw-bold mt-5">Vaccinations</div>
+        {% if patient.vaccinations %}
+            <div class="row">
+            <div class="col-md-4">
+                <p class="info-label">Hepatitis A:</p>
+                <p class="info-value">{% if patient.vaccinations.hepatitis_a %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Hepatitis B:</p>
+                <p class="info-value">{% if patient.vaccinations.hepatitis_b %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">HPV Vaccine:</p>
+                <p class="info-value">{% if patient.vaccinations.hpv_vaccine %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Pre-announced Vaccine:</p>
+                <p class="info-value">{% if patient.vaccinations.pre_announced_vaccine %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Typhoid:</p>
+                <p class="info-value">{% if patient.vaccinations.typhoid %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">MMR:</p>
+                <p class="info-value">{% if patient.vaccinations.mmr %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">DPT:</p>
+                <p class="info-value">{% if patient.vaccinations.dpt %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Chicken Pox:</p>
+                <p class="info-value">{% if patient.vaccinations.chicken_pox %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Tetanus Toxoid:</p>
+                <p class="info-value">{% if patient.vaccinations.tetanus_toxoid %}Yes{% else %}No{% endif %}</p>
+            </div>
+            {% if patient.vaccinations.others %}
+            <div class="col-md-12">
+                <p class="info-label">Others:</p>
+                <p class="info-value">{{ patient.vaccinations.others|default:"None" }}</p>
+            </div>
+            {% endif %}
+            </div>
+        {% else %}
+            <p>No vaccination records available.</p>
+        {% endif %}
+      
+        <!-- Past Medical History -->
+        <div class="section-header fw-bold mt-5">Past Medical History</div>
+        {% if patient.past_medical_history %}
+            <div class="row">
+            <div class="col-md-4">
+                <p class="info-label">Asthma:</p>
+                <p class="info-value">{% if patient.past_medical_history.asthma %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Anemia:</p>
+                <p class="info-value">{% if patient.past_medical_history.anemia %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Bad Teeth:</p>
+                <p class="info-value">{% if patient.past_medical_history.bad_teeth %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Diabetes:</p>
+                <p class="info-value">{% if patient.past_medical_history.diabetes %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Depression:</p>
+                <p class="info-value">{% if patient.past_medical_history.depression %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Heart Disease:</p>
+                <p class="info-value">{% if patient.past_medical_history.heart_disease %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Hearing Problem:</p>
+                <p class="info-value">{% if patient.past_medical_history.hearing_problem %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">High Blood Pressure:</p>
+                <p class="info-value">{% if patient.past_medical_history.high_blood_pressure %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Heart Attack:</p>
+                <p class="info-value">{% if patient.past_medical_history.heart_attack %}Yes{% else %}No{% endif %}</p>
+            </div>
+            <div class="col-md-4">
+                <p class="info-label">Drug Allergy/Others:</p>
+                <p class="info-value">{% if patient.past_medical_history.drug_allergy %}Yes{% else %}No{% endif %}</p>
+            </div>
+            {% if patient.past_medical_history.allergy_details %}
+            <div class="col-md-12">
+                <p class="info-label">Allergy Details:</p>
+                <p class="info-value">{{ patient.past_medical_history.allergy_details|default:"None" }}</p>
+            </div>
+            {% endif %}
+            {% if patient.past_medical_history.others %}
+            <div class="col-md-12">
+                <p class="info-label">Others:</p>
+                <p class="info-value">{{ patient.past_medical_history.others|default:"None" }}</p>
+            </div>
+            {% endif %}
+            </div>
+        {% else %}
+            <p>No past medical history available.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>

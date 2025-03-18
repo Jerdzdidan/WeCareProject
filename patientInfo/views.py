@@ -11,7 +11,8 @@ from patientInfo.models import (
     PastMedicalHistory,
     MedicalRecord,
     PresentIllness,
-    MedicineTracking
+    MedicineTracking,
+    VitalSignsRecord
 )
 from medicineMonitoring.models import Medicine, MedicineStock
 from medicineMonitoring.views import update_medicine_date_last_stocked, update_medicine_totals
@@ -95,6 +96,15 @@ def patient_create_details(request, resident_id):
             weight=weight_float,
         )
         
+        VitalSignsRecord.objects.create(
+            patient=patient,
+            blood_pressure=bp or None,
+            pulse_rate=pr_int,
+            temperature=temp_float,
+            height=height_float,
+            weight=weight_float,
+        )
+        
         index = 0
         while True:
             illness_key = f"present_illness[{index}][illness_name]"
@@ -103,7 +113,6 @@ def patient_create_details(request, resident_id):
                 start_date_str = request.POST.get(f"present_illness[{index}][start_date]", "").strip()
                 treatment = request.POST.get(f"present_illness[{index}][treatment]", "").strip()
                 
-                # If all fields are empty, ignore this row.
                 if not (illness_name or start_date_str or treatment):
                     index += 1
                     continue
@@ -113,7 +122,6 @@ def patient_create_details(request, resident_id):
                 except ValueError:
                     start_date = None
             
-                # Only create the record if both illness name and start date are provided.
                 if illness_name and start_date:
                     patient.present_illnesses.create(
                         illness_name=illness_name,
@@ -125,7 +133,7 @@ def patient_create_details(request, resident_id):
                 break
         
         hepatitis_a = request.POST.get("vaccinations[hepatitis_a]") == "on"
-        hepatitis_b = request.POST.get("vaccinations[hepatitis_b]") == "on"
+        hepatitis_b = request.POST.get("vaccinations[vaccinations[hepatitis_b]]") == "on"
         hpv_vaccine = request.POST.get("vaccinations[hpv_vaccine]") == "on"
         pre_announced_vaccine = request.POST.get("vaccinations[pre_announced_vaccine]") == "on"
         typhoid = request.POST.get("vaccinations[typhoid]") == "on"
@@ -184,6 +192,7 @@ def patient_create_details(request, resident_id):
     return render(request, 'patientInfo/patient_create_details.html', {'resident': resident})
 
 
+
 @login_required
 @role_required(['BHW', 'DOCTOR'], 'Update patient on the Patient Information')
 def patient_update(request, pk):
@@ -203,6 +212,7 @@ def patient_update(request, pk):
         height = request.POST.get("height", "").strip()
         weight = request.POST.get("weight", "").strip()
         
+        # Update or create current VitalSigns
         if vital_signs:
             vital_signs.blood_pressure = bp or None
             vital_signs.pulse_rate = pr or None
@@ -212,7 +222,7 @@ def patient_update(request, pk):
             vital_signs.save()
         else:
             if any([bp, pr, temp, height, weight]):
-                VitalSigns.objects.create(
+                vital_signs = VitalSigns.objects.create(
                     patient=patient,
                     blood_pressure=bp or None,
                     pulse_rate=pr or None,
@@ -221,6 +231,17 @@ def patient_update(request, pk):
                     weight=weight or None,
                 )
         
+        # Create a new VitalSignsRecord to log the update
+        VitalSignsRecord.objects.create(
+            patient=patient,
+            blood_pressure=bp or None,
+            pulse_rate=pr or None,
+            temperature=temp or None,
+            height=height or None,
+            weight=weight or None,
+        )
+        
+        # Update present illnesses
         patient.present_illnesses.all().delete()
         index = 0
         while True:
@@ -249,6 +270,7 @@ def patient_update(request, pk):
             else:
                 break
         
+        # Update Vaccination
         hepatitis_a = request.POST.get("vaccinations[hepatitis_a]") == "on"
         hepatitis_b = request.POST.get("vaccinations[hepatitis_b]") == "on"
         hpv_vaccine = request.POST.get("vaccinations[hpv_vaccine]") == "on"
@@ -288,6 +310,7 @@ def patient_update(request, pk):
                     others=others
                 )
         
+        # Update Past Medical History
         asthma = request.POST.get("past_history[asthma]") == "on"
         anemia = request.POST.get("past_history[anemia]") == "on"
         bad_teeth = request.POST.get("past_history[bad_teeth]") == "on"
@@ -396,6 +419,7 @@ def patient_detail(request, pk):
     patient = get_object_or_404(Patient, patientID=pk)
     records = patient.medical_records.all().order_by('-last_visited')
     
+    # Filter Medical Records by date (using GET keys: start_date and end_date)
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
     
@@ -420,11 +444,38 @@ def patient_detail(request, pk):
             pass
 
     medicine_trackings = patient.medicine_trackings.all().order_by('start_date')
+    
+    # Filter Vital Signs Records by date (using GET keys: vitalsignsfilter_start_date and vitalsignsfilter_end_date)
+    vitalsigns_records = patient.vital_signs_records.all().order_by('-recorded_at')
+    vs_start = request.GET.get('vitalsignsfilter_start_date')
+    vs_end = request.GET.get('vitalsignsfilter_end_date')
+    if vs_start and vs_end:
+        try:
+            vs_start_obj = datetime.strptime(vs_start, "%b %d, %Y").date()
+            vs_end_obj = datetime.strptime(vs_end, "%b %d, %Y").date()
+            vitalsigns_records = vitalsigns_records.filter(recorded_at__range=[vs_start_obj, vs_end_obj])
+        except ValueError:
+            pass
+    elif vs_start:
+        try:
+            vs_start_obj = datetime.strptime(vs_start, "%b %d, %Y").date()
+            vitalsigns_records = vitalsigns_records.filter(recorded_at__gte=vs_start_obj)
+        except ValueError:
+            pass
+    elif vs_end:
+        try:
+            vs_end_obj = datetime.strptime(vs_end, "%b %d, %Y").date()
+            vitalsigns_records = vitalsigns_records.filter(recorded_at__lte=vs_end_obj)
+        except ValueError:
+            pass
+
     return render(request, 'patientInfo/patient_detail.html', {
         'patient': patient,
         'medical_records': records,
         'medicine_trackings': medicine_trackings,
+        'vitalsigns_records': vitalsigns_records,
     })
+
 
 
 # === MEDICAL RECORD FUNCTIONALITY ===
@@ -528,6 +579,19 @@ def medicine_tracking_select(request, pk):
     return render(request, "patientInfo/medicinetracking_select.html", context)
 
 @login_required
+@role_required(['DOCTOR'], 'Select Chief Complaint for Medicine Tracking')
+def medicine_tracking_select_chief_complain(request, pk, medicine_id):
+    patient = get_object_or_404(Patient, patientID=pk)
+    medical_records = patient.medical_records.all().order_by('-last_visited')
+    context = {
+        "patient": patient,
+        "medicine_id": medicine_id,
+        "medical_records": medical_records,
+    }
+    return render(request, "patientInfo/chief_complaint_select.html", context)
+
+
+@login_required
 @role_required(['DOCTOR'], 'Create patient-medicine tracking on the Patient Information')
 def medicine_tracking_create_details(request, pk, medicine_id):
     patient = get_object_or_404(Patient, patientID=pk)
@@ -542,6 +606,8 @@ def medicine_tracking_create_details(request, pk, medicine_id):
 
     available_stocks = valid_stocks.filter(quantity__gt=10)
     availableQty = available_stocks.aggregate(total=Sum('quantity'))['total'] or 0
+
+    chief_complain_prefill = request.GET.get("chief_complain", "")
 
     if request.method == "POST":
         quantity_str = request.POST.get("quantity", "").strip()
@@ -627,7 +693,8 @@ def medicine_tracking_create_details(request, pk, medicine_id):
         "patient": patient,
         "medicine": medicine,
         "releasedQty": releasedQty,
-        "availableQty": availableQty
+        "availableQty": availableQty,
+        "chief_complain_prefill": chief_complain_prefill,
     }
     return render(request, "patientInfo/medicinetracking_create_details.html", context)
 
@@ -776,4 +843,258 @@ def medicine_tracking_delete(request, tracking_id):
 
     tracking.delete()
     messages.success(request, "Medicine tracking record deleted successfully!")
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+# === VITAL SIGNS FUNCTIONALITY ===
+@login_required
+@role_required(['BHW', 'DOCTOR'], 'Create vital signs on the Patient Information')
+def vital_signs_create(request, pk):
+    patient = get_object_or_404(Patient, patientID=pk)
+    
+    if request.method == 'POST':
+        blood_pressure = request.POST.get('blood_pressure')
+        pulse_rate = request.POST.get('pulse_rate')
+        temperature = request.POST.get('temperature')
+        height = request.POST.get('height')
+        weight = request.POST.get('weight')
+        
+        try:
+            pulse_rate = int(pulse_rate) if pulse_rate else None
+        except ValueError:
+            pulse_rate = None
+        try:
+            temperature = float(temperature) if temperature else None
+        except ValueError:
+            temperature = None
+        try:
+            height = float(height) if height else None
+        except ValueError:
+            height = None
+        try:
+            weight = float(weight) if weight else None
+        except ValueError:
+            weight = None
+
+        record = VitalSignsRecord.objects.create(
+            patient=patient,
+            blood_pressure=blood_pressure,
+            pulse_rate=pulse_rate,
+            temperature=temperature,
+            height=height,
+            weight=weight
+        )
+        
+        VitalSigns.objects.update_or_create(
+            patient=patient,
+            defaults={
+                'blood_pressure': blood_pressure,
+                'pulse_rate': pulse_rate,
+                'temperature': temperature,
+                'height': height,
+                'weight': weight,
+            }
+        )
+        
+        return redirect('patient-detail', pk=patient.patientID)
+    
+    return render(request, 'patientInfo/vital_signs_create.html', {'patient': patient})
+
+
+@login_required
+@role_required(['BHW', 'DOCTOR'], 'Update vital signs record on the Patient Information')
+def vital_signs_update(request, pk, vital_signs_id):
+    patient = get_object_or_404(Patient, patientID=pk)
+    record = get_object_or_404(VitalSignsRecord, id=vital_signs_id, patient=patient)
+    
+    if request.method == 'POST':
+        blood_pressure = request.POST.get('blood_pressure')
+        pulse_rate = request.POST.get('pulse_rate')
+        temperature = request.POST.get('temperature')
+        height = request.POST.get('height')
+        weight = request.POST.get('weight')
+        
+        try:
+            pulse_rate = int(pulse_rate) if pulse_rate else None
+        except ValueError:
+            pulse_rate = None
+        try:
+            temperature = float(temperature) if temperature else None
+        except ValueError:
+            temperature = None
+        try:
+            height = float(height) if height else None
+        except ValueError:
+            height = None
+        try:
+            weight = float(weight) if weight else None
+        except ValueError:
+            weight = None
+        
+        record.blood_pressure = blood_pressure
+        record.pulse_rate = pulse_rate
+        record.temperature = temperature
+        record.height = height
+        record.weight = weight
+        record.save()
+
+        # Update current VitalSigns if this is the latest record
+        latest_record = VitalSignsRecord.objects.filter(patient=patient).order_by('-recorded_at').first()
+        if latest_record and latest_record.id == record.id:
+            VitalSigns.objects.update_or_create(
+                patient=patient,
+                defaults={
+                    'blood_pressure': blood_pressure,
+                    'pulse_rate': pulse_rate,
+                    'temperature': temperature,
+                    'height': height,
+                    'weight': weight,
+                }
+            )
+
+        # Create log entry for updating vital signs record
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Vital Signs",
+            action="Update Vital Signs Record",
+            performed_to=f"Vital Signs Record ID - {record.id} for {patient.patientID}: {patient.resident.last_name}, {patient.resident.first_name}",
+            performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+        
+        messages.success(request, "Vital signs record updated successfully!")
+        return redirect('patient-detail', pk=patient.patientID)
+    
+    return render(request, 'patientInfo/vital_signs_update.html', {'patient': patient, 'record': record})
+
+
+
+@login_required
+@role_required(['ADMIN'], 'Delete vital signs record on the Patient Information')
+def vital_signs_delete(request, pk, vital_signs_id):
+    patient = get_object_or_404(Patient, patientID=pk)
+    record = get_object_or_404(VitalSignsRecord, id=vital_signs_id, patient=patient)
+    
+    # Check if this record is the latest one
+    latest_record = VitalSignsRecord.objects.filter(patient=patient).order_by('-recorded_at').first()
+    if latest_record and latest_record.id == record.id:
+        messages.warning(request, "You cannot delete the latest vital signs record.")
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+    
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Vital Signs",
+        action="Delete Vital Signs Record",
+        performed_to=f"Vital Signs Record ID - {record.id} for {patient.patientID}: {patient.resident.last_name}, {patient.resident.first_name}",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+    
+    record.delete()
+    messages.success(request, "Vital signs record deleted successfully!")
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+# === PRESENT ILLNESS FUNCTIONALITY ===
+@login_required
+@role_required(['BHW', 'DOCTOR'], 'Create Present Illness on Patient Information')
+def present_illness_create(request, patient_id):
+    patient = get_object_or_404(Patient, patientID=patient_id)
+    
+    if request.method == "POST":
+        illness_name = request.POST.get('illness_name', '').strip()
+        start_date_str = request.POST.get('start_date', '').strip()
+        treatment = request.POST.get('treatment', '').strip()
+        
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date() if start_date_str else None
+        except ValueError:
+            start_date = None
+        
+        # Create only if required fields are provided.
+        if illness_name and start_date:
+            PresentIllness.objects.create(
+                patient=patient,
+                illness_name=illness_name,
+                start_date=start_date,
+                treatment=treatment
+            )
+            messages.success(request, "Present illness record created successfully!")
+            return redirect('patient-detail', pk=patient.patientID)
+        else:
+            messages.error(request, "Illness Name and Start Date are required.")
+    
+    return render(request, 'patientInfo/present_illness_create.html', {'patient': patient})
+
+@login_required
+@role_required(['BHW', 'DOCTOR'], 'Update Present Illness on Patient Information')
+def present_illness_update(request, illness_id):
+    present_illness = get_object_or_404(PresentIllness, id=illness_id)
+    patient = present_illness.patient
+    
+    if request.method == "POST":
+        illness_name = request.POST.get('illness_name', '').strip()
+        start_date_str = request.POST.get('start_date', '').strip()
+        treatment = request.POST.get('treatment', '').strip()
+        
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date() if start_date_str else None
+        except ValueError:
+            start_date = present_illness.start_date
+        
+        present_illness.illness_name = illness_name
+        present_illness.start_date = start_date
+        present_illness.treatment = treatment
+        present_illness.save()
+
+        # Create log entry for update
+        now = datetime.now()
+        formatted_date = now.strftime("%b. %d, %Y")
+        formatted_time = now.strftime("%I:%M%p")
+        Logs.objects.create(
+            datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+            timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+            module="Present Illness",
+            action="Update Present Illness Record",
+            performed_to=f"Present Illness Record ID - {present_illness.id} for {patient.patientID}: {patient.resident.last_name}, {patient.resident.first_name}",
+            performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+        )
+
+        messages.success(request, "Present illness record updated successfully!")
+        return redirect('patient-detail', pk=patient.patientID)
+    
+    return render(request, 'patientInfo/present_illness_update.html', {
+        'present_illness': present_illness,
+        'patient': patient,
+    })
+
+
+@login_required
+@role_required(['ADMIN'], 'Delete Present Illness on Patient Information')
+def present_illness_delete(request, illness_id):
+    present_illness = get_object_or_404(PresentIllness, id=illness_id)
+    patient = present_illness.patient
+
+    now = datetime.now()
+    formatted_date = now.strftime("%b. %d, %Y")
+    formatted_time = now.strftime("%I:%M%p")
+
+    Logs.objects.create(
+        datelog=datetime.strptime(formatted_date, "%b. %d, %Y").date(),
+        timelog=datetime.strptime(formatted_time, "%I:%M%p").time(),
+        module="Present Illness",
+        action="Delete Present Illness Record",
+        performed_to=f"Present Illness Record ID - {present_illness.id} for {patient.patientID}: {patient.resident.last_name}, {patient.resident.first_name}",
+        performed_by=f"username: {request.user.username} - {request.user.last_name}, {request.user.first_name}"
+    )
+
+    present_illness.delete()
+    messages.success(request, "Present illness record deleted successfully!")
     return redirect(request.META.get('HTTP_REFERER', '/'))

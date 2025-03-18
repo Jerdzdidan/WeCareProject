@@ -2,66 +2,7 @@
 {% load static %}
 
 {% block style %}
-  <link rel="stylesheet" href="{% static 'residentInfo/main.css' %}">
-  <style>
-    .nav-tabs {
-      border-bottom: 2px solid #dee2e6;
-      margin-bottom: 0;
-    }
-    .nav-tabs .nav-link {
-      border: none;
-      background-color: #f8f9fa;
-      color: #495057;
-      padding: 0.75rem 1.25rem;
-      margin-right: 0.25rem;
-    }
-    .nav-tabs .nav-link.active {
-      background-color: #ffffff;
-      border: 1px solid #dee2e6;
-      border-bottom-color: transparent;
-      color: #212529;
-    }
-    .tab-content {
-      background-color: #ffffff;
-      border: 1px solid #dee2e6;
-      border-top: none;
-      padding: 1rem;
-      margin-top: -1px;
-    }
-    .content-section {
-      border-radius: 0.25rem;
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    }
-    .info-section h4 {
-      border-bottom: 1px solid rgb(95, 95, 95);
-      padding-bottom: 0.5rem;
-    }
-    .info-section p, .info-section li {
-      margin-bottom: 0.5rem;
-    }   
-    .info-label {
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-    .info-value {
-      padding: 0.375rem 0.75rem;
-      background-color: #e9ecef;
-      border-radius: 0.25rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
-    .section-header {
-      margin-bottom: 1rem;
-      border-bottom: 1px solid rgb(0, 0, 0);
-      padding-bottom: 0.5rem;
-      font-size: 1.25rem;
-    }
-    /* For table styling (present illness) */
-    .table-readonly th, .table-readonly td {
-      vertical-align: middle;
-      padding: 0.75rem;
-    }
-  </style>
+  <link rel="stylesheet" href="{% static 'patientInfo/main.css' %}">
 {% endblock style %}
 
 {% block body %}
@@ -83,6 +24,12 @@
       <button class="nav-link fw-bold" id="medical-tab" data-bs-toggle="tab" data-bs-target="#medical" type="button" role="tab" aria-controls="medical" aria-selected="false">Medical Record</button>
     </li>
     <li class="nav-item" role="presentation">
+      <button class="nav-link fw-bold" id="vitalsigns-tab" data-bs-toggle="tab" data-bs-target="#vitalsigns" type="button" role="tab" aria-controls="vitalsigns" aria-selected="false">Vital Signs Record</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link fw-bold" id="presentIllness-tab" data-bs-toggle="tab" data-bs-target="#presentIllness" type="button" role="tab" aria-controls="presentIllness" aria-selected="false">Present Illness Record</button>
+    </li>
+    <li class="nav-item" role="presentation">
       <button class="nav-link fw-bold" id="medicine-tab" data-bs-toggle="tab" data-bs-target="#medicine" type="button" role="tab" aria-controls="medicine" aria-selected="false">Medicine Tracking</button>
     </li>
     {% endif %}
@@ -90,404 +37,20 @@
 
   <!-- Tab content -->
   <article class="tab-content content-section shadow-lg p-0" id="patientTabsContent">
-    <!-- Patient Info Tab -->
-    <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-      <div class="container p-3">
-        <div class="info-section">
-          <!-- Resident Information -->
-          <div class="section-header fw-bold">Resident Information</div>
-          <div class="row">
-              <div class="col-md-4">
-                  <p class="info-label">ID:</p>
-                  <p class="info-value">{{ patient.resident.id }}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Name:</p>
-                  <p class="info-value">{{ patient.resident.last_name }}, {{ patient.resident.first_name }}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Birthdate:</p>
-                  <p class="info-value">{{ patient.resident.birthdate }}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Age:</p>
-                  <p class="info-value">{{ patient.resident.age }}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Gender:</p>
-                  <p class="info-value">{{ patient.resident.gender }}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Category:</p>
-                  <p class="info-value">{{ patient.resident.category }}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Address:</p>
-                  <p class="info-value">{{ patient.resident.present_address }}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Civil Status:</p>
-                  <p class="info-value">{{ patient.resident.civil_status }}</p>
-              </div>
-          </div>
-        
-          <!-- Vital Signs -->
-          <div class="section-header fw-bold mt-5">Vital Signs</div>
-          {% if patient.vital_signs %}
-          <div class="row">
-              <div class="col-md-4">
-              <p class="info-label">Blood Pressure (BP):</p>
-              <p class="info-value">{{ patient.vital_signs.blood_pressure|default:"N/A" }}</p>
-              </div>
-              <div class="col-md-4">
-              <p class="info-label">Pulse Rate (PR):</p>
-              <p class="info-value">{{ patient.vital_signs.pulse_rate|default:"N/A" }}</p>
-              </div>
-              <div class="col-md-4">
-              <p class="info-label">Temperature (TEMP):</p>
-              <p class="info-value">{{ patient.vital_signs.temperature|default:"N/A" }}°C</p>
-              </div>
-              <div class="col-md-4">
-              <p class="info-label">Height (cm):</p>
-              <p class="info-value">{{ patient.vital_signs.height|default:"N/A" }}</p>
-              </div>
-              <div class="col-md-4">
-              <p class="info-label">Weight (kg):</p>
-              <p class="info-value">{{ patient.vital_signs.weight|default:"N/A" }}</p>
-              </div>
-          </div>
-          {% else %}
-              <p>No vital signs recorded.</p>
-          {% endif %}
-        
-          <!-- Present Illness -->
-          <div class="section-header fw-bold mt-5">Present Illness</div>
-          <div class="table-responsive">
-              <table class="table table-light table-striped table-readonly text-center">
-              <thead class="table-secondary">
-                  <tr>
-                  <th>Illness Name</th>
-                  <th>Start Date</th>
-                  <th>Treatment</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for illness in patient.present_illnesses.all %}
-                  <tr>
-                  <td>{{ illness.illness_name }}</td>
-                  <td>{{ illness.start_date|date:"M d, Y" }}</td>
-                  <td>{{ illness.treatment|default:"N/A" }}</td>
-                  </tr>
-                  {% empty %}
-                  <tr>
-                  <td colspan="4">No present illness records available.</td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-              </table>
-          </div>
-        
-          <!-- Vaccinations -->
-          <div class="section-header fw-bold mt-5">Vaccinations</div>
-          {% if patient.vaccinations %}
-              <div class="row">
-              <div class="col-md-4">
-                  <p class="info-label">Hepatitis A:</p>
-                  <p class="info-value">{% if patient.vaccinations.hepatitis_a %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Hepatitis B:</p>
-                  <p class="info-value">{% if patient.vaccinations.hepatitis_b %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">HPV Vaccine:</p>
-                  <p class="info-value">{% if patient.vaccinations.hpv_vaccine %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Pre-announced Vaccine:</p>
-                  <p class="info-value">{% if patient.vaccinations.pre_announced_vaccine %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Typhoid:</p>
-                  <p class="info-value">{% if patient.vaccinations.typhoid %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">MMR:</p>
-                  <p class="info-value">{% if patient.vaccinations.mmr %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">DPT:</p>
-                  <p class="info-value">{% if patient.vaccinations.dpt %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Chicken Pox:</p>
-                  <p class="info-value">{% if patient.vaccinations.chicken_pox %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Tetanus Toxoid:</p>
-                  <p class="info-value">{% if patient.vaccinations.tetanus_toxoid %}Yes{% else %}No{% endif %}</p>
-              </div>
-              {% if patient.vaccinations.others %}
-              <div class="col-md-12">
-                  <p class="info-label">Others:</p>
-                  <p class="info-value">{{ patient.vaccinations.others|default:"None" }}</p>
-              </div>
-              {% endif %}
-              </div>
-          {% else %}
-              <p>No vaccination records available.</p>
-          {% endif %}
-        
-          <!-- Past Medical History -->
-          <div class="section-header fw-bold mt-5">Past Medical History</div>
-          {% if patient.past_medical_history %}
-              <div class="row">
-              <div class="col-md-4">
-                  <p class="info-label">Asthma:</p>
-                  <p class="info-value">{% if patient.past_medical_history.asthma %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Anemia:</p>
-                  <p class="info-value">{% if patient.past_medical_history.anemia %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Bad Teeth:</p>
-                  <p class="info-value">{% if patient.past_medical_history.bad_teeth %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Diabetes:</p>
-                  <p class="info-value">{% if patient.past_medical_history.diabetes %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Depression:</p>
-                  <p class="info-value">{% if patient.past_medical_history.depression %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Heart Disease:</p>
-                  <p class="info-value">{% if patient.past_medical_history.heart_disease %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Hearing Problem:</p>
-                  <p class="info-value">{% if patient.past_medical_history.hearing_problem %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">High Blood Pressure:</p>
-                  <p class="info-value">{% if patient.past_medical_history.high_blood_pressure %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Heart Attack:</p>
-                  <p class="info-value">{% if patient.past_medical_history.heart_attack %}Yes{% else %}No{% endif %}</p>
-              </div>
-              <div class="col-md-4">
-                  <p class="info-label">Drug Allergy/Others:</p>
-                  <p class="info-value">{% if patient.past_medical_history.drug_allergy %}Yes{% else %}No{% endif %}</p>
-              </div>
-              {% if patient.past_medical_history.allergy_details %}
-              <div class="col-md-12">
-                  <p class="info-label">Allergy Details:</p>
-                  <p class="info-value">{{ patient.past_medical_history.allergy_details|default:"None" }}</p>
-              </div>
-              {% endif %}
-              {% if patient.past_medical_history.others %}
-              <div class="col-md-12">
-                  <p class="info-label">Others:</p>
-                  <p class="info-value">{{ patient.past_medical_history.others|default:"None" }}</p>
-              </div>
-              {% endif %}
-              </div>
-          {% else %}
-              <p>No past medical history available.</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
+    
+    {% include "patientInfo/patient_detail_patientInfo_tab.html" %}
 
     {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
-    <!-- Medical Record Tab -->
-    <div class="tab-pane fade" id="medical" role="tabpanel" aria-labelledby="medical-tab">
-      <div class="container px-3 pt-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4>Medical Records</h4>
-        </div>
-        <!-- Date Filter Form (no button; auto-submit on valid date change) -->
-        <small class="text-muted">Filter by Date:</small>
-        <div class="row">
-          <div class="col-auto my-auto">
-            <form method="get" id="dateFilterForm" class="my-auto">
-                <div class="input-group mt-2" style="font-size: calc(0.8rem + 0.2vw);">
-                    <input type="text" id="filter_start_date" name="start_date"
-                           class="form-control flatpickr-range" placeholder="From Date"
-                           value="{{ request.GET.start_date }}"
-                           style="font-size: calc(0.8rem + 0.2vw);">
-                    <span class="input-group-text">
-                        <i class="ri-calendar-line"></i>
-                    </span>
-                    <i class="ri-arrow-right-long-fill my-auto mx-2"></i>
-                    <input type="text" id="filter_end_date" name="end_date"
-                           class="form-control flatpickr-range" placeholder="To Date"
-                           value="{{ request.GET.end_date }}"
-                           style="font-size: calc(0.8rem + 0.2vw);">
-                    <span class="input-group-text">
-                        <i class="ri-calendar-line"></i>
-                    </span>
-                </div>
-            </form>
-          </div>
-          <div class="col-auto ms-auto my-auto">
-            {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
-              <a href="{% url 'medical-record-create' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
-                <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Medical Record
-              </a>
-            {% endif %}
-          </div>
-        </div>
-        <!-- Entries and Search Bar -->
-        <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
-          <div>
-            <select id="patientMedicalRecordEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-            <span class="ms-2">Entries per page</span>
-          </div>
-          <div>
-            <input type="text" id="patientMedicalRecordSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
-          </div>
-        </div>
-      </div>
-      <!-- Medical Records Table -->
-      <div class="table-responsive">
-        <table class="table table-striped projectTables" id="patientMedicalRecordDataTable">
-          <thead class="table-dark">
-            <tr>
-              <th class="text-start">Chief Complain</th>
-              <th class="text-start">Description</th>
-              <th class="text-start">Recommendation</th>
-              <th class="text-start">Date Visited</th>
-              {% if request.user.userprofile.userrole in "[ADMIN]" %}
-                <th class="text-center ms-auto me-auto">Action</th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for record in medical_records %}
-            <tr>
-              <td class="text-start align-middle">{{ record.concern }}</td>
-              <td class="text-start align-middle">{{ record.description }}</td>
-              <td class="text-start align-middle">{{ record.recommendation }}</td>
-              <td class="text-start align-middle">{{ record.last_visited|date:"M d, Y" }}</td>
-              {% if request.user.userprofile.userrole in "[ADMIN]" %}
-              <td class="text-center align-middle">
-                <a href="{% url 'medical-record-update' record.id %}" class="btn btn-sm btn-outline-success px-4 responsive_text fw-bold flex-fill" title="Edit"><i class="ri-edit-2-fill"></i></a>
-                {% if request.user.userprofile.userrole in "[ADMIN]" %}
-                <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ record.id }}" data-moduleName="Delete the medical record" class="btn px-4 btn-sm btn-outline-danger responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button>
-                {% endif %}
-              </td>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <!-- Custom Pagination Container -->
-      <div id="patientMedicalRecordCustomPagination"></div>
-    </div>
+
+    {% include "patientInfo/patient_detail_medical_record_tab.html" %}
+
+    {% include "patientInfo/patient_detail_medicine_tracking_tab.html" %}
+
+    {% include "patientInfo/patient_detail_vital_signs_record_tab.html" %}
+
+    {% include "patientInfo/patient_detail_presentIllnessRecord_tab.html" %}
 
 
-
-    <!-- Medicine Tracking Tab -->
-    <div class="tab-pane fade" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">
-      <div class="container px-3 pt-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4>Medicine Tracking</h4>
-        </div>
-        <div class="row">
-          <div class="col-auto ms-auto my-auto">
-            {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
-              <a href="{% url 'medicine-tracking-select' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
-                <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Medicine Record
-              </a>
-            {% endif %}
-          </div>
-        </div>
-        <!-- Entries and Search Bar -->
-        <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
-          <div>
-            <select id="patientMedicalRecordEntries" class="form-select d-inline w-auto border-secondary fw-bold" style="font-size: calc(0.8rem + 0.2vw); cursor: pointer;">
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-            <span class="ms-2">Entries per page</span>
-          </div>
-          <div>
-            <input type="text" id="patientMedicalRecordSearchBar" class="form-control d-inline w-auto border-secondary" placeholder="Search..." style="font-size: calc(0.8rem + 0.2vw);">
-          </div>
-        </div>
-      </div>
-      <!-- Medicine Tracking Table -->
-      <div class="table-responsive">
-        <table class="table table-striped projectTables" id="patientMedicineTrackingDataTable">
-          <thead class="table-dark">
-            <tr>
-              <th class="text-start">Chief Complain</th>
-              <th class="text-start">Medicine Name</th>
-              <th class="text-start">Quantity Used</th>
-              <th class="text-start">Dosage</th>
-              <th class="text-start">Frequency</th>
-              <th class="text-start">Date Given</th>
-              <th class="text-start">Follow Up Date</th>
-              <th class="text-start">Start Date</th>
-              <th class="text-start">End Date</th>
-              {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
-                <th class="text-center">Action</th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for tracking in medicine_trackings %}
-            <tr>
-              <td class="align-middle text-start">{{ tracking.chief_complain|default:"-" }}</td>
-              <td class="align-middle text-start">{{ tracking.medicine.medicine_name }}</td>
-              <td class="align-middle text-center">{{ tracking.quantity_used }}</td>
-              <td class="align-middle text-start">{{ tracking.total_dosage }}</td>
-              <td class="align-middle text-start">{{ tracking.frequency }}</td>
-              <td class="align-middle text-start">{{ tracking.date_given|date:"M d, Y" }}</td>
-              <td class="align-middle text-start">
-                {% if tracking.follow_up_date %}
-                  {{ tracking.follow_up_date|date:"M d, Y" }}
-                {% else %}
-                  N/A
-                {% endif %}
-              </td>
-              <td class="align-middle text-start">{{ tracking.start_date|date:"M d, Y" }}</td>
-              <td class="align-middle text-start">
-                {% if tracking.end_date %}
-                  {{ tracking.end_date|date:"M d, Y" }}
-                {% else %}
-                  Ongoing
-                {% endif %}
-              </td>
-              {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
-                <td class="text-center">
-                  <a href="{% url 'medicine-tracking-update' tracking.id %}" class="btn btn-sm px-4 btn-outline-success responsive_text mb-1" title="Edit">
-                    <i class="ri-edit-2-fill"></i>
-                  </a>
-                  {% if request.user.userprofile.userrole in "[ADMIN]" %}
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-deleteData="{{ patient.patientID }}: {{ patient.resident.last_name }}, {{ patient.resident.first_name }}" data-ID="{{ tracking.id }}" data-moduleName="Delete the medicine record" class="btn px-4 btn-sm btn-outline-danger mb-1 responsive_text my-auto"><i class="ri-delete-bin-5-fill"></i></button> 
-                  {% endif %}
-                </td>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        <div id="patientMedicineTrackingCustomPagination"></div>
-      </div>
-    </div>
     {% endif %}
   </article>
 </div>
@@ -496,15 +59,55 @@
 {% block script %}
 <script src="{% static 'patientInfo/patientMedicalRecordDataTable.js' %}"></script>
 <script src="{% static 'patientInfo/patientMedicineTrackingDataTable.js' %}"></script>
+<script src="{% static 'patientInfo/patientVitalSignsRecordDataTable.js' %}"></script>
+<script src="{% static 'patientInfo/patientPresentIllnessRecordDataTable.js' %}"></script>
 <script>
   $(document).ready(function(){
-    flatpickr(".flatpickr-range", {
-      dateFormat: "M j, Y",
+    $("#filter_start_date").flatpickr({
+      dateFormat: "M d, Y",
+      defaultDate: $("#filter_start_date").val() || null,
       allowInput: true,
       autoClose: true,
       onChange: function(selectedDates, dateStr, instance) {
         if($('#filter_start_date').val() && $('#filter_end_date').val()){
           $("#dateFilterForm").submit();
+        }
+      }
+    });
+    
+    $("#filter_end_date").flatpickr({
+      dateFormat: "M d, Y",
+      defaultDate: $("#filter_end_date").val() || null,
+      allowInput: true,
+      autoClose: true,
+      onChange: function(selectedDates, dateStr, instance) {
+        if($('#filter_start_date').val() && $('#filter_end_date').val()){
+          $("#dateFilterForm").submit();
+        }
+      }
+    });
+    
+    // Initialize Vital Signs date pickers
+    $("#vitalsignsfilter_start_date").flatpickr({
+      dateFormat: "M d, Y",
+      defaultDate: $("#vitalsignsfilter_start_date").val() || null,
+      allowInput: true,
+      autoClose: true,
+      onChange: function(selectedDates, dateStr, instance) {
+        if($('#vitalsignsfilter_start_date').val() && $('#vitalsignsfilter_end_date').val()){
+          $("#vitalsignsdateFilterForm").submit();
+        }
+      }
+    });
+    
+    $("#vitalsignsfilter_end_date").flatpickr({
+      dateFormat: "M d, Y",
+      defaultDate: $("#vitalsignsfilter_end_date").val() || null,
+      allowInput: true,
+      autoClose: true,
+      onChange: function(selectedDates, dateStr, instance) {
+        if($('#vitalsignsfilter_start_date').val() && $('#vitalsignsfilter_end_date').val()){
+          $("#vitalsignsdateFilterForm").submit();
         }
       }
     });
@@ -533,6 +136,12 @@
     
     if (moduleName == "Delete the medical record"){
       var txtDataUrl = '{% url "medical-record-delete" patient.patientID 0 %}'
+    }
+    else if (moduleName == "Delete the vital signs record"){
+      var txtDataUrl = '{% url "vital-signs-delete" patient.patientID 0 %}'
+    }
+    else if (moduleName == "Delete the present illness record"){
+      var txtDataUrl = '{% url "present-illness-delete" 0 %}'
     }
     else{
       var txtDataUrl = '{% url "medicine-tracking-delete" 0 %}'
