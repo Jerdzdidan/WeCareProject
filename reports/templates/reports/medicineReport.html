@@ -48,33 +48,41 @@
             <table id="dataTable" class="table table-light table-striped text-center m-0 w-100 projectTables">
                 <thead class="table-dark">
                 <tr>
-                    <th>Medicine Name</th>
-                    <th>Dosage</th>
-                    <th>Brand Name</th>
-                    <th>Supplier Name</th>
-                    <th>Total Quantity</th>
-                    <th>Released Quantity</th>
-                    <th>Available Quantity</th>
-                    <th>Expired Quantity</th>
-                    <th>Supplier</th>
-                    <th>Date Last Stocked</th>
-                    <th>Notes</th>
+                    <th class="text-center align-middle">Medicine Name</th>
+                    <th class="text-center align-middle">Dosage</th>
+                    <th class="text-center align-middle">Brand Name</th>
+                    <th class="text-center align-middle">Supplier Name</th>
+                    <th class="text-center align-middle">Total Quantity</th>
+                    <th class="text-center align-middle">Released Quantity</th>
+                    <th class="text-center align-middle">Available Quantity</th>
+                    <th class="text-center align-middle">Expired Quantity</th>
+                    <th class="text-center align-middle">Status</th>
+                    <th class="text-center align-middle">Date Last Stocked</th>
+                    <th class="text-center align-middle">Notes</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for med in medicines %}
                 <tr>
-                    <td class="align-middle">{{ med.medicine_name }}</td>
-                    <td class="align-middle">{{ med.dosage }}</td>
-                    <td class="align-middle">{{ med.brand_name }}</td>
-                    <td class="align-middle">{{ med.supplier_name }}</td>
-                    <td class="align-middle">{{ med.total_quantity }}</td>
-                    <td class="align-middle">{{ med.releasedQty|default:"0" }}</td>
-                    <td class="align-middle">{{ med.availableQty|default:"0" }}</td>
-                    <td class="align-middle">{{ med.expiredQty|default:"0" }}</td>
-                    <td class="align-middle">{{ med.supplier_name }}</td>
-                    <td class="align-middle">{{ med.date_last_stock|date:"M. d, Y" }}</td>
-                    <td class="align-middle">{{ med.notes }}</td>
+                    <td class="text-center align-middle">{{ med.medicine_name }}</td>
+                    <td class="text-center align-middle">{{ med.dosage }}</td>
+                    <td class="text-center align-middle">{{ med.brand_name }}</td>
+                    <td class="text-center align-middle">{{ med.supplier_name }}</td>
+                    <td class="text-center align-middle">{{ med.total_quantity }}</td>
+                    <td class="text-center align-middle">{{ med.releasedQty|default:"0" }}</td>
+                    <td class="text-center align-middle">{{ med.availableQty|default:"0" }}</td>
+                    <td class="text-center align-middle">{{ med.expiredQty|default:"0" }}</td>
+                    <td class="text-center align-middle">
+                      {% if med.total_quantity <= 0 %}
+                        <span class="badge p-2 fw-bold bg-danger">OUT OF STOCK</span>
+                      {% elif med.total_quantity <= 10 %}
+                        <span class="badge p-2 fw-bold bg-warning text-dark">LOW STOCK</span>
+                      {% else %}
+                        <span class="badge p-2 fw-bold bg-success">AVAILABLE</span>
+                      {% endif %}
+                    </td>
+                    <td class="text-center align-middle">{{ med.date_last_stock|date:"M. d, Y" }}</td>
+                    <td class="text-center align-middle">{{ med.notes }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -114,6 +122,21 @@ function printTable() {
       }
       .print-table .text-end {
         text-align: right !important;
+      }
+      .bg-warning {
+        background-color: #ffc107 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+      }
+      .bg-danger {
+        background-color: #dc3545 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+      }
+      .bg-success {
+        background-color: #28a745 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
       }
     }
     .print-table {

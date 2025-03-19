@@ -69,39 +69,39 @@
         <table id="dataTable" class="table table-light table-hover table-striped table-striped text-cente m-0 projectTables">
         <thead class="table-dark">
           <tr>
-            <th class="text-center">Family No.</th>
-            <th class="text-center">Resident ID</th>
-            <th class="text-center">Last Name</th>
-            <th class="text-center">First Name</th>
-            <th class="text-center">Middle Name</th>
-            <th class="text-center">Relationship to Head</th>
-            <th class="text-center">Birthdate</th>
-            <th class="text-center">Age</th>
-            <th class="text-center">Civil Status</th>
-            <th class="text-center">Gender</th>
-            <th class="text-center">Category</th>
-            <th class="text-center">Address</th>
-            <th class="text-center">Contact Number</th>
-            <th class="text-center">Date Updated</th>
+            <th class="text-center align-middle">Family No.</th>
+            <th class="text-center align-middle">Resident ID</th>
+            <th class="text-center align-middle">Last Name</th>
+            <th class="text-center align-middle">First Name</th>
+            <th class="text-center align-middle">Middle Name</th>
+            <th class="text-center align-middle">Relationship to Head</th>
+            <th class="text-center align-middle">Birthdate</th>
+            <th class="text-center align-middle">Age</th>
+            <th class="text-center align-middle">Civil Status</th>
+            <th class="text-center align-middle">Gender</th>
+            <th class="text-center align-middle">Category</th>
+            <th class="text-center align-middle">Address</th>
+            <th class="text-center align-middle">Contact Number</th>
+            <th class="text-center align-middle">Date Updated</th>
           </tr>
         </thead>
         <tbody>
             {% for resident in residents %}
             <tr>
-                <td class="text-center">{{ resident.family.family_no }}</a></td>
-                <td class="text-center">{{ resident.id }}</td>
-                <td class="text-center">{{ resident.last_name }}</td>
-                <td class="text-center">{{ resident.first_name }}</td>
-                <td class="text-center">{{ resident.middle_name }}</td>
-                <td class="text-center">{{ resident.relationship_to_head|capfirst }}</td>
-                <td class="text-center">{{ resident.birthdate|date:"M d, Y" }}</td>
-                <td class="text-center">{{ resident.age }}</td>
-                <td class="text-center">{{ resident.civil_status }}</td>
-                <td class="text-center">{{ resident.gender }}</td>
-                <td class="text-center">{{ resident.category }}</td>
-                <td class="text-center">{{ resident.present_address }}</td>
-                <td class="text-center">{{ resident.contact_number }}</td>
-                <td class="text-center">{{ resident.date_updated|date:"M d, Y" }}</td>
+                <td class="text-center align-middle">{{ resident.family.family_no }}</a></td>
+                <td class="text-center align-middle">{{ resident.id }}</td>
+                <td class="text-center align-middle">{{ resident.last_name }}</td>
+                <td class="text-center align-middle">{{ resident.first_name }}</td>
+                <td class="text-center align-middle">{{ resident.middle_name }}</td>
+                <td class="text-center align-middle">{{ resident.relationship_to_head|capfirst }}</td>
+                <td class="text-center align-middle">{{ resident.birthdate|date:"M d, Y" }}</td>
+                <td class="text-center align-middle">{{ resident.age }}</td>
+                <td class="text-center align-middle">{{ resident.civil_status }}</td>
+                <td class="text-center align-middle">{{ resident.gender }}</td>
+                <td class="text-center align-middle">{{ resident.category }}</td>
+                <td class="text-center align-middle">{{ resident.present_address }}</td>
+                <td class="text-center align-middle">{{ resident.contact_number }}</td>
+                <td class="text-center align-middle">{{ resident.date_updated|date:"M d, Y" }}</td>
             </tr>
             {% endfor %}
         </tbody>

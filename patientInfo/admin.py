@@ -8,6 +8,7 @@ from .models import (
     PastMedicalHistory,
     MedicalRecord,
     MedicineTracking,
+    VitalSignsRecord
 )
 
 admin.site.register(Patient)
@@ -17,3 +18,4 @@ admin.site.register(Vaccination)
 admin.site.register(PastMedicalHistory)
 admin.site.register(MedicalRecord)
 admin.site.register(MedicineTracking)
+admin.site.register(VitalSignsRecord)

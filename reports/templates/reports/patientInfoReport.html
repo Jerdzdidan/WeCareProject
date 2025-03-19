@@ -65,35 +65,35 @@
         <table id="dataTable" class="table table-light table-hover table-striped text-center m-0 projectTables">
         <thead class="table-dark">
           <tr>
-            <th class="text-start">Family No.</th>
-            <th class="text-start">Patient ID</th>
-            <th class="text-start">Last Name</th>
-            <th class="text-start">First Name</th>
-            <th class="text-start">Middle Name</th>
-            <th class="text-start">Birthdate</th>
-            <th class="text-start">Age</th>
-            <th class="text-start">Civil Status</th>
-            <th class="text-start">Gender</th>
-            <th class="text-start">Category</th>
-            <th class="text-start">Contact Number</th>
-            <th class="text-start">Last Visit</th>
+            <th class="text-start align-middle">Family No.</th>
+            <th class="text-start align-middle">Patient ID</th>
+            <th class="text-start align-middle">Last Name</th>
+            <th class="text-start align-middle">First Name</th>
+            <th class="text-start align-middle">Middle Name</th>
+            <th class="text-start align-middle">Birthdate</th>
+            <th class="text-start align-middle">Age</th>
+            <th class="text-start align-middle">Civil Status</th>
+            <th class="text-start align-middle">Gender</th>
+            <th class="text-start align-middle">Category</th>
+            <th class="text-start align-middle">Contact Number</th>
+            <th class="text-start align-middle">Last Visit</th>
           </tr>
         </thead>
         <tbody>
             {% for patient in patients %}
             <tr>
-                <td class="text-start">{{ patient.resident.family.family_no }}</td>
-                <td class="text-start">{{ patient.patientID }}</td>
-                <td class="text-start">{{ patient.resident.last_name }}</td>
-                <td class="text-start">{{ patient.resident.first_name }}</td>
-                <td class="text-start">{{ patient.resident.middle_name }}</td>
-                <td class="text-start">{{ patient.resident.birthdate|date:"M d, Y" }}</td>
-                <td class="text-start">{{ patient.resident.age }}</td>
-                <td class="text-start">{{ patient.resident.civil_status }}</td>
-                <td class="text-start">{{ patient.resident.gender }}</td>
-                <td class="text-start">{{ patient.resident.category }}</td>
-                <td class="text-start">{{ patient.resident.contact_number }}</td>
-                <td class="text-start">
+                <td class="text-start align-middle">{{ patient.resident.family.family_no }}</td>
+                <td class="text-start align-middle">{{ patient.patientID }}</td>
+                <td class="text-start align-middle">{{ patient.resident.last_name }}</td>
+                <td class="text-start align-middle">{{ patient.resident.first_name }}</td>
+                <td class="text-start align-middle">{{ patient.resident.middle_name }}</td>
+                <td class="text-start align-middle">{{ patient.resident.birthdate|date:"M d, Y" }}</td>
+                <td class="text-start align-middle">{{ patient.resident.age }}</td>
+                <td class="text-start align-middle">{{ patient.resident.civil_status }}</td>
+                <td class="text-start align-middle">{{ patient.resident.gender }}</td>
+                <td class="text-start align-middle">{{ patient.resident.category }}</td>
+                <td class="text-start align-middle">{{ patient.resident.contact_number }}</td>
+                <td class="text-start align-middle">
                   {% if patient.last_visit_date %}
                     {{ patient.last_visit_date|date:"M d, Y" }}
                   {% else %}

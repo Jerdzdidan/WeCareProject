@@ -44,12 +44,13 @@ class VitalSignsRecord(models.Model):
     temperature = models.FloatField(null=True, blank=True)
     height = models.FloatField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
-    recorded_at = models.DateTimeField(auto_now_add=True)
+    recorded_at = models.DateTimeField(auto_now_add=True,  editable=True)
 
     def __str__(self):
         return f"Vital Signs Record for {self.patient.patientID} on {self.recorded_at:%b %d, %Y %H:%M}"
 
 class PresentIllness(models.Model):
+    date_visited = models.DateField(default=date.today)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="present_illnesses")
     illness_name = models.CharField(max_length=100)
     start_date = models.DateField()

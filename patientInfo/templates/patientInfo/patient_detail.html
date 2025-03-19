@@ -21,13 +21,13 @@
     </li>
     {% if request.user.userprofile.userrole in "[ADMIN,BHW,DOCTOR]" %}
     <li class="nav-item" role="presentation">
-      <button class="nav-link fw-bold" id="medical-tab" data-bs-toggle="tab" data-bs-target="#medical" type="button" role="tab" aria-controls="medical" aria-selected="false">Medical Record</button>
-    </li>
-    <li class="nav-item" role="presentation">
       <button class="nav-link fw-bold" id="vitalsigns-tab" data-bs-toggle="tab" data-bs-target="#vitalsigns" type="button" role="tab" aria-controls="vitalsigns" aria-selected="false">Vital Signs Record</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link fw-bold" id="presentIllness-tab" data-bs-toggle="tab" data-bs-target="#presentIllness" type="button" role="tab" aria-controls="presentIllness" aria-selected="false">Present Illness Record</button>
+      <button class="nav-link fw-bold" id="presentIllness-tab" data-bs-toggle="tab" data-bs-target="#presentIllness" type="button" role="tab" aria-controls="presentIllness" aria-selected="false">Illness Record</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link fw-bold" id="medical-tab" data-bs-toggle="tab" data-bs-target="#medical" type="button" role="tab" aria-controls="medical" aria-selected="false">Medical Record</button>
     </li>
     <li class="nav-item" role="presentation">
       <button class="nav-link fw-bold" id="medicine-tab" data-bs-toggle="tab" data-bs-target="#medicine" type="button" role="tab" aria-controls="medicine" aria-selected="false">Medicine Tracking</button>

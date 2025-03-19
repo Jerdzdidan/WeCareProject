@@ -28,7 +28,7 @@
           </form>
         </div>
         <div class="col-auto ms-auto my-auto">
-          {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+          {% if request.user.userprofile.userrole in "[ADMIN,BHW]" %}
             <a href="{% url 'vitalsigns-record-create' patient.patientID %}" class="btn btn-success fw-semibold" style="font-size: calc(0.8rem + 0.2vw);">
               <i class="ri-add-fill fw-bold" style="font-size: calc(0.6rem + 0.4vw);"></i> Add Vital Signs Record
             </a>
@@ -62,7 +62,7 @@
             <th class="text-start">Temperature</th>
             <th class="text-start">Height</th>
             <th class="text-start">Weight</th>
-            {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+            {% if request.user.userprofile.userrole in "[ADMIN,BHW]" %}
               <th class="text-center">Action</th>
             {% endif %}
           </tr>
@@ -70,13 +70,13 @@
         <tbody>
           {% for record in vitalsigns_records %}
           <tr>
-            <td class="align-middle text-start">{{ record.recorded_at|date:"M d, Y H:i" }}</td>
+            <td class="align-middle text-start">{{ record.recorded_at|date:"M d, Y" }}</td>
             <td class="align-middle text-start">{{ record.blood_pressure|default:"-" }}</td>
             <td class="align-middle text-center">{{ record.pulse_rate|default:"-" }}</td>
             <td class="align-middle text-start">{{ record.temperature|default:"-" }}</td>
             <td class="align-middle text-start">{{ record.height|default:"-" }}</td>
             <td class="align-middle text-start">{{ record.weight|default:"-" }}</td>
-            {% if request.user.userprofile.userrole in "[ADMIN,DOCTOR]" %}
+            {% if request.user.userprofile.userrole in "[ADMIN,BHW]" %}
               <td class="text-center">
                 <a href="{% url 'vital-signs-update' record.patient.patientID record.id %}" class="btn btn-sm px-4 btn-outline-success" title="Edit">
                   <i class="ri-edit-2-fill"></i>
