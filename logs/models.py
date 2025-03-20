@@ -4,7 +4,7 @@ from django.db import models
 class Logs(models.Model):
     datelog = models.DateField()
     timelog = models.TimeField()
-    module = models.CharField(max_length=20)
-    action = models.CharField(max_length=20)
-    performed_to = models.CharField(max_length=20)
+    module = models.CharField(max_length=100)
+    action = models.CharField(max_length=100)
+    performed_to = models.CharField(max_length=100)
     performed_by = models.CharField(max_length=20)
